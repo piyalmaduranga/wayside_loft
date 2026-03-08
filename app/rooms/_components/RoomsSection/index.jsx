@@ -5,7 +5,7 @@ import { isValid } from "date-fns";
 
 async function RoomsSection({ filter, range }) {
   const rooms = await getAllRooms();
-  console.log({ rooms: rooms.length });
+  console.log("rooms", { rooms: rooms.length });
 
   // let filteredRooms = await filterRoomsByDate();
 

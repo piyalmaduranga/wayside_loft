@@ -3,19 +3,26 @@ import { auth, signIn, signOut } from "@/auth";
 import { contactSchema, signInSchema, signupSchema } from "./zodSchemas";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { areIntervalsOverlapping, isBefore, isValid } from "date-fns";
+import { areIntervalsOverlapping, isBefore, isValid, format } from "date-fns";
 import {
   cancelReservation,
+  cancelReservationDirect,
   getReservationByID,
   getRoomReservations,
   updateReseration,
+  updateReservationDirect,
 } from "./supabase/reservations";
 import { bookingTotalPrice } from "../utils/reservationsCalcs";
 import { daysDifferCount } from "../utils/datetime";
 import { revalidatePath } from "next/cache";
-import { createGuest, getGuestByEmail } from "./supabase/guests";
+import { createGuest, getGuestByEmailDirect } from "./supabase/guests";
 import { hash, hashSync } from "bcryptjs";
 import { createMessage } from "./supabase/inbox";
+import {
+  sendContactEmail,
+  sendBookingUpdateEmail,
+  sendBookingCancellationEmail,
+} from "./mailer";
 
 export async function authAction(prevState, formData) {
   // await new Promise((res) => setTimeout(res, 500));
@@ -114,9 +121,9 @@ export async function reservationUpdateAction(prevState, formData) {
   const room_busy_days = planned_room_reservations.filter((item) =>
     item.id != reservation_id
       ? {
-          start: new Date(item.start_date),
-          end: new Date(item.end_date),
-        }
+        start: new Date(item.start_date),
+        end: new Date(item.end_date),
+      }
       : false
   );
 
@@ -149,14 +156,29 @@ export async function reservationUpdateAction(prevState, formData) {
     guests_count,
     totalNights
   );
-  await updateReseration(
-    session.supabaseAccessToken,
+  await updateReservationDirect(
     reservation_id,
     new_total,
     guests_count,
     start_date,
     end_date
   );
+
+  // Send update email notification
+  try {
+    await sendBookingUpdateEmail({
+      guestName: session.user.name || target_reservation.guests.fullname,
+      guestEmail: session.user.email || target_reservation.guests.email,
+      roomName: target_reservation.rooms.name,
+      checkIn: format(start_date, "MMMM dd, yyyy"),
+      checkOut: format(end_date, "MMMM dd, yyyy"),
+      guests: guests_count,
+      totalPrice: new_total,
+      bookingId: reservation_id,
+    });
+  } catch (emailErr) {
+    console.error("[mailer] Booking update email failed:", emailErr.message);
+  }
 
   revalidatePath(`/reservations/edit/${reservation_id}`);
   return { status: "success" };
@@ -167,7 +189,25 @@ export async function reservationCancelAction(prevState, formData) {
 
   const session = await auth();
 
-  await cancelReservation(session?.supabaseAccessToken, reservation_id);
+  // Fetch info for email before cancelling
+  const reservation = await getReservationByID(reservation_id);
+
+  await cancelReservationDirect(reservation_id);
+
+  if (reservation) {
+    try {
+      await sendBookingCancellationEmail({
+        guestName: session.user.name || reservation.guests.fullname,
+        guestEmail: session.user.email || reservation.guests.email,
+        roomName: reservation.rooms.name,
+        checkIn: format(new Date(reservation.start_date), "MMMM dd, yyyy"),
+        checkOut: format(new Date(reservation.end_date), "MMMM dd, yyyy"),
+        bookingId: reservation_id,
+      });
+    } catch (err) {
+      console.error("[mailer] Cancellation email failed:", err.message);
+    }
+  }
 
   revalidatePath("/account/history");
 }
@@ -195,7 +235,7 @@ export async function signupAction(prevState, formData) {
     return { ...prevState };
   }
 
-  const does_email_exists = await getGuestByEmail(email);
+  const does_email_exists = await getGuestByEmailDirect(email);
 
   if (does_email_exists)
     return { ...prevState, critical: "Email address already exists!" };
@@ -254,6 +294,14 @@ export async function contactAction(state, formData) {
       ...currentState,
       errors: { ...currentState.errors, critical: err.message },
     };
+  }
+
+  // Send email notification to the hotel
+  try {
+    await sendContactEmail({ fullname, email, phone, message });
+  } catch (err) {
+    console.error("[mailer] Failed to send contact email:", err.message);
+    // Don't fail the whole action if email fails — message is already saved to DB
   }
 
   return { ...currentState, isSuccess: true, errors: {} };

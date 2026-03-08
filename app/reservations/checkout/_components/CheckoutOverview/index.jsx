@@ -16,7 +16,7 @@ function CheckoutOverview({ room, pending_reservation }) {
     <div>
       <Card>
         <Card.Thumbnail>
-          <Image fill src={`${SUPABASE_ROOMS_URL}/${room.thumbnail}`} alt={`${room.name} thumbnail`} />
+          <Image fill src={room.thumbnail?.startsWith("https") ? room.thumbnail : `${SUPABASE_ROOMS_URL}/${room.thumbnail}`} unoptimized={room.thumbnail?.startsWith("http")} alt={`${room.name} thumbnail`} />
         </Card.Thumbnail>
 
         <Card.Description className={styles.overviewDescription}>

@@ -27,6 +27,7 @@
     "leaflet": "^1.9.4",
     "next": "^14.2.22",
     "next-auth": "^5.0.0-beta.20",
+    "nodemailer": "^6.10.1",
     "react": "^18",
     "react-datepicker": "^7.3.0",
     "react-day-picker": "^9.0.8",

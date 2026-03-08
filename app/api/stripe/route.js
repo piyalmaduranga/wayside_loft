@@ -71,7 +71,7 @@ export async function POST(req, res) {
   const pending_reservation = requestBody.pending_reservation;
 
   const [guest, room] = await Promise.all([
-    getGuestByEmail(guest_email),
+    getGuestByEmailDirect(guest_email),
     getRoomById(pending_reservation?.room_id),
   ]);
 
@@ -125,15 +125,14 @@ export async function POST(req, res) {
               unit_amount: totalCentPrice,
               product_data: {
                 name: room.name,
-                description: `Booking ${room.name} for ${
-                  pending_reservation.guests_count
-                } guest(s). Starting from ${format(
-                  pending_reservation.start_date,
-                  "LLLL dd yyyy"
-                )} until ${format(
-                  pending_reservation.end_date,
-                  "LLLL do yyyy"
-                )} : (${totalNights}) Nights`,
+                description: `Booking ${room.name} for ${pending_reservation.guests_count
+                  } guest(s). Starting from ${format(
+                    pending_reservation.start_date,
+                    "LLLL dd yyyy"
+                  )} until ${format(
+                    pending_reservation.end_date,
+                    "LLLL do yyyy"
+                  )} : (${totalNights}) Nights`,
                 images: [
                   `https://kapumuyablpuibhumzdj.supabase.co/storage/v1/object/public/rooms-imgs/${room.thumbnail}`,
                 ],

@@ -1,5 +1,6 @@
 import { formatISO, formatISO9075 } from "date-fns";
 import supabase, { supabaseWithToken } from "./db";
+import { getRiskySupabaseClient } from "./supabaseRiskyClient";
 
 export async function getRoomReservations(id) {
   let { data: reservations, error } = await supabase
@@ -81,6 +82,43 @@ export async function createNewReservation(reservationObj) {
   return reservations;
 }
 
+export async function createNewReservationDirect(reservationObj) {
+  const {
+    room_id,
+    guest_id,
+    guests_count,
+    message,
+    reserved_price,
+    start_date,
+    end_date,
+    stripe_session_id,
+    status,
+  } = reservationObj;
+
+  const { data: reservations, error } = await getRiskySupabaseClient()
+    .from("reservations")
+    .insert([
+      {
+        room_id,
+        guest_id,
+        guests_count,
+        reserved_price,
+        message,
+        start_date,
+        end_date,
+        stripe_session_id,
+        status,
+      },
+    ])
+    .select();
+
+  if (error) {
+    console.error("createNewReservationDirect error:", error);
+  }
+
+  return reservations;
+}
+
 export async function deleteReservation(supabaseAccessToken, id) {
   const { data: reservations, error } = await supabaseWithToken(
     supabaseAccessToken
@@ -96,7 +134,7 @@ export async function deleteReservation(supabaseAccessToken, id) {
 export async function getReservationByID(id) {
   let { data: reservations, error } = await supabase
     .from("reservations")
-    .select("*, rooms(thumbnail, name, capacity, price)")
+    .select("*, rooms(thumbnail, name, capacity, price), guests(fullname, email)")
     .eq("id", id)
     .single();
 
@@ -129,6 +167,31 @@ export async function updateReseration(
   return reservations;
 }
 
+export async function updateReservationDirect(
+  id,
+  price,
+  guests_count,
+  start_date,
+  end_date
+) {
+  const { data: reservations, error } = await getRiskySupabaseClient()
+    .from("reservations")
+    .update({
+      reserved_price: price,
+      guests_count,
+      start_date: formatISO9075(new Date(start_date)),
+      end_date: formatISO9075(new Date(end_date)),
+    })
+    .eq("id", id)
+    .select();
+
+  if (error) {
+    console.error("updateReservationDirect error:", error);
+  }
+
+  return reservations;
+}
+
 export async function cancelReservation(supabaseAccessToken, id) {
   const { data: reservations, error } = await supabaseWithToken(
     supabaseAccessToken
@@ -138,6 +201,20 @@ export async function cancelReservation(supabaseAccessToken, id) {
     .eq("id", id);
 
   console.log("datetime", formatISO9075(new Date()));
+  return reservations;
+}
+
+export async function cancelReservationDirect(id) {
+  const { data: reservations, error } = await getRiskySupabaseClient()
+    .from("reservations")
+    .update({ status: "cancelled" })
+    .eq("id", id)
+    .select();
+
+  if (error) {
+    console.error("cancelReservationDirect error:", error);
+  }
+
   return reservations;
 }
 

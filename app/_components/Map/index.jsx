@@ -28,10 +28,10 @@ function Map({ initialCenter, center }) {
       />
       <Marker
         icon={new Icon({ iconUrl: "/marker-icon.png", iconSize: [25, 41], iconAnchor: [12, 41] })}
-        position={[30.390245794565757, -9.556749533359007]}
+        position={[5.9495523492736515, 80.45819726671677]}
       >
         <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
+          Wayside Loft, Yatipila Road, Mirissa
         </Popup>
       </Marker>
       <SetViewOnClick />

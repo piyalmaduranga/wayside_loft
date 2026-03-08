@@ -12,6 +12,7 @@ export const metadata = {
 };
 
 function Rooms({ searchParams }) {
+  console.log({ searchParams });
   const filter = searchParams?.sort ?? "default";
   const range = searchParams?.range ?? "";
   return (

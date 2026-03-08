@@ -36,7 +36,8 @@ function ReservationOverview({ deleteAction, reservation, allowDelete = true, re
           <Card.Thumbnail zoomOnHover={false}>
             <Image
               fill
-              src={`${SUPABASE_ROOMS_URL}/${reservation.rooms.thumbnail}`}
+              src={reservation.rooms.thumbnail?.startsWith("http") ? reservation.rooms.thumbnail : `${SUPABASE_ROOMS_URL}/${reservation.rooms.thumbnail}`}
+              unoptimized={reservation.rooms.thumbnail?.startsWith("http")}
               alt={`${reservation.rooms.name} thumbnail`}
             />
             {/* <Image fill src={"/bg.png"} /> */}
@@ -63,7 +64,8 @@ function ReservationOverview({ deleteAction, reservation, allowDelete = true, re
         <Card.Thumbnail zoomOnHover={false}>
           <Image
             fill
-            src={`${SUPABASE_ROOMS_URL}/${reservation.rooms.thumbnail}`}
+            src={reservation.rooms.thumbnail?.startsWith("https") ? reservation.rooms.thumbnail : `${SUPABASE_ROOMS_URL}/${reservation.rooms.thumbnail}`}
+            unoptimized={reservation.rooms.thumbnail?.startsWith("https")}
             alt={`${reservation.rooms.name} thumbnail`}
           />
           {/* <Image fill src={"/bg.png"} /> */}

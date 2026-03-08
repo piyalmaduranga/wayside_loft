@@ -19,7 +19,8 @@ function CheckoutOverview({ reservation, guests, start, end }) {
         <Card.Thumbnail>
           <Image
             fill
-            src={`${SUPABASE_ROOMS_URL}/${reservation.rooms.thumbnail}`}
+            src={reservation.rooms.thumbnail?.startsWith("https") ? reservation.rooms.thumbnail : `${SUPABASE_ROOMS_URL}/${reservation.rooms.thumbnail}`}
+            unoptimized={reservation.rooms.thumbnail?.startsWith("https")}
             alt={`${reservation.rooms.name} thumbnail`}
           />
         </Card.Thumbnail>

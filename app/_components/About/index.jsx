@@ -9,11 +9,10 @@ function About() {
         <div className={styles.description}>
           <Heading>About Us</Heading>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis perferendis itaque iure consequatur iusto
-            omnis sapiente, doloribus animi velit vero impedit repellendus minus eaque quos voluptatum eum obcaecati
-            ducimus sequi! Blanditiis impedit praesentium labore amet. Numquam molestias, praesentium iste minus quis
-            cupiditate ea voluptatem natus, impedit perferendis distinctio ullam atque enim error, quasi sit? Iure
-            quibusdam aperiam nostrum enim. Sequi.
+            Nestled amidst the lush greenery of Mirissa, Wayside Loft offers a tranquil escape where nature meets comfort.
+            Our boutique villa combines modern amenities with a serene environment, providing the perfect backdrop for
+            your Sri Lankan adventure. Whether you're here to relax on the beach or explore the island's vibrant culture,
+            we're dedicated to making your stay unforgettable.
           </p>
         </div>
         <div className={styles.gallery}>

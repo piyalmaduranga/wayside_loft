@@ -12,6 +12,18 @@ const nextConfig = {
         port: "",
         pathname: "/storage/v1/object/public/rooms-imgs/**",
       },
+      {
+        protocol: "https",
+        hostname: "cmvuxhnuhsbtpmbusmfv.storage.supabase.co",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "cmvuxhnuhsbtpmbusmfv.supabase.co",
+        port: "",
+        pathname: "/**",
+      }
     ],
   },
 

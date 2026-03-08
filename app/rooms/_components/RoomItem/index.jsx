@@ -9,7 +9,7 @@ function RoomItem({ id, imgPath, price, link, title }) {
     <div className={styles.roomsGrid}>
       <div className={styles.roomItem}>
         <div className={styles.imgOverlay}>
-          <Image fill src={`${SUPABASE_ROOMS_URL}/${imgPath}`} alt="" />
+          <Image fill src={imgPath?.startsWith("https") ? imgPath : `${SUPABASE_ROOMS_URL}/${imgPath}`} unoptimized={imgPath?.startsWith("http")} alt="" />
         </div>
         <div className={styles.roomDescription}>
           <div>

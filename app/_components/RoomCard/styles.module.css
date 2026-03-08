@@ -32,3 +32,67 @@
   color: #333;
   line-height: 1.8;
 }
+
+/* Hide the default arrow */
+.details summary {
+  list-style: none;
+}
+
+.details summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Clamp to 5 lines when collapsed */
+.descriptionClamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+}
+
+.viewMore {
+  display: inline-block;
+  margin-top: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #3b82f6;
+  font-weight: 500;
+}
+
+.viewMore:hover {
+  text-decoration: underline;
+}
+
+/* Hide full description by default */
+.fullDescription {
+  display: none;
+  margin-top: 4px;
+}
+
+/* When open, hide the clamped version and show full */
+.details[open] .descriptionClamp {
+  display: none;
+}
+
+.details[open] .fullDescription {
+  display: block;
+}
+
+/* Change button text when open */
+.details[open] .viewMore::after {
+  content: "View less";
+}
+
+.viewMore::after {
+  content: "View more";
+}
+
+.viewMore {
+  font-size: 0;
+  /* hide the span's own text, show only ::after */
+}
+
+.viewMore::after {
+  font-size: 0.85rem;
+}

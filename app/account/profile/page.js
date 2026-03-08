@@ -3,7 +3,7 @@ import Heading from "@/app/_ui/Heading";
 import ProfileForm from "./_components/ProfileForm";
 import { auth } from "@/auth";
 import {
-  getGuestById,
+  getGuestByIdDirect,
   updateGuest,
   updateGuestWithPwd,
 } from "@/app/_lib/supabase/guests";
@@ -21,7 +21,7 @@ async function Profile() {
   const session = await auth();
   if (!session?.user?.email) redirect("/signin");
 
-  const user = await getGuestById(session?.user.id);
+  const user = await getGuestByIdDirect(session?.user.id);
   const supabaseAccessToken = session?.supabaseAccessToken;
 
   if (!user) redirect("/signin");

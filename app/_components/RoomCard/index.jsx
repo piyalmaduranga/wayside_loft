@@ -8,13 +8,19 @@ function RoomCard({ room }) {
   return (
     <Card>
       <Card.Thumbnail>
-        <Image fill src={`${SUPABASE_ROOMS_URL}/${room.thumbnail}`} alt="" />
+        <Image fill src={room.thumbnail?.startsWith("https") ? room.thumbnail : `${SUPABASE_ROOMS_URL}/${room.thumbnail}`} unoptimized={room.thumbnail?.startsWith("http")} alt="" />
       </Card.Thumbnail>
 
       <Card.Description className={styles.roomDescription}>
         <h2>{room.name}</h2>
 
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia voluptates amet atque.</p>
+        <details className={styles.details}>
+          <summary className={styles.summary}>
+            <p className={styles.descriptionClamp}>{room.description}</p>
+            <span className={styles.viewMore}>View more</span>
+          </summary>
+          <p className={styles.fullDescription}>{room.description}</p>
+        </details>
       </Card.Description>
     </Card>
   );

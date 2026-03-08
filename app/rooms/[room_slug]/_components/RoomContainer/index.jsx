@@ -16,15 +16,16 @@ const SUPABASE_ROOMS_URL = process.env.NEXT_PUBLIC_SUPABASE_IMGS_URL;
 
 async function RoomContainer({ params }) {
   const room_slug = params?.room_slug;
+  console.log({ room_slug });
 
-  if (!room_slug || !/^-?\d+$/.test(room_slug)) notFound();
+  if (!room_slug) notFound();
 
   const room = await getRoomById(room_slug);
 
   const room_images = await getRoomImages(room_slug ?? []);
 
   const images = room_images.map(
-    (item) => `${SUPABASE_ROOMS_URL}/${item.img_path}`
+    (item) => item.img_path?.startsWith("https") ? item.img_path : `${SUPABASE_ROOMS_URL}/${item.img_path}`
   );
 
   if (!room) notFound();

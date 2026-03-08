@@ -42,7 +42,7 @@ function ReservationCard({ reservation }) {
   return (
     <article className={styles.reservationItem}>
       <div className={styles.reservationThumbnail}>
-        <Image fill src={`${SUPABASE_ROOMS_URL}/${reservation.rooms.thumbnail}`} />
+        <Image fill src={reservation.rooms.thumbnail?.startsWith("https") ? reservation.rooms.thumbnail : `${SUPABASE_ROOMS_URL}/${reservation.rooms.thumbnail}`} unoptimized={reservation.rooms.thumbnail?.startsWith("http")} />
       </div>
 
       <div className={styles.reservationInfos}>
@@ -75,8 +75,8 @@ function ReservationCard({ reservation }) {
               reservation.status == "unconfirmed"
                 ? "warning"
                 : reservation.status == "canceled" || reservation.status == "finished"
-                ? "danger"
-                : "success"
+                  ? "danger"
+                  : "success"
             }
           >
             {reservation.status}

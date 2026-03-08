@@ -30,7 +30,7 @@ function Slider({ height = "calc(100vh - 64px)", imgPriority = false, images, ch
       <div className="slideshow">
         {images.map((item, index) => (
           <div key={index} className={`slide ${active === index + 1 ? "active" : ""}`}>
-            <Image priority={imgPriority} fill src={item} alt="slider image" />
+            <Image priority={imgPriority} fill src={item} unoptimized={item?.startsWith?.("https")} alt="slider image" />
           </div>
         ))}
       </div>

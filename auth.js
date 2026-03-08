@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { createGuest, getGuestByEmail } from "./app/_lib/supabase/guests";
+import { createGuest, getGuestByEmail, getGuestByEmailDirect } from "./app/_lib/supabase/guests";
 import { credentials } from "./app/_lib/authjs/credentialsCallback";
 import Google from "next-auth/providers/google";
 import Facebook from "next-auth/providers/facebook";
@@ -52,7 +52,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (!user.email) return false;
 
       try {
-        const guest = await getGuestByEmail(user.email);
+        const guest = await getGuestByEmailDirect(user.email);
         if (guest) {
           return true;
         }
@@ -71,7 +71,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
 
     async session({ session, token, user }) {
-      const currentGuest = await getGuestByEmail(
+      const currentGuest = await getGuestByEmailDirect(
         session.user ? session.user.email : token.email
       );
 
@@ -84,8 +84,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (signingSecret) {
         const payload = {
           exp: Math.floor(new Date(session.expires).getTime() / 1000),
-          name: currentGuest.name,
-          sub: currentGuest.name,
+          name: currentGuest.fullname,
+          sub: currentGuest.id, // Supabase expects 'sub' to be the user ID
           email: currentGuest.email,
           aud: "authenticated",
           role: "authenticated",

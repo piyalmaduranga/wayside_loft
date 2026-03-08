@@ -8,9 +8,9 @@ function Footer() {
         <div>
           <h3>Contact Us</h3>
           <ul>
-            <li>email@gmail.com</li>
-            <li>+212 6 77 88 99 00</li>
-            <li>XYZ Street Agadir</li>
+            <li>piyaluom@gmail.com</li>
+            <li>+94760087674</li>
+            <li>Wayside Loft, Yatipila Road, Mirissa</li>
             <li className={styles.icons}></li>
           </ul>
         </div>
@@ -39,7 +39,7 @@ function Footer() {
         <div>
           <h3>Subscribe To Our Newsletter</h3>
           <li className={styles.newsletter}>
-            <input type="text" placeholder="example@mail.com" />
+            <input type="text" placeholder="piyaluom@gmail.com" />
             <button>SUBMIT</button>
           </li>
         </div>

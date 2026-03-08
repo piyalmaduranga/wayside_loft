@@ -12,7 +12,7 @@ async function Rooms() {
       <div className="container">
         <Heading className="text-center">Our Rooms</Heading>
         <p className="text-center">
-          Lorem Ipsum is available, but the majority have suffered
+          Discover our range of comfortable and stylish rooms, designed to make your stay truly memorable.
         </p>
         <div className={styles.roomsGrid}>
           {rooms.map((item, index) => (

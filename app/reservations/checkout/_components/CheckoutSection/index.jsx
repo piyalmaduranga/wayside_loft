@@ -3,17 +3,26 @@ import CheckoutOverview from "../CheckoutOverview";
 import styles from "./styles.module.css";
 import { cookies, headers } from "next/headers";
 import { getRoomById } from "@/app/_lib/supabase/rooms";
-import { getGuestById, updateGuest } from "@/app/_lib/supabase/guests";
+import {
+  getGuestByIdDirect,
+  updateGuest,
+  updateGuestDirect,
+} from "@/app/_lib/supabase/guests";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { reservationSchema } from "@/app/_lib/zodSchemas";
-import { createNewReservation } from "@/app/_lib/supabase/reservations";
+import {
+  createNewReservation,
+  createNewReservationDirect,
+} from "@/app/_lib/supabase/reservations";
 import { bookingCancelAction } from "@/app/_lib/actions";
 import SelectCountry from "@/app/_ui/SelectCountry";
 import { revalidatePath } from "next/cache";
-import { loadStripe } from "@stripe/stripe-js";
-import axios from "axios";
-// import { NextResponse } from "next/server";
+import { format } from "date-fns";
+import { sendBookingConfirmationEmail } from "@/app/_lib/mailer";
+import { bookingTotalPrice } from "@/app/utils/reservationsCalcs";
+// import { loadStripe } from "@stripe/stripe-js"; // Stripe disabled — Pay on Arrival
+// import axios from "axios";
 
 async function CheckoutSection() {
   const session = await auth();
@@ -29,7 +38,7 @@ async function CheckoutSection() {
 
   const [room, guest] = await Promise.all([
     getRoomById(pending_reservation.room_id),
-    getGuestById(session.user?.id),
+    getGuestByIdDirect(session.user?.id),
   ]);
 
   if (!room) notFound();
@@ -77,8 +86,8 @@ async function CheckoutSection() {
     try {
       const session = await auth();
 
-      await updateGuest(
-        session?.supabaseAccessToken,
+      // Update the guest profile
+      await updateGuestDirect(
         guest.id,
         fullname,
         nationality,
@@ -88,40 +97,51 @@ async function CheckoutSection() {
         nationalID
       );
 
-      pending_reservation.message = message;
-      cookies().set(
-        "pending_reservation",
-        JSON.stringify(pending_reservation),
-        {
-          maxAge: 60 * 60 * 2,
-          httpOnly: true,
-        }
-      );
+      // Create the reservation directly (no Stripe — Pay on Arrival)
+      const newReservations = await createNewReservationDirect({
+        room_id: pending_reservation.room_id,
+        guest_id: guest.id,
+        guests_count: pending_reservation.guests_count,
+        message,
+        reserved_price: total_price,
+        start_date: pending_reservation.start_date,
+        end_date: pending_reservation.end_date,
+        stripe_session_id: null,
+        status: "confirmed",
+      });
 
-      const stripe = await loadStripe(
-        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-      );
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/stripe`,
-        { pending_reservation },
-        {
-          headers: { Authorization: `Bearer ${session?.supabaseAccessToken}` },
-        }
-      );
-      // console.log({ STRIPE: response.data, KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY });
-      // redirect(response.checkout_url); // CANNOT BE USED WITH TRY BLOCK
-      flagError.payload = response.data?.checkout_url;
-      // console.log({ flagError, response });
+      const newReservation = newReservations?.[0];
+
+      // Send confirmation email
+      try {
+        await sendBookingConfirmationEmail({
+          guestName: fullname,
+          guestEmail: email,
+          roomName: room.name,
+          checkIn: format(new Date(pending_reservation.start_date), "MMMM dd, yyyy"),
+          checkOut: format(new Date(pending_reservation.end_date), "MMMM dd, yyyy"),
+          guests: pending_reservation.guests_count,
+          totalPrice: total_price,
+          bookingId: newReservation?.id ?? "N/A",
+        });
+      } catch (emailErr) {
+        console.error("[mailer] Booking email failed:", emailErr.message);
+        // Don't block the booking flow if email fails
+      }
+
+      // Clear the pending reservation cookie
+      cookies().delete("pending_reservation");
+      revalidatePath("/account/history");
+
+      flagError.payload = `/payment/success?session_id=${newReservation?.id}`;
     } catch (err) {
       flagError.error = true;
-      console.log("CHECKOUT COOKIE ERROR");
-      console.log(err);
+      console.error("Booking creation error:", err);
       return { ...prevState, criticalErr: "Failed to confirm your booking!" };
     } finally {
       revalidatePath("/account/history");
       // TODO: PREVENT REDIRECTING WHEN AN UNHANDLED ERROR OCCURS
       if (!flagError.error && flagError.payload) {
-        console.log({ URL: flagError.payload });
         redirect(flagError.payload);
       }
     }
