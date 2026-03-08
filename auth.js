@@ -4,7 +4,6 @@ import { createGuest, getGuestByEmail, getGuestByEmailDirect } from "./app/_lib/
 import { credentials } from "./app/_lib/authjs/credentialsCallback";
 import Google from "next-auth/providers/google";
 import Facebook from "next-auth/providers/facebook";
-import { SupabaseAdapter } from "@auth/supabase-adapter";
 import jwt from "jsonwebtoken";
 import { encode, decode } from "next-auth/jwt";
 
@@ -14,10 +13,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/signin",
   },
   jwt: { decode, encode },
-  adapter: SupabaseAdapter({
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
-    secret: process.env.SUPABASE_SERVICE_ROLE_KEY ?? "",
-  }),
   providers: [
     Credentials(credentials),
     Google({
