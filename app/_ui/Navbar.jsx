@@ -6,6 +6,7 @@ import fa_styles from "@fortawesome/fontawesome-svg-core/styles.css";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import GuestDropdown from "./GuestDropdown/GuestDropdown";
+import Image from "next/image";
 
 function Navbar({ user, signOutAction }) {
   const [hideMenu, setHideMenu] = useState(true);
@@ -13,7 +14,16 @@ function Navbar({ user, signOutAction }) {
   return (
     <header>
       <div className="container header-items">
-        <h2>LOGO</h2>
+        <Link href="/" className="logo-container" onClick={() => setHideMenu(true)}>
+          <Image
+            src="/logo-wayside-loft.png"
+            alt="Wayside Loft Logo"
+            width={220}
+            height={60}
+            style={{ width: "100%", height: "auto", objectFit: "contain" }}
+            priority
+          />
+        </Link>
         <nav className={`navbar ${hideMenu ? "hide-menu" : "show-menu"}`}>
           <ul>
             <li>

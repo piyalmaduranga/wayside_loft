@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+export const subscriberSchema = z.object({
+  email: z.string().email("invalid email format."),
+});
+
 export const profileSchema = z.object({
   fullname: z
     .string()

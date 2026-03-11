@@ -1,6 +1,6 @@
 "use server";
 import { auth, signIn, signOut } from "@/auth";
-import { contactSchema, signInSchema, signupSchema } from "./zodSchemas";
+import { contactSchema, signInSchema, signupSchema, subscriberSchema } from "./zodSchemas";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { areIntervalsOverlapping, isBefore, isValid, format } from "date-fns";
@@ -22,7 +22,9 @@ import {
   sendContactEmail,
   sendBookingUpdateEmail,
   sendBookingCancellationEmail,
+  sendNewsletterWelcomeEmail,
 } from "./mailer";
+import { getRiskySupabaseClient } from "./supabase/supabaseRiskyClient";
 
 export async function authAction(prevState, formData) {
   // await new Promise((res) => setTimeout(res, 500));
@@ -305,4 +307,49 @@ export async function contactAction(state, formData) {
   }
 
   return { ...currentState, isSuccess: true, errors: {} };
+}
+
+export async function subscribeAction(prevState, formData) {
+  "use server";
+
+  const email = formData.get("email");
+
+  const validation = subscriberSchema.safeParse({ email });
+  if (!validation.success) {
+    return { success: false, message: "Please provide a valid email address." };
+  }
+
+  try {
+    const supabase = await getRiskySupabaseClient();
+
+    // Attempt to insert the subscriber
+    const { error } = await supabase
+      .from("subscribers")
+      .insert([{ email }]);
+
+    if (error) {
+      if (error.code === '23505') { // Unique constraint violation (already subscribed)
+        return { success: false, message: "You are already subscribed!" };
+      }
+      if (error.code === '42P01') {
+        // Table does not exist - handle gracefully so user doesn't crash completely
+        console.error("Subscribers table does not exist yet. Please create it in Supabase.");
+        return { success: true, message: "Subscribed successfully! (DB setup pending)" };
+      }
+      console.error("Supabase insert error:", error);
+      return { success: false, message: "An error occurred. Please try again later." };
+    }
+
+    // Send Welcome Email
+    try {
+      await sendNewsletterWelcomeEmail(email);
+    } catch (emailErr) {
+      console.error("Newsletter email failed to send:", emailErr);
+    }
+
+    return { success: true, message: "Successfully subscribed!" };
+  } catch (err) {
+    console.error("Subscription error:", err);
+    return { success: false, message: "An unexpected error occurred." };
+  }
 }

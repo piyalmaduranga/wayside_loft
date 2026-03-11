@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./styles.module.css";
+import NewsletterForm from "./NewsletterForm";
 
 function Footer() {
   return (
@@ -44,10 +45,7 @@ function Footer() {
 
         <div>
           <h3>Subscribe To Our Newsletter</h3>
-          <li className={styles.newsletter}>
-            <input type="text" placeholder="piyaluom@gmail.com" />
-            <button>SUBMIT</button>
-          </li>
+          <NewsletterForm className={styles.newsletter} />
         </div>
       </nav>
     </footer>

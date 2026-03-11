@@ -14,7 +14,7 @@ function HeroSection({ bookingSearchAction }) {
           <BookingForm bookingSearchAction={bookingSearchAction} />
         </div>
         <div className={styles.heroTitle}>
-          <h1>Wayside Loft: Your Boutique Guest House in Mirissa</h1>
+          <h1>Wayside Loft Mirissa</h1>
           <p>Experience a Serene Escape and Productive Remote Work Environment</p>
           <p>Book Now, Pay On Arrival</p>
           <div className={styles.heroCTA}>

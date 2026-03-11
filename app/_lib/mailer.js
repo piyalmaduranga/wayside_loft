@@ -285,3 +285,37 @@ export async function sendBookingCancellationEmail({
         html,
     });
 }
+
+/**
+ * Sends a welcome email to new newsletter subscribers.
+ */
+export async function sendNewsletterWelcomeEmail(email) {
+    const transporter = createTransporter();
+
+    const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 8px;">
+      <h2 style="color: #1a1a2e; border-bottom: 2px solid #5a78af; padding-bottom: 10px; margin-top: 0;">
+        Welcome to Wayside Loft! 🌴
+      </h2>
+      <p style="color: #444;">Hi there,</p>
+      <p style="color: #444;">Thank you for subscribing to the Wayside Loft newsletter. We're thrilled to have you with us!</p>
+      <p style="color: #444;">You'll be the first to know about our special offers, new rooms, and the best travel tips for Mirissa.</p>
+
+      <div style="background: #e8f0fe; border-left: 4px solid #5a78af; padding: 12px 16px; border-radius: 4px; margin: 20px 0;">
+        <p style="margin: 0; color: #2b4a83; font-weight: bold;">Ready to visit?</p>
+        <p style="margin: 4px 0 0; color: #2b4a83; font-size: 13px;">Check our website for availability and book your stay.</p>
+      </div>
+
+      <p style="color: #888; font-size: 12px; margin-top: 24px;">
+        The Wayside Loft Team
+      </p>
+    </div>
+  `;
+
+    await transporter.sendMail({
+        from: `"Wayside Loft" <${process.env.SMTP_USER}>`,
+        to: email,
+        subject: `Welcome to Wayside Loft Newsletter!`,
+        html,
+    });
+}
