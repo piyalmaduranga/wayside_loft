@@ -13,7 +13,12 @@ async function Gallery() {
         <div className={styles.galleryGrid}>
           {rooms.map((item) => (
             <div key={item.id} className={styles.thumbnail}>
-              <Image fill src={item.thumbnail?.startsWith("https") ? item.thumbnail : `${SUPABASE_ROOMS_URL}/${item.thumbnail}`} unoptimized={item.thumbnail?.startsWith("http")} alt="" />
+              <Image
+                fill
+                src={item.thumbnail?.startsWith("https") ? item.thumbnail : `${SUPABASE_ROOMS_URL}/${item.thumbnail}`}
+                unoptimized={item.thumbnail?.startsWith("http")}
+                alt={`${item.name} - Accommodation in Mirissa`}
+              />
             </div>
           ))}
         </div>

@@ -10,8 +10,9 @@ import { redirect } from "next/navigation";
 import ContactSection from "./_components/ContactSection";
 
 export const metadata = {
-  title: "Hotel Booking App",
-  description: "Hotel Booking App built with NextJS",
+  title: "Home | Wayside Loft Mirissa - Best Boutique Stay in Sri Lanka",
+  description:
+    "Book your stay at Wayside Loft, the premier boutique guest house in Mirissa. Perfect for digital nomads, couples, and whale watching enthusiasts. Comfortable rooms and remote-work friendly.",
 };
 
 export default async function Home() {

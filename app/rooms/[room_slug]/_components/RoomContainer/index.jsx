@@ -75,7 +75,7 @@ async function RoomContainer({ params }) {
       <Features room={room} />
       <RoomSlider images={images} />
       <RoomBookingForm bookingAction={bookingAction} room={room} />
-      <RoomDescription />
+      <RoomDescription room={room} />
       <Facilities />
       <BookingPolicy />
     </>

@@ -7,8 +7,9 @@ import { Suspense } from "react";
 import Loader from "../_ui/Loader";
 
 export const metadata = {
-  title: "Rooms",
-  description: "Discover and book a room at the Hotel Booking App ",
+  title: "Accommodation | Find Your Perfect Room in Mirissa",
+  description:
+    "Explore our comfortable and affordable rooms in Mirissa. Whether you're a couple or a solo traveler, book your ideal accommodation at Wayside Loft.",
 };
 
 function Rooms({ searchParams }) {

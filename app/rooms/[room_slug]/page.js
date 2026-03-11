@@ -2,10 +2,22 @@ import { Suspense } from "react";
 import RoomContainer from "./_components/RoomContainer";
 import LoadingSpinner from "@/app/_ui/LoadingSpinner";
 
-export const metadata = {
-  title: "Room Details",
-  description: "Discover and book a room at the Hotel Booking App ",
-};
+import { getRoomById } from "@/app/_lib/supabase/rooms";
+
+export async function generateMetadata({ params }) {
+  const room = await getRoomById(params.room_slug);
+
+  if (!room) {
+    return {
+      title: "Room Not Found",
+    };
+  }
+
+  return {
+    title: `${room.name} | Wayside Loft Mirissa`,
+    description: `Book the ${room.name} at Wayside Loft in Mirissa. Our ${room.capacity}-person room is perfect for couples and remote workers. Experience the best accommodation in Mirissa.`,
+  };
+}
 
 function RoomDetails({ params }) {
   return (

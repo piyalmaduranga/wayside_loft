@@ -10,9 +10,10 @@ async function Rooms() {
   return (
     <section className={styles.roomsSection}>
       <div className="container">
-        <Heading className="text-center">Our Rooms</Heading>
+        <Heading className="text-center">Luxurious Rooms in Mirissa</Heading>
         <p className="text-center">
-          Discover our range of comfortable and stylish rooms, designed to make your stay truly memorable.
+          Discover our range of <strong>comfortable rooms</strong> and <strong>stylish accommodation</strong> in Mirissa,
+          designed to make your stay truly memorable, whether for a <strong>couple</strong>'s retreat or <strong>remote work</strong>.
         </p>
         <div className={styles.roomsGrid}>
           {rooms.map((item, index) => (
