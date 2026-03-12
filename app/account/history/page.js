@@ -22,19 +22,23 @@ async function History() {
   }
 
   return (
-    <>
+    <section className={styles.historySection}>
       <Heading textClassName={styles.heading}>Your History</Heading>
-      <div>
+      <div className="container">
         {reservations.length ? (
-          reservations.reverse().map((item) => <ReservationCard key={item.id} reservation={item} />)
+          <div className={styles.reservationsGrid}>
+            {reservations.reverse().map((item) => (
+              <ReservationCard key={item.id} reservation={item} />
+            ))}
+          </div>
         ) : (
-          <div>
+          <div className={styles.emptyMessage}>
             <p>You have no booked room.</p>
-            <Link href={"/rooms"}>View Rooms</Link>
+            <Link href="/rooms">View Rooms</Link>
           </div>
         )}
       </div>
-    </>
+    </section>
   );
 }
 

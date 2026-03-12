@@ -30,12 +30,13 @@
 }
 
 .overviewButton {
-  background-color: #333;
+  background-color: var(--color-accent);
   color: #fff;
   transition: all 150ms linear;
   padding: 12px;
+  border-radius: var(--radius-md);
 }
 
 .overviewButton:hover {
-  background-color: #161616;
+  background-color: var(--color-accent-strong);
 }

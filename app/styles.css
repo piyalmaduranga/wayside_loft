@@ -83,6 +83,21 @@ header .header-items {
   align-items: center;
 }
 
+.logo-container {
+  max-width: 220px;
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.logo-container img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
 
 
 header nav ul {
@@ -302,8 +317,106 @@ div.slider nav.slider-menu button.active {
   .roomsForm .styles_input__lVi_H {
     width: 100%;
   }
-
 }
+
+/* Advanced react-datepicker styling */
+.react-datepicker {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 15px 50px rgba(16, 24, 40, 0.15);
+  font-family: inherit;
+  z-index: 999999;
+}
+
+.react-datepicker__header {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-strong) 100%);
+  border-bottom: none;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 20px 0;
+}
+
+.react-datepicker__current-month {
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+
+.react-datepicker__navigation {
+  top: 18px;
+}
+
+.react-datepicker__navigation--previous,
+.react-datepicker__navigation--next {
+  width: 36px;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 150ms ease;
+}
+
+.react-datepicker__navigation--previous:hover,
+.react-datepicker__navigation--next:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.react-datepicker__day-names {
+  background-color: var(--color-surface-2);
+  padding: 14px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.react-datepicker__day-name {
+  color: var(--color-muted);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.react-datepicker__month {
+  margin: 0;
+  padding: 14px;
+}
+
+.react-datepicker__week {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.react-datepicker__day {
+  color: var(--color-text);
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: var(--radius-md);
+  transition: all 150ms ease;
+  font-weight: 500;
+}
+
+.react-datepicker__day:hover {
+  background-color: var(--color-surface-2);
+  cursor: pointer;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range {
+  background-color: var(--color-accent) !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.react-datepicker__day--disabled {
+  color: var(--color-border);
+  opacity: 0.4;
+}
+
 
 .modal-update-form .react-datepicker-wrapper, 
 .modal-update-form .styles_input__lVi_H .react-datepicker-ignore-onclickoutside, 
@@ -321,4 +434,27 @@ div.slider nav.slider-menu button.active {
   justify-content: center;
   flex-direction: column;
   gap: 6px;
+}
+
+/* global WhatsApp button */
+.whatsapp-global-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #25D366;
+  color: #fff;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  z-index: 100000;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.whatsapp-global-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }

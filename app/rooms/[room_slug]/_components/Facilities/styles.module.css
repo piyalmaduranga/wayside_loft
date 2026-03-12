@@ -1,38 +1,60 @@
 
-.facilitiesTable {
+.facilitiesSection {
+  margin: 60px 0;
+}
+
+.facilitiesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
   margin: 32px auto 0;
-  color: var(--color-text);
-  border-collapse: separate;
-  border-spacing: 0;
-  width: 100%;
   max-width: 820px;
+  color: var(--color-text);
+}
+
+@media (min-width: 768px) {
+  .facilitiesGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+}
+
+.facilityItem {
+  display: flex;
+  gap: 16px;
+  padding: 16px 20px;
   background-color: var(--color-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: all 150ms ease;
 }
 
-.facilitiesTable tr:nth-child(2n) {
-  background-color: var(--color-surface-2);
+.facilityItem:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 4px 16px rgba(186, 160, 108, 0.1);
 }
 
-.facilitiesTable tr:hover {
-  background-color: rgba(186, 160, 108, 0.06);
+.facilityContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
 }
 
-.facilitiesTable td {
+.facilityName {
   font-size: 16px;
-  padding: 12px 24px;
-  vertical-align: top;
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-text);
 }
 
-.facilitiesTable td:not(:last-of-type) {
-  border-right: 1px solid var(--color-border);
+.facilityDesc {
+  font-size: 13px;
+  color: var(--color-muted);
+  margin: 0;
+  line-height: 1.4;
 }
 
-.facilitiesTable tr:not(:last-of-type) {
-  border-bottom: 1px solid var(--color-border);
-}
 
 .facilitiyIcon {
   color: var(--color-accent);

@@ -5,6 +5,8 @@ import styles from "./styles.css";
 
 import { Roboto } from "next/font/google";
 import { signOutAction } from "./_lib/actions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
 const roboto_font = Roboto({
   subsets: ["latin"],
@@ -128,6 +130,16 @@ export default async function RootLayout({ children }) {
       <body className={roboto_font.className}>
         <Navbar user={session?.user} signOutAction={signOutAction} />
         <main>{children}</main>
+        {/* global WhatsApp chat button */}
+        <a
+          href="https://wa.me/+94760087674"
+          className="whatsapp-global-button"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat on WhatsApp"
+        >
+          <FontAwesomeIcon icon={faWhatsapp} />
+        </a>
         <Footer />
       </body>
     </html>

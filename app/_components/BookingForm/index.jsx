@@ -38,36 +38,38 @@ function BookingForm({ bookingSearchAction, children }) {
   return (
     <form action={handleSearch} className={styles.bookingForm}>
       <h1 className={styles.formHeading}>BOOK A ROOM ONLINE</h1>
-      <div className={styles.formControl}>
-        <label htmlFor="" className={styles.formLabel}>
-          Arrival
-        </label>
-        <DatePicker
-          selected={startDate}
-          onChange={(date) => handleStartSelection(date)}
-          selectsStart
-          startDate={startDate}
-          endDate={endDate}
-          className={styles.input}
-          dateFormat={"dd/MM/yyyy"}
-          excludeDateIntervals={[{ start: new Date("01/01/1970"), end: new Date() }]}
-        />
-      </div>
-      <div className={styles.formControl}>
-        <label htmlFor="" className={styles.formLabel}>
-          Departure
-        </label>
-        <DatePicker
-          selected={endDate}
-          onChange={(date) => handleEndSelection(date)}
-          selectsEnd
-          startDate={startDate}
-          endDate={endDate}
-          minDate={startDate}
-          className={styles.input}
-          dateFormat={"dd/MM/yyyy"}
-          excludeDateIntervals={[{ start: new Date("01/01/1970"), end: new Date() }]}
-        />
+      <div className={styles.dateInputsWrapper}>
+        <div className={styles.formControl}>
+          <label htmlFor="" className={styles.formLabel}>
+            Arrival
+          </label>
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => handleStartSelection(date)}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+            className={styles.input}
+            dateFormat={"dd/MM/yyyy"}
+            excludeDateIntervals={[{ start: new Date("01/01/1970"), end: new Date() }]}
+          />
+        </div>
+        <div className={styles.formControl}>
+          <label htmlFor="" className={styles.formLabel}>
+            Departure
+          </label>
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => handleEndSelection(date)}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            minDate={startDate}
+            className={styles.input}
+            dateFormat={"dd/MM/yyyy"}
+            excludeDateIntervals={[{ start: new Date("01/01/1970"), end: new Date() }]}
+          />
+        </div>
       </div>
 
       <div className={styles.actions}>

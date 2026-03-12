@@ -4,7 +4,7 @@
 
 .overviewDescription, .cancelView {
   padding: 12px;
-  border: 1px solid #dedede;
+  border: 1px solid var(--color-border);
 }
 
 
@@ -24,7 +24,7 @@
   font-size: 18px;
   padding: 6px 0px;
   font-weight: 500;
-  border-bottom: 1px solid #dedede;
+  border-bottom: 1px solid var(--color-border);
   margin-bottom: 4px;
 }
 
@@ -37,7 +37,7 @@
 
 
 .bookingSummary p span:first-of-type {
-  color: #656a70;
+  color: var(--color-muted);
 }
 
 .bookingSummary p span:last-of-type {
@@ -58,20 +58,23 @@
   width: 100%;
   font-size: 18px;
   outline: none;
-  text-align: center;
   color: #fff;
   transition: all 150ms linear;
   cursor: pointer;
   width: 100% !important;
-  
+  border-radius: var(--radius-md);
 }
 
 .editButton, .backButton {
-  background-color: #131313;
+  background-color: var(--color-text);
 }
 
 .deleteButton, .cancelButton, .confirmationButton {
-  background-color: #dc143c;
+  background-color: var(--color-accent);
+}
+
+.actionsContainer button:hover {
+  background-color: var(--color-accent-strong);
 }
 
 .editLink {
@@ -83,6 +86,7 @@
   background-color: #292929;
   text-decoration: none;
   transition: all 150ms linear;
+  border-radius: var(--radius-md);
 }
 
 .editLink, .actionsContainer button {

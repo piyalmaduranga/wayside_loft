@@ -97,4 +97,6 @@
 
 .deleteButton {
   background-color: #dc143c;
+  border-radius: var(--radius-md);
 }
+

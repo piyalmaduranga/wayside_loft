@@ -2,3 +2,21 @@
   font-size: 22px !important;
 }
 
+/* section padding similar to other home sections */
+.historySection {
+  padding: 0px 0;
+}
+
+/* grid container for reservation cards */
+.reservationsGrid {
+  display: grid;
+  gap: 10px; /* tighter spacing between cards */
+  grid-template-columns: 1fr; /* single column list */
+  margin-top: 10px;
+}
+
+.emptyMessage {
+  text-align: center;
+  margin-top: 10px;
+}
+

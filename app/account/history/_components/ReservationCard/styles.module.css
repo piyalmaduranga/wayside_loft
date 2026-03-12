@@ -1,8 +1,27 @@
 .reservationItem {
-  width: 100%;
-  box-shadow: 2px 2px 8px 1px #DDD;
+  /* container class applied to outer Card; Card already provides surface, border, and shadow */
   margin-bottom: 20px;
 }
+
+/* thumbnail override to stretch to match card height */
+.reservationThumbnail {
+  aspect-ratio: auto !important;
+  height: 100%;
+  overflow: hidden;
+}
+
+@media (min-width: 780px) {
+  .reservationItem {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    align-items: stretch;
+    /* height will be determined by content, image will stretch via reservationThumbnail */
+  }
+  .reservationThumbnail {
+    width: 180px; /* fixed column width on large screens */
+  }
+}
+
 
 .reservationTitle {
   display: flex;
@@ -40,21 +59,10 @@
   }
 }
 
-.reservationThumbnail {
-  overflow: hidden;
-  position: relative;
-  aspect-ratio: 4/3;
-  width: 100%;
-  height: fit-content;
-}
 
-.reservationThumbnail img {
-  width: 100%;
-  aspect-ratio: 4/3;
-}
 
 .reservationInfos {
-  padding: 12px 16px;
+  padding: 24px 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -68,10 +76,6 @@
   }
 }
 
-.price {
-  color: #dc143c;
-  font-weight: 600;
-}
 
 
 .reservationOverview {
@@ -86,7 +90,13 @@
 }
 
 .reservationOverview p {
-  color: #656a70;
+  color: var(--color-muted);
+}
+
+.price {
+  /* use accent color for price display */
+  color: var(--color-accent);
+  font-weight: 600;
 }
 
 .reservationPriceContainer {

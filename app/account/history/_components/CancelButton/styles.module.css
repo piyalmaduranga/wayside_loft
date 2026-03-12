@@ -8,6 +8,7 @@
   border: none;
   cursor: pointer;
   transition: all 150ms linear;
+  border-radius: var(--radius-md);
 }
 
 .deleteButton:not(:disabled):hover {

@@ -10,7 +10,8 @@
 .Card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  border-color: rgba(186, 160, 108, 0.35);
+  /* use neutral border on hover instead of accent to keep cards elegant */
+  border-color: var(--color-border);
 }
 
 
@@ -26,6 +27,8 @@
 
 .thumbnailContainer img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
   /* aspect-ratio: 4/3; */
   transition: all 300ms linear;
 }

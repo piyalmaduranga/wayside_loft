@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "./styles.module.css";
+import Card from "@/app/_components/Card/Card";
 
 import Badge from "@/app/_ui/Badge";
 import { auth } from "@/auth";
@@ -40,12 +41,20 @@ function ReservationCard({ reservation }) {
   const departureDate = formatToAbrFormat(reservation.end_date);
 
   return (
-    <article className={styles.reservationItem}>
-      <div className={styles.reservationThumbnail}>
-        <Image fill src={reservation.rooms.thumbnail?.startsWith("https") ? reservation.rooms.thumbnail : `${SUPABASE_ROOMS_URL}/${reservation.rooms.thumbnail}`} unoptimized={reservation.rooms.thumbnail?.startsWith("http")} />
-      </div>
+    <Card className={styles.reservationItem}>
+      <Card.Thumbnail className={styles.reservationThumbnail}>
+        <Image
+          fill
+          src={
+            reservation.rooms.thumbnail?.startsWith("https")
+              ? reservation.rooms.thumbnail
+              : `${SUPABASE_ROOMS_URL}/${reservation.rooms.thumbnail}`
+          }
+          unoptimized={reservation.rooms.thumbnail?.startsWith("http")}
+        />
+      </Card.Thumbnail>
 
-      <div className={styles.reservationInfos}>
+      <Card.Description className={styles.reservationInfos}>
         <div className={styles.reservationOverview}>
           <h2 className={styles.reservationTitle}>
             <span>{reservation.rooms.name}</span>
@@ -91,11 +100,9 @@ function ReservationCard({ reservation }) {
             reservation={reservation}
             reservationCancelAction={reservationCancelAction}
           />
-
-          {/* <DeleteForm deleteAction={deleteReservationAction} /> */}
         </div>
-      </div>
-    </article>
+      </Card.Description>
+    </Card>
   );
 }
 

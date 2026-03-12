@@ -22,8 +22,8 @@
 }
 
 .accountSidebar {
-  /* background-color: #ddd; */
-  background-color: #252525;
+  /* use neutral surface color for sidebar, keeping it light */
+  background-color: var(--color-surface-2);
   padding: 20px 12px;
 }
 
@@ -67,9 +67,10 @@
   gap: 12px;
   width: 100%;
   padding: 8px 16px;
-  background-color: #1a1a1a;
-  color: #F1F1F1;
+  background-color: var(--color-accent);
+  color: #fff;
   transition: all 150ms linear;
+  border-radius: var(--radius-md);
 }
 
 @media (min-width: 780px) {
@@ -79,7 +80,7 @@
 }
 
 .sidebarLink:hover, .sidebarButton:hover {
-  background-color: #dc143c;
+  background-color: var(--color-accent-strong);
 }
 
 @media (min-width: 780px) {

@@ -53,41 +53,22 @@ const amenities = [
 ];
 
 function Facilities() {
-  // Split amenities into rows of 2 for the table
-  const rows = [];
-  for (let i = 0; i < amenities.length; i += 2) {
-    rows.push([amenities[i], amenities[i + 1]]);
-  }
 
   return (
-    <div>
+    <div className={styles.facilitiesSection}>
       <Heading className="text-center">Facilities</Heading>
       <hr className="decriptionDivider" />
-      <table className={styles.facilitiesTable}>
-        <tbody>
-          {rows.map((row, index) => (
-            <tr key={index}>
-              {row.map((item, itemIdx) => (
-                <td key={itemIdx}>
-                  {item ? (
-                    <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-                      <FontAwesomeIcon className={styles.facilitiyIcon} icon={item.icon} style={{ marginTop: '4px' }} />
-                      <div>
-                        <span style={{ fontWeight: '500' }}>{item.name}</span>
-                        {item.desc && (
-                          <div style={{ fontSize: '14px', color: '#666', marginTop: '2px' }}>
-                            {item.desc}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ) : null}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className={styles.facilitiesGrid}>
+        {amenities.map((item, index) => (
+          <div key={index} className={styles.facilityItem}>
+            <FontAwesomeIcon className={styles.facilitiyIcon} icon={item.icon} />
+            <div className={styles.facilityContent}>
+              <h3 className={styles.facilityName}>{item.name}</h3>
+              {item.desc && <p className={styles.facilityDesc}>{item.desc}</p>}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

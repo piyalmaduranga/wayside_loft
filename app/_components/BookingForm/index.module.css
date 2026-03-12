@@ -1,21 +1,26 @@
 .bookingForm {
   flex-direction: column;
   gap: 32px;
-  background-color: rgba(15, 23, 42, 0.86);
-  padding: 32px 24px ;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(20, 30, 50, 0.85) 100%);
+  padding: 40px 32px;
   border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.14);
-
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   flex-shrink: 0;
   flex-grow: 0;
   display: flex;
-  /* display: none; */
+  width: 100%;
+  max-width: 800px;
 }
 
-/* @media (min-width: 820px) {
+@media (min-width: 820px) {
   .bookingForm {
+    max-width: 900px;
+    padding: 48px 40px;
+    gap: 36px;
   }
-} */
+}
+
 
 .formHeading {
   color: #fff;
@@ -23,6 +28,20 @@
   font-size: 24px;
   text-align: center;
 }
+
+.dateInputsWrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 820px) {
+  .dateInputsWrapper {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+}
+
 
 .formControl {
   display: flex;
@@ -36,17 +55,30 @@
 }
 
 .input {
-  padding: 10px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(248, 250, 252, 0.65);
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(248, 250, 252, 0.4);
   outline: none;
-  background-color: rgba(15, 23, 42, 0.85);
+  background-color: rgba(15, 23, 42, 0.7);
   color: #f9fafb;
   color-scheme: dark;
   font-weight: 500;
   font-size: 16px;
   width: 100%;
+  transition: all 150ms ease;
 }
+
+.input:hover {
+  border-color: rgba(248, 250, 252, 0.65);
+  background-color: rgba(15, 23, 42, 0.8);
+}
+
+.input:focus {
+  border-color: var(--color-accent);
+  background-color: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 0 0 3px rgba(186, 160, 108, 0.15);
+}
+
 
 .actions {
   display: flex;
