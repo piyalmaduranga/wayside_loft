@@ -8,6 +8,7 @@ import { useFormState } from "react-dom";
 import CancelButton from "../CancelButton";
 import { useTransition } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import Image from "next/image";
 
 const initialState = {
   fullname: "",
@@ -75,7 +76,12 @@ function CheckoutForm({ guest, createReservationAction, bookingCancelAction, chi
         <label htmlFor="" className={styles.formLabel}>
           <span>Where are you from?</span>{" "}
           <span className={styles.countryFlag}>
-            <img src={guest.countryFlag} alt={`${guest.nationality ?? "country"} flag`} />
+            <Image
+              src={guest.countryFlag}
+              alt={`${guest.nationality ?? "country"} flag`}
+              width={24}
+              height={16}
+            />
           </span>
         </label>
         {children}

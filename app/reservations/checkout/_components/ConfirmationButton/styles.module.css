@@ -1,23 +1,23 @@
 .formButton {
   padding: 16px 48px;
-  border: none;
-  outline: none;
+  border-radius: 999px;
+  background-color: var(--color-accent);
   color: #fff;
-  background-color: #dc143c;
   font-size: 17px;
-  margin-bottom: 20px;
   display: inline-block;
   cursor: pointer;
   transition: all 150ms linear;
+  outline: none;
+  border: none;
+  font-weight: 600;
 }
 
-
 .formButton:not(:disabled):hover {
-  background-color: rgb(167, 10, 41);
+  background-color: var(--color-accent-strong);
 }
 
 .formButton:disabled {
-  background-color: rgb(240, 87, 118);
+  background-color: #c9c9c9;
   cursor: not-allowed;
 }
 
