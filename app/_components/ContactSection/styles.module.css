@@ -1,6 +1,6 @@
 .contactSection {
   padding: 60px 0px;
-  background-color: #fff;
+  background-color: var(--color-surface);
 }
 
 .heading {

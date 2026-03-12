@@ -1,9 +1,9 @@
 .heading {
-  text-align: center ;
-  margin: 20px 0px;
+  text-align: center;
+  margin: 24px 0px 32px;
   font-weight: 500;
   word-spacing: 1px;
-  font-size: 38px;
-  color: #161616;
+  font-size: 34px;
+  color: var(--color-text);
 }
 

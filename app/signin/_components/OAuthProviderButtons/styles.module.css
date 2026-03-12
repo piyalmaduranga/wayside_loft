@@ -11,14 +11,15 @@
   align-items: center;
   gap: 1.5rem; 
   font-size: 1.125rem; 
-  border: 1px solid #dedede;
-  background-color: transparent;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
   padding: 1rem 2.5rem;
   font-weight: 500;
+  border-radius: 999px;
 }
 
 .googleButton:hover {
-  background-color: #dedede;
+  background-color: var(--color-surface-2);
 }
 
 .googleButton {
@@ -40,15 +41,17 @@
   padding: 0.75rem 1.5rem;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.15s ease-out;
   font-size: 1.125rem; 
 
   padding: 1rem 2.5rem;
   font-weight: 500;
+  border-radius: 999px;
 }
 
 .facebookBtn:hover {
   background-color: #165dab;
+  transform: translateY(-1px);
 }
 
 .facebookIcon {
@@ -65,7 +68,7 @@
   display: flex;
   align-items: center;
   text-align: center;
-  color: #888; /* Adjust color as needed */
+  color: var(--color-muted);
   margin: 1rem 0;
   margin-bottom: 48px;
 }

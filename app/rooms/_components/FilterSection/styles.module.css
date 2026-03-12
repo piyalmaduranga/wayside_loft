@@ -4,6 +4,7 @@
   justify-content: space-between;
   padding: 20px 0px;
   gap: 12px;
+  row-gap: 16px;
 }
 
 
@@ -19,14 +20,14 @@
 }
 
 .input {
-  padding: 8px 12px;
-  border: 1px solid #cccccc;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
   outline: none;
-  background-color: transparent;
-  border-radius: 2px;
-  color-scheme: dark;
-  font-size: 17px;
-  color: #333333;
+  background-color: var(--color-surface);
+  border-radius: 999px;
+  color-scheme: light;
+  font-size: 16px;
+  color: var(--color-text);
 }
 
 
@@ -52,24 +53,26 @@
 
 .formControl label {
   font-weight: 600;
+  color: var(--color-text);
 }
 
 
 .searchButton {
-  padding: 8px 12px;
+  padding: 10px 18px;
   color: #fff;
-  background-color: #dc143c;
+  background-color: var(--color-accent);
   outline: none;
   border: none;
   cursor: pointer;
   transition: all 150ms linear;
   display: inline-block;
   width: 100%;
-  font-size: 17px;
+  font-size: 16px;
+  border-radius: 999px;
 }
 
 .searchButton:hover {
-  background-color: rgb(156, 16, 44);
+  background-color: var(--color-accent-strong);
 }
 
 @media (min-width: 590px) {

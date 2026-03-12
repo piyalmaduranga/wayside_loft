@@ -1,7 +1,10 @@
 
 .roomBookingForm {
-  box-shadow: 2px 2px 8px 6px #eee;
+  box-shadow: var(--shadow-md);
   width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: var(--color-surface);
 }
 
 @media(min-width: 1000px) {
@@ -21,7 +24,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  border-left: 1px solid #dedede;
+  border-left: 1px solid var(--color-border);
 }
 
 @media(min-width: 1000px) {
@@ -32,7 +35,7 @@
 }
 
 .formIcon {
-  color: rgb(168, 13, 44);
+  color: var(--color-accent);
   font-size: 16px;
 }
 
@@ -44,13 +47,13 @@
 
 
 .formControl label {
-  color: #181b20;
+  color: var(--color-text);
   font-size: 17px;
 }
 
 .formControl input, .formControl select {
-  color: #656a70;
-  font-size: 17px;
+  color: var(--color-muted);
+  font-size: 16px;
   width: 100%;
   padding: 4px 0px;
   border: none;

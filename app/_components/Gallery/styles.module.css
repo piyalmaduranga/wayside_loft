@@ -1,5 +1,5 @@
 .gallerySection {
-  background-color: #fff;
+  background-color: var(--color-surface);
   padding: 60px 0px;
 }
 
@@ -25,5 +25,5 @@
 }
 
 .thumbnail img:hover {
-  transform: scale(1.2);
+  transform: scale(1.06);
 }

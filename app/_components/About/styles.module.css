@@ -1,6 +1,6 @@
 .aboutSection {
   padding: 60px 0px;
-  background-color: #fff;
+  background-color: var(--color-surface);
 }
 
 @media(min-width: 720px) {
@@ -15,7 +15,7 @@
   text-align: justify;
   line-height: 1.8;
   font-size: 18px;
-  color: #333;
+  color: var(--color-muted);
 }
 
 .gallery {

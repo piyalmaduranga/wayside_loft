@@ -26,10 +26,11 @@
 
 .roomDescription h2 {
   margin-bottom: 12px;
+  letter-spacing: 0.2px;
 }
 
 .roomDescription p {
-  color: #333;
+  color: var(--color-muted);
   line-height: 1.8;
 }
 
@@ -56,8 +57,8 @@
   margin-top: 4px;
   cursor: pointer;
   font-size: 0.85rem;
-  color: #3b82f6;
-  font-weight: 500;
+  color: var(--color-accent-strong);
+  font-weight: 600;
 }
 
 .viewMore:hover {

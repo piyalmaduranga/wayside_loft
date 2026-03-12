@@ -13,7 +13,7 @@ async function Rooms() {
         <Heading className="text-center">Luxurious Rooms in Mirissa</Heading>
         <p className="text-center">
           Discover our range of <strong>comfortable rooms</strong> and <strong>stylish accommodation</strong> in Mirissa,
-          designed to make your stay truly memorable, whether for a <strong>couple</strong>'s retreat or <strong>remote work</strong>.
+          designed to make your stay truly memorable, whether for a <strong>couple</strong>&apos;s retreat or <strong>remote work</strong>.
         </p>
         <div className={styles.roomsGrid}>
           {rooms.map((item, index) => (

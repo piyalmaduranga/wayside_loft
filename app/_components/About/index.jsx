@@ -15,7 +15,7 @@ function About() {
             offering high-speed internet and quiet spaces for <strong>remote work</strong>.
           </p>
           <p>
-            Whether you're here as a <strong>couple</strong> seeking a romantic getaway or to experience the thrill of
+            Whether you&apos;re here as a <strong>couple</strong> seeking a romantic getaway or to experience the thrill of
             <strong>whale watching in Mirissa</strong>, our location and <strong>modern accommodation</strong> provide the
             perfect backdrop for your Sri Lankan adventure.
           </p>

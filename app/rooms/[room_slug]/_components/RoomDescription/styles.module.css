@@ -1,5 +1,6 @@
 .description {
-  padding: 40px 0px;
+  padding: 48px 0px 56px;
+  background-color: var(--color-surface);
 }
 
 .descriptionHeading {
@@ -13,10 +14,10 @@
   width: 100%;
   max-width: 800px;
   margin: auto;
-  color: #656a70;
-  text-align: justify;
-  font-size: 18px;
-  line-height: 1.8;
+  color: var(--color-muted);
+  text-align: left;
+  font-size: 17px;
+  line-height: 1.9;
 }
 
 .descriptionContent p:not(:last-of-type) {

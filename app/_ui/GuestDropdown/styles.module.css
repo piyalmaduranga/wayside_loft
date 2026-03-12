@@ -49,7 +49,7 @@
 }
 
 .dropdownItem:hover {
-  background-color: #f1f1f1;
+  background-color: var(--color-surface-2);
 }
 
 
@@ -74,5 +74,5 @@
 }
 
 .dropdownItem button:hover {
-  color: #dc143c;
+  color: var(--color-accent);
 }

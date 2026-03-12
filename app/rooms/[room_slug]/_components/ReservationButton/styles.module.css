@@ -1,6 +1,6 @@
 
 .formButton {
-  background-color: rgb(168, 13, 44);
+  background-color: var(--color-accent);
   color: #fff;
   border: none;
   outline: none;
@@ -13,10 +13,10 @@
 }
 
 .formButton:not(:disabled):hover {
-  background-color: rgb(128, 12, 35);
+  background-color: var(--color-accent-strong);
 }
 
 .formButton:disabled {
-  background-color: rgb(238, 11, 57);
+  background-color: #c9c9c9;
   cursor: not-allowed;
 }

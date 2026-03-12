@@ -1,6 +1,6 @@
 .roomsSection {
   padding: 60px 0px;
-  background-color: #F1F1F1;
+  background-color: var(--color-surface-2);
 }
 
 .roomsGrid {

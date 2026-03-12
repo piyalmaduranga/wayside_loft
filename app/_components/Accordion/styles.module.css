@@ -3,7 +3,8 @@
   flex-direction: column;
   gap: 6px;
   transition: all 300ms linear;
-  padding-bottom: 12px;
+  padding: 16px 0 12px;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .accordionControl {
@@ -17,24 +18,36 @@
   font-weight: 500;
   margin-bottom: 6px;
   user-select: none;
+  color: var(--color-text);
 }
 
 .toggleBtn {
   border-radius: 50%;
-  padding: 13px 16px;
-  background-color: #dc143c;
-  color: #fff;
-  border: none;
+  padding: 10px 12px;
+  background-color: rgba(186, 160, 108, 0.12);
+  color: var(--color-accent-strong);
+  border: 1px solid rgba(186, 160, 108, 0.5);
   outline: none;
   flex-grow: 0;
   flex-shrink: 0;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, transform 150ms ease;
+}
+
+.toggleBtn:hover {
+  background-color: rgba(186, 160, 108, 0.2);
+  border-color: rgba(186, 160, 108, 0.8);
+  transform: translateY(-1px);
 }
 
 .accordionContent {
-  padding-left: 57px 
+  padding-left: 57px;
 }
 
 .accordionContent p {
-  color: #656a70;
+  color: var(--color-muted);
+  line-height: 1.7;
 }
