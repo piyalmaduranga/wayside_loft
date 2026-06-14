@@ -20,6 +20,8 @@ function ContactSection() {
                 </span>
                 <h3 className="font-serif font-semibold text-ink text-base">Address</h3>
                 <p className="text-muted text-sm leading-relaxed">
+                  Wayside Loft, Yatipila Road
+                  <br />
                   Mirissa, Matara District
                   <br />
                   Southern Province, Sri Lanka
@@ -32,9 +34,9 @@ function ContactSection() {
                 </span>
                 <h3 className="font-serif font-semibold text-ink text-base">Phone</h3>
                 <p className="text-muted text-sm leading-relaxed">
-                  +94 77 123 4567
+                  +94 760087674
                   <br />
-                  +94 71 987 6543
+                  +94 711904563
                 </p>
               </div>
 
@@ -46,7 +48,7 @@ function ContactSection() {
                 <p className="text-muted text-sm leading-relaxed">
                   hello@waysideloft.com
                   <br />
-                  bookings@waysideloft.com
+                  piyaluom@gmail.com
                 </p>
               </div>
             </div>
