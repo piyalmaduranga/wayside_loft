@@ -75,9 +75,9 @@ function RoomCard({ room }) {
           {room.capacity} guests · {room.size || "32m²"}
         </p>
 
-        <p className="mt-1.5 text-sm">
-          <span className="font-semibold text-ink">${room.price}</span>
-          <span className="text-muted"> night</span>
+        <p className="mt-1.5 flex items-baseline gap-1">
+          <span className="text-lg font-bold text-[#C4A87A] font-sans">${room.price}</span>
+          <span className="text-muted text-xs">/ night</span>
         </p>
       </div>
     </Link>

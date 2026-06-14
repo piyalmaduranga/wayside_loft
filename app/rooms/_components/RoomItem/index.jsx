@@ -28,8 +28,9 @@ function RoomItem({ id, imgPath, price, title, slug }) {
           <h2 className="text-white font-serif font-medium text-lg leading-tight mb-0.5">
             {title}
           </h2>
-          <p className="text-[#E8D9BE] text-[13px] font-medium">
-            From ${price} / night
+          <p className="flex items-baseline gap-1.5 mt-1">
+            <span className="text-[#C4A87A] text-xl font-bold font-sans">${price}</span>
+            <span className="text-white/70 text-xs font-medium">/ night</span>
           </p>
         </div>
         <Link
