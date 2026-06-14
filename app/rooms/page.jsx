@@ -30,7 +30,10 @@ function Rooms({ searchParams }) {
             </div>
           }
         >
-          <RoomsSection filter={filter} range={range} />
+          <div className="mb-8">
+            <RoomsSection filter={filter} range={range} />
+          </div>
+
         </Suspense>
       </div>
     </>
