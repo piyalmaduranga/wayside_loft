@@ -3,10 +3,14 @@ import Link from "next/link";
 
 const SUPABASE_ROOMS_URL = process.env.NEXT_PUBLIC_SUPABASE_IMGS_URL;
 
-function RoomItem({ id, imgPath, price, title, slug }) {
+function RoomItem({ id, imgPath, price, title, slug, range }) {
   const src = imgPath?.startsWith("https")
     ? imgPath
     : `${SUPABASE_ROOMS_URL}/${imgPath}`;
+
+  const roomHref = range
+    ? `/rooms/${slug || id}?range=${range}`
+    : `/rooms/${slug || id}`;
 
   return (
     <article className="group relative aspect-[4/3] rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(26,24,21,0.08)] border border-[rgba(26,24,21,0.06)] bg-[#F0EDE5]">
@@ -34,7 +38,7 @@ function RoomItem({ id, imgPath, price, title, slug }) {
           </p>
         </div>
         <Link
-          href={`/rooms/${slug || id}`}
+          href={roomHref}
           className="inline-flex items-center justify-center flex-shrink-0 px-7 py-3 bg-[#C4A87A] hover:bg-[#A8895E] text-white font-sans text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 shadow-sm whitespace-nowrap"
         >
           View Room

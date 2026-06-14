@@ -7,13 +7,26 @@ import Facilities from "../Facilities";
 import BookingPolicy from "../BookingPolicy";
 import { getRoomById, getRoomImages } from "@/app/_lib/supabase/rooms";
 import { notFound, redirect } from "next/navigation";
+import { isValid } from "date-fns";
 import { bookingSchema } from "@/app/_lib/zodSchemas";
 import { cookies } from "next/headers";
 
 const SUPABASE_ROOMS_URL = process.env.NEXT_PUBLIC_SUPABASE_IMGS_URL;
 
-async function RoomContainer({ params }) {
+async function RoomContainer({ params, searchParams }) {
   const room_slug = params?.room_slug;
+  const range = searchParams?.range ?? "";
+
+  // Parse date range from URL (e.g. "2026-06-14_2026-06-15")
+  let initialRange = null;
+  if (range) {
+    const [arrivalStr, departureStr] = range.split("_");
+    const arrival = new Date(arrivalStr);
+    const departure = new Date(departureStr);
+    if (isValid(arrival) && isValid(departure)) {
+      initialRange = { from: arrivalStr, to: departureStr };
+    }
+  }
   console.log({ room_slug });
 
   if (!room_slug) notFound();
@@ -85,7 +98,7 @@ async function RoomContainer({ params }) {
           <BookingPolicy />
         </div>
         <div className="lg:col-span-1 lg:sticky lg:top-24">
-          <RoomBookingForm bookingAction={bookingAction} room={room} />
+          <RoomBookingForm bookingAction={bookingAction} room={room} initialRange={initialRange} />
         </div>
       </div>
     </div>

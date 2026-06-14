@@ -15,11 +15,11 @@ const initialState = {
   isBooking: false,
 };
 
-function RoomBookingForm({ bookingAction, room }) {
+function RoomBookingForm({ bookingAction, room, initialRange }) {
   const [state, formAction] = useFormState(bookingAction, initialState);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [guests, setGuests] = useState("");
+  const [startDate, setStartDate] = useState(initialRange?.from ?? "");
+  const [endDate, setEndDate] = useState(initialRange?.to ?? "");
+  const [guests, setGuests] = useState("2");
 
   const handleDateSelection = useCallback((range) => {
     if (!range) return;
@@ -53,7 +53,11 @@ function RoomBookingForm({ bookingAction, room }) {
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <FormDayPicker endDate={endDate} handleDateSelection={handleDateSelection} />
+      <FormDayPicker
+        handleDateSelection={handleDateSelection}
+        start={startDate ? new Date(startDate) : undefined}
+        end={endDate ? new Date(endDate) : undefined}
+      />
 
       <form action={handleSubmit} className="bg-surface border border-border rounded-lg p-6 shadow-sm flex flex-col gap-5 text-left">
         <div>

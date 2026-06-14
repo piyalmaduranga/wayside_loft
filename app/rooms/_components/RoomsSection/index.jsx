@@ -53,7 +53,7 @@ async function RoomsSection({ filter, range }) {
           title={item.name}
           price={item.price}
           imgPath={item.thumbnail}
-          link="#"
+          range={range}
         />
       ))}
     </div>

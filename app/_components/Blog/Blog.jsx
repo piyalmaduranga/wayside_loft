@@ -7,6 +7,8 @@ const services = [
     alt: "Airport Transfers Mirissa",
     label: "Travel & Transport",
     title: "Airport Transfers",
+    price: 35,
+    unit: "per trip",
     desc: "Travel with ease. We offer convenient transfers between the airport and your accommodation in Mirissa, ensuring a smooth and hassle-free journey.",
   },
   {
@@ -14,6 +16,8 @@ const services = [
     alt: "Whale Watching in Mirissa",
     label: "Ocean Experience",
     title: "Whale Watching",
+    price: 45,
+    unit: "per person",
     desc: "Experience the thrill of whale watching in Mirissa, one of the best places in the world to spot blue whales and dolphins in their natural habitat.",
   },
   {
@@ -21,6 +25,8 @@ const services = [
     alt: "Yala Safari from Mirissa",
     label: "Wildlife Adventure",
     title: "Yala Safari Tours",
+    price: 80,
+    unit: "per person",
     desc: "Embark on an unforgettable safari adventure through Yala National Park. Spot elephants, leopards, and diverse bird species from our guest house.",
   },
 ];
@@ -57,8 +63,16 @@ function Blog() {
                 <h3 className="font-serif font-medium text-lg text-[#1A1815] mb-3 leading-snug">
                   {s.title}
                 </h3>
-                <p className="text-[#6C6760] text-[14.5px] leading-[1.75]">
+                <p className="text-[#6C6760] text-[14.5px] leading-[1.75] mb-4">
                   {s.desc}
+                </p>
+                <p className="flex items-baseline gap-1.5 mt-auto pt-3 border-t border-[rgba(26,24,21,0.08)]">
+                  <span className="text-lg font-bold text-[#C4A87A] font-sans">
+                    ${s.price}
+                  </span>
+                  <span className="text-[#6C6760] text-xs font-medium">
+                    {s.unit}
+                  </span>
                 </p>
               </Description>
             </Card>

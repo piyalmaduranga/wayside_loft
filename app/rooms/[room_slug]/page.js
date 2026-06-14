@@ -19,7 +19,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-function RoomDetails({ params }) {
+function RoomDetails({ params, searchParams }) {
   return (
     <section className="container">
       <Suspense
@@ -29,7 +29,7 @@ function RoomDetails({ params }) {
           </div>
         }
       >
-        <RoomContainer params={params} />
+        <RoomContainer params={params} searchParams={searchParams} />
       </Suspense>
     </section>
   );

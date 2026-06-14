@@ -23,7 +23,7 @@ function OAuthProviderButtons() {
           </button>
         </form>
 
-        <form
+        {/* <form
           action={async () => {
             "use server";
             await signIn("facebook", { redirectTo: redirectURL });
@@ -36,7 +36,7 @@ function OAuthProviderButtons() {
             </svg>
             <span>Continue with Facebook</span>
           </button>
-        </form>
+        </form> */}
       </div>
     </div>
   );
