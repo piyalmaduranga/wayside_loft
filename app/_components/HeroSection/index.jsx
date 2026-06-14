@@ -38,7 +38,7 @@ function HeroSection({ bookingSearchAction }) {
               </Modal.ToggleOpen>
 
               <Modal.Overlay>
-                <Modal.Wrapper>
+                <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
                   <BookingForm bookingSearchAction={bookingSearchAction}>
                     <div className="mt-2">
                       <Modal.ToggleClose>
@@ -51,7 +51,7 @@ function HeroSection({ bookingSearchAction }) {
                       </Modal.ToggleClose>
                     </div>
                   </BookingForm>
-                </Modal.Wrapper>
+                </div>
               </Modal.Overlay>
             </Modal>
           </div>
