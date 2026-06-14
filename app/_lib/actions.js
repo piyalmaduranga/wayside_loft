@@ -25,6 +25,7 @@ import {
   sendNewsletterWelcomeEmail,
 } from "./mailer";
 import { getRiskySupabaseClient } from "./supabase/supabaseRiskyClient";
+import { createLog } from "./supabase/logs";
 
 export async function authAction(prevState, formData) {
   // await new Promise((res) => setTimeout(res, 500));
@@ -166,6 +167,12 @@ export async function reservationUpdateAction(prevState, formData) {
     end_date
   );
 
+  try {
+    await createLog('reservation', `Reservation ${reservation_id} updated by ${session.user.email || session.user.name}`);
+  } catch (logErr) {
+    console.error('Failed to create reservation update log', logErr?.message ?? logErr);
+  }
+
   // Send update email notification
   try {
     await sendBookingUpdateEmail({
@@ -195,6 +202,12 @@ export async function reservationCancelAction(prevState, formData) {
   const reservation = await getReservationByID(reservation_id);
 
   await cancelReservationDirect(reservation_id);
+
+  try {
+    await createLog('reservation', `Reservation ${reservation_id} cancelled by ${session?.user?.email || session?.user?.name}`);
+  } catch (logErr) {
+    console.error('Failed to create reservation cancellation log', logErr?.message ?? logErr);
+  }
 
   if (reservation) {
     try {
@@ -249,6 +262,12 @@ export async function signupAction(prevState, formData) {
   await createGuest(fullname, email, avatar, hashSync(password, 10));
 
   try {
+    await createLog('auth', `New signup: ${email}`);
+  } catch (logErr) {
+    console.error('Failed to create signup log', logErr?.message ?? logErr);
+  }
+
+  try {
     await signIn("credentials", { email, password, redirect: false });
   } catch (err) {
     console.log(err);
@@ -291,6 +310,11 @@ export async function contactAction(state, formData) {
 
   try {
     await createMessage({ fullname, email, phone, message });
+    try {
+      await createLog('contact', `Contact from ${email} - ${fullname}`);
+    } catch (logErr) {
+      console.error('Failed to create contact log', logErr?.message ?? logErr);
+    }
   } catch (err) {
     return {
       ...currentState,

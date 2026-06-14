@@ -1,6 +1,7 @@
 export function nightTotalPrice(pricePerNight, guests, guestsDiscount = 50) {
   const guest_price_with_discount = pricePerNight * (guestsDiscount / 100);
-  const total = pricePerNight + guest_price_with_discount * (guests - 1);
+  const additionalGuests = Math.max(0, guests - 2);
+  const total = pricePerNight + guest_price_with_discount * additionalGuests;
 
   return total.toFixed(2);
 }

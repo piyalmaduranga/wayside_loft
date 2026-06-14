@@ -1,6 +1,4 @@
 import FilterSection from "./_components/FilterSection";
-
-import styles from "./styles.module.css";
 import Banner from "../_components/Banner";
 import RoomsSection from "./_components/RoomsSection";
 import { Suspense } from "react";
@@ -16,17 +14,18 @@ function Rooms({ searchParams }) {
   console.log({ searchParams });
   const filter = searchParams?.sort ?? "default";
   const range = searchParams?.range ?? "";
+
   return (
     <>
-      <Banner title={"Accomodation Options"} />
+      <Banner title="Accommodation Options" />
 
-      <div className={`container ${styles.roomsHolder}`}>
+      <div className="container py-8">
         <FilterSection filters={{ filter, range }} />
 
         <Suspense
           key={`${filter}-${range}`}
           fallback={
-            <div className={styles.loader}>
+            <div className="flex items-center justify-center h-[40vh]">
               <Loader />
             </div>
           }

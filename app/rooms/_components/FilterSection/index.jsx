@@ -1,9 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import styles from "./styles.module.css";
 import "react-datepicker/dist/react-datepicker.css";
-
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import { useState } from "react";
@@ -14,14 +12,40 @@ import toast, { Toaster } from "react-hot-toast";
 
 const options = [
   { value: "default", label: "Default Sorting" },
-  { value: "high-price", label: "From High to Low price" },
-  { value: "low-price", label: "From Low to High price" },
-  { value: "max-guests", label: "From Max to Min guests" },
-  { value: "min-guests", label: "From Min to Max guests" },
+  { value: "high-price", label: "Price: High to Low" },
+  { value: "low-price", label: "Price: Low to High" },
+  { value: "max-guests", label: "Most Guests First" },
+  { value: "min-guests", label: "Fewest Guests First" },
 ];
 
+const selectStyles = {
+  control: (base, state) => ({
+    ...base,
+    borderRadius: "10px",
+    border: state.isFocused ? "1.5px solid #C4A87A" : "1.5px solid rgba(26,24,21,0.12)",
+    boxShadow: state.isFocused ? "0 0 0 3px rgba(196,168,122,0.15)" : "none",
+    padding: "2px 4px",
+    fontSize: "14px",
+    backgroundColor: "#fff",
+    cursor: "pointer",
+    minWidth: "220px",
+    "&:hover": { borderColor: "#C4A87A" },
+  }),
+  option: (base, state) => ({
+    ...base,
+    fontSize: "14px",
+    backgroundColor: state.isSelected ? "#C4A87A" : state.isFocused ? "#F8F6F1" : "#fff",
+    color: state.isSelected ? "#fff" : "#1A1815",
+    cursor: "pointer",
+  }),
+  indicatorSeparator: () => ({ display: "none" }),
+};
+
 function FilterSection({ filters }) {
-  const range = { from: filters?.range.split("_")?.at(0), to: filters?.range.split("_")?.at(1) };
+  const range = {
+    from: filters?.range.split("_")?.at(0),
+    to: filters?.range.split("_")?.at(1),
+  };
   const [startDate, setStartDate] = useState(
     filters?.range && isValid(new Date(range.from)) ? formatRFC7231(new Date(range.from)) : ""
   );
@@ -34,20 +58,9 @@ function FilterSection({ filters }) {
   const { replace } = useRouter();
 
   function handleSort(e) {
-    console.log(e);
     const params = new URLSearchParams(searchParams);
     params.set("sort", e.value);
     replace(`${pathname}?${params.toString()}`, { scroll: false });
-  }
-
-  function handleStartSelection(date) {
-    setStartDate(date);
-    console.log(date);
-  }
-
-  function handleEndSelection(date) {
-    setEndDate(date);
-    console.log(date);
   }
 
   function handleSearch() {
@@ -61,63 +74,69 @@ function FilterSection({ filters }) {
     }
 
     const params = new URLSearchParams(searchParams);
-    const formatedRange = `${arrival}_${departure}`;
-    params.set("range", formatedRange);
+    params.set("range", `${arrival}_${departure}`);
     replace(`${pathname}?${params.toString()}`, { scroll: false });
   }
 
+  const inputClass =
+    "px-4 py-2.5 border border-[rgba(26,24,21,0.12)] rounded-[10px] text-[14px] text-[#1A1815] bg-white outline-none focus:border-[#C4A87A] focus:ring-2 focus:ring-[rgba(196,168,122,0.15)] transition-all w-full placeholder:text-[#B0A99F]";
+
   return (
-    <form className={`${styles.filterSection} roomsForm`}>
-      <div className={styles.formControl}>
-        <label htmlFor="">Sort Rooms</label>
+    <form className="roomsForm flex flex-wrap items-end justify-between gap-4 py-6 border-b border-[rgba(26,24,21,0.08)] mb-8">
+      {/* Sort */}
+      <div className="flex flex-col gap-1.5 min-w-[200px]">
+        <label className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#6C6760]">
+          Sort Rooms
+        </label>
         <Select
-          onChange={(e) => {
-            handleSort(e);
-          }}
+          onChange={(e) => handleSort(e)}
           options={options}
           isSearchable={false}
-          className={styles.select}
-          defaultValue={options.find((item) => item.value === filters?.filter) ?? options.at(0)}
+          styles={selectStyles}
+          defaultValue={options.find((item) => item.value === filters?.filter) ?? options[0]}
         />
       </div>
 
-      <div className={styles.formControl}>
-        <label>Filter By Date</label>
-        <div className={styles.datesContainer}>
+      {/* Date filter */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#6C6760]">
+          Filter by Date
+        </label>
+        <div className="flex flex-wrap gap-3 items-center">
           <DatePicker
             selected={startDate}
-            onChange={(date) => handleStartSelection(date)}
+            onChange={(date) => setStartDate(date)}
             selectsStart
             startDate={startDate}
             endDate={endDate}
-            className={styles.input}
-            dateFormat={"dd/MM/yyyy"}
+            className={inputClass}
+            dateFormat="dd/MM/yyyy"
             excludeDateIntervals={[{ start: new Date("01/01/1970"), end: new Date() }]}
             placeholderText="Arrival Date"
-            // onSelect={(date) => handleStartSelection(date)}
           />
           <DatePicker
             selected={endDate}
-            onChange={(date) => handleEndSelection(date)}
+            onChange={(date) => setEndDate(date)}
             selectsEnd
             startDate={startDate}
             endDate={endDate}
             minDate={startDate}
-            className={styles.input}
-            dateFormat={"dd/MM/yyyy"}
+            className={inputClass}
+            dateFormat="dd/MM/yyyy"
             excludeDateIntervals={[{ start: new Date("01/01/1970"), end: new Date() }]}
             placeholderText="Departure Date"
-            // onSelect={(date) => handleEndSelection(date)}
           />
-
-          <button className={styles.searchButton} type="button" onClick={handleSearch}>
-            <span>
-              <FontAwesomeIcon icon={faSearch} />
-            </span>
-            <span>Search</span>
+          <button
+            type="button"
+            onClick={handleSearch}
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#C4A87A] hover:bg-[#A8895E] text-white text-[13px] font-semibold rounded-full transition-all duration-200 hover:-translate-y-0.5 whitespace-nowrap"
+          >
+            <FontAwesomeIcon icon={faSearch} className="text-xs" />
+            Search
           </button>
         </div>
       </div>
+
       <Toaster position="top-center" reverseOrder={false} />
     </form>
   );

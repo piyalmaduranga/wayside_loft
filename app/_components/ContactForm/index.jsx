@@ -1,6 +1,5 @@
 "use client";
 import { useFormState } from "react-dom";
-import styles from "./styles.module.css";
 import { useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import SubmitButton from "@/app/_ui/SubmitButton";
@@ -21,41 +20,61 @@ function ContactForm({ contactAction }) {
     toast.error("Invalid contact data");
   }
   return (
-    <form ref={formRef} action={formAction} className={styles.contactForm}>
+    <form ref={formRef} action={formAction} className="flex flex-col gap-5">
       {state.errors?.critical && (
         <Alert type="danger">{state.errors?.critical}</Alert>
       )}
 
-      <div>
-        <input name="fullname" type="text" placeholder="Name" />
+      <div className="flex flex-col gap-1.5">
+        <input 
+          name="fullname" 
+          type="text" 
+          placeholder="Name" 
+          className="border border-border text-base focus:border-gold focus:ring-4 focus:ring-gold/10 px-4 py-3 w-full shadow-xs transition-all duration-200 rounded-md bg-surface text-ink placeholder:text-muted/60 outline-none"
+        />
         {state.errors?.fullname && (
-          <span className={styles.errorMessage}>{state.errors.fullname}</span>
+          <span className="text-red-600 text-xs font-sans mt-1 pl-1.5 block">{state.errors.fullname}</span>
         )}
       </div>
-      <div>
-        <input name="email" type="email" placeholder="Email" />
+      <div className="flex flex-col gap-1.5">
+        <input 
+          name="email" 
+          type="email" 
+          placeholder="Email" 
+          className="border border-border text-base focus:border-gold focus:ring-4 focus:ring-gold/10 px-4 py-3 w-full shadow-xs transition-all duration-200 rounded-md bg-surface text-ink placeholder:text-muted/60 outline-none"
+        />
         {state.errors?.email && (
-          <span className={styles.errorMessage}>{state.errors.email}</span>
+          <span className="text-red-600 text-xs font-sans mt-1 pl-1.5 block">{state.errors.email}</span>
         )}
       </div>
-      <div>
-        <input name="phone" type="tel" placeholder="Phone" />
+      <div className="flex flex-col gap-1.5">
+        <input 
+          name="phone" 
+          type="tel" 
+          placeholder="Phone" 
+          className="border border-border text-base focus:border-gold focus:ring-4 focus:ring-gold/10 px-4 py-3 w-full shadow-xs transition-all duration-200 rounded-md bg-surface text-ink placeholder:text-muted/60 outline-none"
+        />
         {state.errors?.phone && (
-          <span className={styles.errorMessage}>{state.errors.phone}</span>
+          <span className="text-red-600 text-xs font-sans mt-1 pl-1.5 block">{state.errors.phone}</span>
         )}
       </div>
-      <div>
-        <textarea name="message" placeholder="Message" rows={5}></textarea>
+      <div className="flex flex-col gap-1.5">
+        <textarea 
+          name="message" 
+          placeholder="Message" 
+          rows={5} 
+          className="border border-border text-base focus:border-gold focus:ring-4 focus:ring-gold/10 px-4 py-3 w-full shadow-xs transition-all duration-200 rounded-md bg-surface text-ink placeholder:text-muted/60 resize-y outline-none"
+        />
         {state.errors?.message && (
-          <span className={styles.errorMessage}>{state.errors.message}</span>
+          <span className="text-red-600 text-xs font-sans mt-1 pl-1.5 block">{state.errors.message}</span>
         )}
       </div>
 
-      <div>
-        <SubmitButton type="submit">Send</SubmitButton>
+      <div className="mt-2">
+        <SubmitButton type="submit" content={{ pending: "Sending...", base: "Send Message" }} className="w-full sm:w-auto" />
         <button
           type="reset"
-          className={styles.resetButton}
+          className="absolute -top-[200px] -left-[200px] invisible w-0 h-0 overflow-hidden -z-50"
           ref={resetBtnRef}
         ></button>
       </div>
@@ -65,3 +84,4 @@ function ContactForm({ contactAction }) {
 }
 
 export default ContactForm;
+

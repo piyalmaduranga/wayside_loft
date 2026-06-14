@@ -1,16 +1,19 @@
 import { authAction } from "@/app/_lib/actions";
 import CredentialsForm from "../CredentialsForm";
 import OAuthProviderButtons from "../OAuthProviderButtons";
-import styles from "./styles.module.css";
 
 function SigninForm() {
   return (
-    <div className={`${styles.formSection} container`}>
-      <CredentialsForm authAction={authAction} />
-
-      <OAuthProviderButtons />
+    <div className="py-16 md:py-24 bg-ivory flex items-center justify-center">
+      <div className="w-full max-w-md mx-auto px-4">
+        <div className="bg-surface border border-border p-8 rounded-lg shadow-sm flex flex-col gap-6">
+          <CredentialsForm authAction={authAction} />
+          <OAuthProviderButtons />
+        </div>
+      </div>
     </div>
   );
 }
 
 export default SigninForm;
+

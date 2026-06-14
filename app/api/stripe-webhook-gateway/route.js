@@ -1,4 +1,4 @@
-import { getGuestById } from "@/app/_lib/supabase/guests";
+import { getGuestByIdDirect } from "@/app/_lib/supabase/guests";
 import { createNewReservation } from "@/app/_lib/supabase/reservations";
 import { getRoomById } from "@/app/_lib/supabase/rooms";
 import { daysDifferCount } from "@/app/utils/datetime";
@@ -29,7 +29,7 @@ export async function POST(req, res) {
   const pending_reservation = metadata.pending_reservation;
 
   const [guest, room] = await Promise.all([
-    getGuestById(metadata.guest_id),
+    getGuestByIdDirect(metadata.guest_id),
     getRoomById(pending_reservation.room_id),
   ]);
 

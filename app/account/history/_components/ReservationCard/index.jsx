@@ -1,7 +1,5 @@
 import Image from "next/image";
-import styles from "./styles.module.css";
-import Card from "@/app/_components/Card/Card";
-
+import Card, { Description } from "@/app/_components/Card/Card";
 import Badge from "@/app/_ui/Badge";
 import { auth } from "@/auth";
 import { deleteReservation, getReservationByID } from "@/app/_lib/supabase/reservations";
@@ -9,7 +7,7 @@ import { revalidatePath } from "next/cache";
 import ControlButtons from "../ControlButtons";
 import { reservationCancelAction, reservationUpdateAction } from "@/app/_lib/actions";
 import { formatToAbrFormat } from "@/app/utils/datetime";
-import { differenceInDays, isFuture, isPast } from "date-fns";
+import { isFuture, isPast } from "date-fns";
 
 const SUPABASE_ROOMS_URL = process.env.NEXT_PUBLIC_SUPABASE_IMGS_URL;
 
@@ -18,7 +16,6 @@ function ReservationCard({ reservation }) {
     "use server";
 
     prevState = {};
-
     const session = await auth();
     const active_user = session?.user;
 
@@ -39,61 +36,73 @@ function ReservationCard({ reservation }) {
 
   const arrivalDate = formatToAbrFormat(reservation.start_date);
   const departureDate = formatToAbrFormat(reservation.end_date);
+  const thumbnail = reservation.rooms?.thumbnail ?? "";
 
   return (
-    <Card className={styles.reservationItem}>
-      <Card.Thumbnail className={styles.reservationThumbnail}>
+    <Card className="flex flex-col md:flex-row bg-white border border-border rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all duration-300 overflow-hidden">
+      <div className="relative aspect-[16/10] md:aspect-square md:w-56 shrink-0 bg-ivory-dark">
         <Image
           fill
           src={
-            reservation.rooms.thumbnail?.startsWith("https")
-              ? reservation.rooms.thumbnail
-              : `${SUPABASE_ROOMS_URL}/${reservation.rooms.thumbnail}`
+            thumbnail && thumbnail.startsWith("https")
+              ? thumbnail
+              : `${SUPABASE_ROOMS_URL}/${thumbnail}`
           }
-          unoptimized={reservation.rooms.thumbnail?.startsWith("http")}
+          unoptimized={thumbnail.startsWith("http")}
+          alt={reservation.rooms?.name || "Room thumbnail"}
+          className="object-cover"
         />
-      </Card.Thumbnail>
+      </div>
 
-      <Card.Description className={styles.reservationInfos}>
-        <div className={styles.reservationOverview}>
-          <h2 className={styles.reservationTitle}>
-            <span>{reservation.rooms.name}</span>
+      <Description className="p-6 flex flex-col md:flex-row justify-between flex-grow gap-6 text-left">
+        <div className="flex flex-col justify-between gap-3">
+          <div>
+            <div className="flex flex-wrap items-center gap-2 mb-1.5">
+              <h2 className="font-serif text-lg font-semibold text-ink">
+                {reservation.rooms?.name ?? "Room"}
+              </h2>
 
-            {isPast(reservation.start_date) && isFuture(reservation.end_date) ? (
-              <span className={`${styles.onGoing} ${styles.reservationEstimation}`}>ON GOING</span>
-            ) : isFuture(reservation.start_date) ? (
-              <span className={`${styles.future} ${styles.reservationEstimation}`}>FUTURE</span>
-            ) : isPast(reservation.end_date) ? (
-              <span className={`${styles.past} ${styles.reservationEstimation}`}>PAST</span>
-            ) : (
-              ""
-            )}
-          </h2>
-          <p>
-            {formatToAbrFormat(arrivalDate)} - {formatToAbrFormat(departureDate)}
-          </p>
+              {isPast(reservation.start_date) && isFuture(reservation.end_date) ? (
+                <span className="text-[10px] font-sans font-semibold tracking-wider px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 uppercase">
+                  Ongoing
+                </span>
+              ) : isFuture(reservation.start_date) ? (
+                <span className="text-[10px] font-sans font-semibold tracking-wider px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 uppercase">
+                  Upcoming
+                </span>
+              ) : isPast(reservation.end_date) ? (
+                <span className="text-[10px] font-sans font-semibold tracking-wider px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 uppercase">
+                  Past
+                </span>
+              ) : null}
+            </div>
 
-          <p>
-            <span className={styles.price}>${reservation.reserved_price.toFixed(2)}</span> - {reservation.guests_count}{" "}
-            Guest(s)
-          </p>
+            <p className="text-sm font-sans text-muted">
+              {arrivalDate} — {departureDate}
+            </p>
+          </div>
 
-          {/* CREATE A SEPARATED COMPONENT FOR THE STATUS AS BADGE */}
+          <div className="flex items-center gap-2 text-sm font-sans">
+            <span className="text-ink font-bold text-base">${reservation.reserved_price.toFixed(2)}</span>
+            <span className="text-muted">·</span>
+            <span className="text-muted">{reservation.guests_count} {reservation.guests_count === 1 ? 'guest' : 'guests'}</span>
+          </div>
+
           <Badge
             type={
-              reservation.status == "unconfirmed"
+              reservation.status === "unconfirmed"
                 ? "warning"
-                : reservation.status == "canceled" || reservation.status == "finished"
+                : reservation.status === "canceled" || reservation.status === "finished"
                   ? "danger"
                   : "success"
             }
+            className="rounded-full"
           >
             {reservation.status}
           </Badge>
         </div>
-        <div className={styles.reservationPriceContainer}>
-          {/* USE 3rd PARTY API FOR CURRENCY CONVERSION */}
 
+        <div className="flex flex-col justify-end md:items-end w-full md:w-auto">
           <ControlButtons
             reservationUpdateAction={reservationUpdateAction}
             deleteAction={deleteReservationAction}
@@ -101,7 +110,7 @@ function ReservationCard({ reservation }) {
             reservationCancelAction={reservationCancelAction}
           />
         </div>
-      </Card.Description>
+      </Description>
     </Card>
   );
 }

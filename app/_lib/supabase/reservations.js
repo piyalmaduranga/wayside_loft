@@ -82,6 +82,7 @@ export async function createNewReservation(reservationObj) {
   return reservations;
 }
 
+// add logging for reservations created via risky client as well
 export async function createNewReservationDirect(reservationObj) {
   const {
     room_id,
@@ -114,10 +115,18 @@ export async function createNewReservationDirect(reservationObj) {
 
   if (error) {
     console.error("createNewReservationDirect error:", error);
+  } else {
+    try {
+      const { createLog } = await import('./logs');
+      await createLog('reservation', `Created reservation ${reservations?.[0]?.id} for guest ${guest_id}`);
+    } catch (logErr) {
+      console.error('Failed to create reservation log', logErr?.message ?? logErr);
+    }
   }
 
   return reservations;
 }
+
 
 export async function deleteReservation(supabaseAccessToken, id) {
   const { data: reservations, error } = await supabaseWithToken(

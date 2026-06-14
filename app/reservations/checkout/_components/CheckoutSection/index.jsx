@@ -1,6 +1,5 @@
 import CheckoutForm from "../CheckoutForm";
 import CheckoutOverview from "../CheckoutOverview";
-import styles from "./styles.module.css";
 import { cookies, headers } from "next/headers";
 import { getRoomById } from "@/app/_lib/supabase/rooms";
 import {
@@ -21,8 +20,7 @@ import { revalidatePath } from "next/cache";
 import { format } from "date-fns";
 import { sendBookingConfirmationEmail } from "@/app/_lib/mailer";
 import { bookingTotalPrice } from "@/app/utils/reservationsCalcs";
-// import { loadStripe } from "@stripe/stripe-js"; // Stripe disabled — Pay on Arrival
-// import axios from "axios";
+import { daysDifferCount } from "@/app/utils/datetime";
 
 async function CheckoutSection() {
   const session = await auth();
@@ -65,8 +63,6 @@ async function CheckoutSection() {
         message,
       });
     } catch (err) {
-      // console.log("errors");
-      // console.log(err.errors);
       prevState = {};
       err?.errors.forEach((element) => {
         prevState[element?.path[0] ?? "unknown"] = element.message;
@@ -77,10 +73,8 @@ async function CheckoutSection() {
 
     const [nationality, countryFlag] = nationalityWithFlag.split("%");
 
-    const total_price = (
-      room.price +
-      ((room.price / 2) * pending_reservation.guests_count - 1)
-    ).toFixed(2);
+    const nightsCount = daysDifferCount(pending_reservation.end_date, pending_reservation.start_date);
+    const total_price = bookingTotalPrice(room.price, pending_reservation.guests_count, nightsCount);
 
     let flagError = { error: false, payload: "" };
     try {
@@ -126,7 +120,6 @@ async function CheckoutSection() {
         });
       } catch (emailErr) {
         console.error("[mailer] Booking email failed:", emailErr.message);
-        // Don't block the booking flow if email fails
       }
 
       // Clear the pending reservation cookie
@@ -140,7 +133,6 @@ async function CheckoutSection() {
       return { ...prevState, criticalErr: "Failed to confirm your booking!" };
     } finally {
       revalidatePath("/account/history");
-      // TODO: PREVENT REDIRECTING WHEN AN UNHANDLED ERROR OCCURS
       if (!flagError.error && flagError.payload) {
         redirect(flagError.payload);
       }
@@ -148,27 +140,28 @@ async function CheckoutSection() {
   }
 
   return (
-    <div className={`${styles.formSection} container`}>
-      <CheckoutForm
-        createReservationAction={createReservationAction}
-        room={room}
-        guest={guest}
-        bookingCancelAction={bookingCancelAction}
-      >
-        {/* PASSING THIS AS CHILD TO PREVENT UNCESSACERY RERENDERS FOR THIS COMPONENT SINCE:
-          1 - ITS A SERVER COMPONENT AND NEEDED TO BE RENDERED INSIDE A CLIENT COMPONENT
-          2 - IT HAS SOME INNER API CALLS, SO RENDERING AS A CHILD WOULD PREVENT WASTING RENDERES
-        */}
-        <SelectCountry
-          name={"nationality"}
-          className={styles.formInput}
-          defaultCountry={guest.nationality}
-        />
-      </CheckoutForm>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 items-start py-12 px-4 max-w-7xl mx-auto container">
+      <div className="lg:col-span-2">
+        <CheckoutForm
+          createReservationAction={createReservationAction}
+          room={room}
+          guest={guest}
+          bookingCancelAction={bookingCancelAction}
+        >
+          <SelectCountry
+            name={"nationality"}
+            className="border-none text-base outline-1 outline-border focus:outline-gold focus:ring-4 focus:ring-gold/10 px-4 py-3 w-full shadow-xs transition-all duration-200 rounded-md bg-surface text-ink placeholder:text-muted/60"
+            defaultCountry={guest.nationality}
+          />
+        </CheckoutForm>
+      </div>
 
-      <CheckoutOverview room={room} pending_reservation={pending_reservation} />
+      <div className="lg:col-span-1 lg:sticky lg:top-24">
+        <CheckoutOverview room={room} pending_reservation={pending_reservation} />
+      </div>
     </div>
   );
 }
 
 export default CheckoutSection;
+

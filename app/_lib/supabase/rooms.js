@@ -1,6 +1,7 @@
-import supabase from "./db";
+import { getRiskySupabaseClient } from "./supabaseRiskyClient";
 
 export async function getAllRooms() {
+  const supabase = getRiskySupabaseClient();
   let { data: rooms, error } = await supabase.from("rooms").select("*");
 
   // await new Promise((res) => setTimeout(res, 2000));
@@ -12,16 +13,23 @@ export async function getAllRooms() {
   return rooms;
 }
 
-export async function getRoomById(id) {
-  let { data: rooms, error } = await supabase
-    .from("rooms")
-    .select("*")
-    .eq("id", id);
+export async function getRoomById(idOrSlug) {
+  const supabase = getRiskySupabaseClient();
+  const isNumeric = /^\d+$/.test(idOrSlug);
+  
+  let query = supabase.from("rooms").select("*");
+  if (isNumeric) {
+    query = query.eq("id", parseInt(idOrSlug, 10));
+  } else {
+    query = query.eq("slug", idOrSlug);
+  }
 
+  let { data: rooms, error } = await query;
   return rooms?.at(0);
 }
 
 export async function getRoomImages(id) {
+  const supabase = getRiskySupabaseClient();
   let { data: room_images, error } = await supabase
     .from("room_images")
     .select("*")
@@ -34,6 +42,7 @@ export async function filterRoomsByDate(
   start = "2024-09-21",
   end = "2024-09-27"
 ) {
+  const supabase = getRiskySupabaseClient();
   let { data: reservations, error } = await supabase
     .from("reservations")
     .select("*")
@@ -55,3 +64,4 @@ export async function filterRoomsByDate(
 
   return rooms;
 }
+

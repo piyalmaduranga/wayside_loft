@@ -1,4 +1,3 @@
-import styles from "./styles.module.css";
 import Heading from "@/app/_ui/Heading";
 import ProfileForm from "./_components/ProfileForm";
 import { auth } from "@/auth";
@@ -104,7 +103,7 @@ async function Profile() {
 
   return (
     <>
-      <Heading textClassName={styles.heading}>Edit Profile</Heading>
+      <Heading>Edit Profile</Heading>
       <ProfileForm guestUpdateAction={guestUpdateAction} guest={user} />
     </>
   );

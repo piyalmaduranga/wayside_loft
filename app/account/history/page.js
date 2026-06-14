@@ -1,4 +1,3 @@
-import styles from "./style.module.css";
 import Heading from "@/app/_ui/Heading";
 import ReservationCard from "./_components/ReservationCard";
 import { getGuestReservations } from "@/app/_lib/supabase/reservations";
@@ -22,24 +21,28 @@ async function History() {
   }
 
   return (
-    <section className={styles.historySection}>
-      <Heading textClassName={styles.heading}>Your History</Heading>
-      <div className="container">
-        {reservations.length ? (
-          <div className={styles.reservationsGrid}>
-            {reservations.reverse().map((item) => (
-              <ReservationCard key={item.id} reservation={item} />
-            ))}
-          </div>
-        ) : (
-          <div className={styles.emptyMessage}>
-            <p>You have no booked room.</p>
-            <Link href="/rooms">View Rooms</Link>
-          </div>
-        )}
-      </div>
-    </section>
+    <div className="flex flex-col gap-6 text-left">
+      <Heading className="text-left mb-2">Your Booking History</Heading>
+      {reservations.length ? (
+        <div className="flex flex-col gap-4 mt-4">
+          {reservations.reverse().map((item) => (
+            <ReservationCard key={item.id} reservation={item} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-16 bg-surface border border-border rounded-lg shadow-sm text-center p-6 mt-4">
+          <p className="text-muted font-sans text-base mb-4">You have no booked rooms yet.</p>
+          <Link 
+            href="/rooms" 
+            className="px-6 py-3 bg-gold hover:bg-gold-dark text-white font-sans text-sm font-semibold uppercase tracking-wider rounded-sm transition-all duration-300 shadow-sm outline-none"
+          >
+            Browse Our Rooms
+          </Link>
+        </div>
+      )}
+    </div>
   );
 }
 
 export default History;
+

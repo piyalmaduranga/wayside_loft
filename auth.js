@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { createGuest, getGuestByEmail, getGuestByEmailDirect } from "./app/_lib/supabase/guests";
+import { createLog } from "./app/_lib/supabase/logs";
 import { credentials } from "./app/_lib/authjs/credentialsCallback";
 import Google from "next-auth/providers/google";
 import Facebook from "next-auth/providers/facebook";
@@ -49,6 +50,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       try {
         const guest = await getGuestByEmailDirect(user.email);
         if (guest) {
+          try {
+            await createLog('auth', `User signed in: ${user.email}`);
+          } catch (e) {
+            console.error('createLog failed', e?.message ?? e);
+          }
           return true;
         }
       } catch (err) {
@@ -58,6 +64,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // When going with OAuth providers, if a user does not have already an account, we simply create it on the go just to reduce a sign up step
       try {
         await createGuest(user.name, user.email, user.image);
+        try {
+          await createLog('auth', `OAuth signup: ${user.email}`);
+        } catch (e) {
+          console.error('createLog failed', e?.message ?? e);
+        }
       } catch (err) {
         return false;
       }

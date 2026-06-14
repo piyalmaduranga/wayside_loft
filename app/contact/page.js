@@ -9,7 +9,7 @@ export const metadata = {
 async function Page() {
   return (
     <>
-      <Banner title={"REACHING OUT"} />
+      <Banner title={"Reaching Out"} />
       <ContactSection />
     </>
   );

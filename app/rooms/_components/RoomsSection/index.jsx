@@ -1,13 +1,10 @@
 import { filterRoomsByDate, getAllRooms } from "@/app/_lib/supabase/rooms";
-import styles from "./styles.module.css";
 import RoomItem from "../RoomItem";
 import { isValid } from "date-fns";
 
 async function RoomsSection({ filter, range }) {
   const rooms = await getAllRooms();
   console.log("rooms", { rooms: rooms.length });
-
-  // let filteredRooms = await filterRoomsByDate();
 
   let filteredRooms = rooms;
 
@@ -28,24 +25,31 @@ async function RoomsSection({ filter, range }) {
     case "low-price":
       filteredRooms = filteredRooms.sort((a, b) => a.price - b.price);
       break;
-
     case "min-guests":
       filteredRooms = filteredRooms.sort((a, b) => b.capacity - a.capacity);
       break;
-
     case "max-guests":
       filteredRooms = filteredRooms.sort((a, b) => a.capacity - b.capacity);
       break;
     default:
-      filteredRooms = filteredRooms;
+      break;
+  }
+
+  if (!filteredRooms.length) {
+    return (
+      <div className="py-20 text-center">
+        <p className="text-[#6C6760] text-lg">No rooms available for the selected dates.</p>
+      </div>
+    );
   }
 
   return (
-    <div className={styles.roomsGrid}>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {filteredRooms.map((item) => (
         <RoomItem
           key={item.id}
           id={item.id}
+          slug={item.slug}
           title={item.name}
           price={item.price}
           imgPath={item.thumbnail}

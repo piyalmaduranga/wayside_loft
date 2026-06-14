@@ -1,5 +1,3 @@
-import styles from "./styles.module.css";
-
 import Heading from "@/app/_ui/Heading";
 import Features from "../Features";
 import RoomSlider from "../RoomSlider";
@@ -22,13 +20,13 @@ async function RoomContainer({ params }) {
 
   const room = await getRoomById(room_slug);
 
-  const room_images = await getRoomImages(room_slug ?? []);
+  if (!room) notFound();
 
-  const images = room_images.map(
+  const room_images = await getRoomImages(room.id);
+
+  const images = (room_images || []).map(
     (item) => item.img_path?.startsWith("https") ? item.img_path : `${SUPABASE_ROOMS_URL}/${item.img_path}`
   );
-
-  if (!room) notFound();
 
   async function bookingAction(prevState, formData) {
     "use server";
@@ -70,16 +68,29 @@ async function RoomContainer({ params }) {
   }
 
   return (
-    <>
-      <Heading className={styles.heading}>{room.name}</Heading>
+    <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+      <Heading className="text-center mb-8 font-medium tracking-tight text-3xl md:text-4xl text-ink">
+        {room.name}
+      </Heading>
       <Features room={room} />
-      <RoomSlider images={images} />
-      <RoomBookingForm bookingAction={bookingAction} room={room} />
-      <RoomDescription room={room} />
-      <Facilities />
-      <BookingPolicy />
-    </>
+      <div className="my-8 md:my-12">
+        <RoomSlider images={images} />
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 mt-12 items-start">
+        <div className="lg:col-span-2 space-y-12">
+          <RoomDescription room={room} />
+          <hr className="border-border" />
+          <Facilities />
+          <hr className="border-border" />
+          <BookingPolicy />
+        </div>
+        <div className="lg:col-span-1 lg:sticky lg:top-24">
+          <RoomBookingForm bookingAction={bookingAction} room={room} />
+        </div>
+      </div>
+    </div>
   );
 }
 
 export default RoomContainer;
+

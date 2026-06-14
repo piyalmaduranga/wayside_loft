@@ -1,17 +1,23 @@
 import { auth } from "@/auth";
 import Footer from "./_components/Footer";
 import Navbar from "./_ui/Navbar";
-import styles from "./styles.css";
+import "./styles.css";
 
-import { Roboto } from "next/font/google";
+import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 import { signOutAction } from "./_lib/actions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
-const roboto_font = Roboto({
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["100", "300", "400", "500", "700", "900"],
-  style: "normal",
+  variable: "--font-heading",
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  style: ["normal"],
+  variable: "--font-body",
 });
 
 export const metadata = {
@@ -127,7 +133,7 @@ export default async function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={roboto_font.className}>
+      <body className={`${jakarta.variable} ${playfair.variable} ${jakarta.className}`}>
         <Navbar user={session?.user} signOutAction={signOutAction} />
         <main>{children}</main>
         {/* global WhatsApp chat button */}

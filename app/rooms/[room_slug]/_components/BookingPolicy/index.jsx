@@ -1,17 +1,12 @@
 import Accordion from "@/app/_components/Accordion";
-import Heading from "@/app/_ui/Heading";
-
-import styles from "./styles.module.css";
 
 function BookingPolicy() {
   return (
-    <section className={styles.BookingPolicySection}>
-      <Heading className="text-center">Booking Policy</Heading>
+    <div className="py-8 text-left">
+      <h3 className="font-serif text-2xl font-semibold text-ink mb-6">Policies & Rules</h3>
 
-      <hr className="decriptionDivider" />
-
-      <div className={styles.accordion}>
-        <Accordion className={styles.accordionItem} label={"Check-in & Check-out Times"}>
+      <div className="flex flex-col">
+        <Accordion label="Check-in & Check-out Times">
           <p>
             <strong>Check-in:</strong> Detailed instructions for check-in will be provided prior to your arrival. Standard check-in time is from 2:00 PM onwards. Early check-in is subject to availability.
           </p>
@@ -20,7 +15,7 @@ function BookingPolicy() {
           </p>
         </Accordion>
 
-        <Accordion className={styles.accordionItem} label={"Payment & Reservation Policy"}>
+        <Accordion label="Payment & Reservation Policy">
           <p>
             <strong>Book Now, Pay on Arrival:</strong> To make your booking process as smooth as possible, we do not require upfront payment online. You can reserve your room now and pay the full amount upon arrival at the property.
           </p>
@@ -29,7 +24,7 @@ function BookingPolicy() {
           </p>
         </Accordion>
 
-        <Accordion className={styles.accordionItem} label={"Cancellation Policy"}>
+        <Accordion label="Cancellation Policy">
           <p>
             We understand that travel plans can change. You can cancel or modify your reservation free of charge up to 72 hours before your scheduled arrival date.
           </p>
@@ -38,7 +33,7 @@ function BookingPolicy() {
           </p>
         </Accordion>
 
-        <Accordion className={styles.accordionItem} label={"House Rules & Additional Information"}>
+        <Accordion label="House Rules & Additional Information">
           <p>
             <strong>Smoking:</strong> Wayside Loft maintains a strict no-smoking policy inside the rooms. Smoking is only permitted in designated outdoor areas.
           </p>
@@ -50,8 +45,9 @@ function BookingPolicy() {
           </p>
         </Accordion>
       </div>
-    </section>
+    </div>
   );
 }
 
 export default BookingPolicy;
+

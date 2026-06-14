@@ -2,46 +2,72 @@ import supabase, { supabaseWithToken } from "./db";
 
 import { getRiskySupabaseClient } from "./supabaseRiskyClient";
 export async function getGuestById(id) {
-  let request = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/guests?id=${id}`,
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_KEY}`,
-      },
-    }
-  );
-
-  const response = await request.json();
-
-  const { data: guests, error } = response;
-
-  // await new Promise((resolve) => setTimeout(resolve, 2000));
-
-  return guests;
+  // Prefer direct DB query via `fetchGuests` which uses the Supabase client
+  const data = await fetchGuests({ id, select: '*' });
+  return data ?? null;
 }
 
 export async function getGuestByEmail(email) {
-  let request = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/guests?email=${email}`,
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_KEY}`,
-      },
+  const data = await fetchGuests({ email, select: '*' });
+  if (!data) throw new Error('Failed to fetch guest');
+  return data;
+}
+
+// Direct fetch from Supabase (uses the public `supabase` client and the guests_view)
+// Supports optional filters: email, id, select fields, pagination (from,to) and ordering
+export async function fetchGuests({ email, id, select = '*', from, to, order = 'desc' } = {}) {
+  try {
+    let query = supabase.from('guests_view').select(select);
+
+    if (email) query = query.eq('email', email).single();
+    if (id) query = query.eq('id', id).single();
+
+    if (!isNaN(Number(from)) && !isNaN(Number(to))) {
+      query = query.range(Number(from), Number(to));
     }
-  );
 
-  const response = await request.json();
+    query = query.order('id', { ascending: order === 'asc' });
 
-  const { data: guests, error } = response;
+    const { data, error } = await query;
 
-  // await new Promise((resolve) => setTimeout(resolve, 2000));
+    if (error) {
+      console.log('fetchGuests supabase error', error);
+      throw error;
+    }
 
-  if (error) {
-    console.log({ error: error });
-    throw new Error(error?.messagse ?? "Failed to fetch guest");
+    return data;
+  } catch (err) {
+    console.error('fetchGuests error', err?.message ?? err);
+    return null;
+  }
+}
+
+// Call Supabase REST endpoint directly (useful for external scripts or debugging)
+export async function fetchGuestsRest({ select = '*', limit, offset, rangeStart, rangeEnd, order = 'desc' } = {}) {
+  const base = `${process.env.NEXT_PUBLIC_SUPABASE_URL.replace(/\/$/, '')}/rest/v1/guests_view`;
+  const url = new URL(base);
+  if (select) url.searchParams.set('select', select);
+  if (order) url.searchParams.set('order', `id.${order}`);
+  if (!isNaN(Number(limit))) url.searchParams.set('limit', String(limit));
+  if (!isNaN(Number(offset))) url.searchParams.set('offset', String(offset));
+
+  const headers = {
+    apikey: process.env.NEXT_PUBLIC_SUPABASE_KEY,
+    Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_KEY}`,
+  };
+
+  // Prefer Range header when provided
+  if (!isNaN(Number(rangeStart)) && !isNaN(Number(rangeEnd))) {
+    headers.Range = `${rangeStart}-${rangeEnd}`;
+    headers.Prefer = 'count=exact';
   }
 
-  return guests;
+  const res = await fetch(url.toString(), { headers });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Supabase REST error ${res.status}: ${body}`);
+  }
+  return res.json();
 }
 
 // For use in server-side auth callbacks (signIn, session) where no JWT token exists yet.

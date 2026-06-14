@@ -1,6 +1,5 @@
 "use client";
 import { createPortal } from "react-dom";
-import styles from "./styles.module.css";
 import { useState, createContext, cloneElement, useContext, useEffect } from "react";
 
 const ModalContext = createContext();
@@ -19,28 +18,22 @@ function Overlay({ hideOnLargerScreens = true, children }) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    if (typeof w !== "undefined") {
-      setIsMounted(true);
-    }
+    setIsMounted(true);
   }, []);
 
-  if (!isMounted)
-    return (
-      <>
-        {isOpen
-          ? createPortal(
-              <div className={`${styles.modalOverlay} ${hideOnLargerScreens ? styles.hideOnLargerScreens : ""}`}>
-                {children}
-              </div>,
-              typeof window !== "undefined" ? document.body : null
-            )
-          : null}
-      </>
-    );
+  if (!isMounted) return null;
+  if (!isOpen) return null;
+
+  return createPortal(
+    <div className={`fixed inset-0 backdrop-blur-sm bg-black/40 z-[99999] ${hideOnLargerScreens ? "min-[820px]:hidden" : ""}`}>
+      {children}
+    </div>,
+    document.body
+  );
 }
 
 function Heading({ children }) {
-  return <h2>{children}</h2>;
+  return <h2 className="text-xl font-serif font-medium mb-4 text-[#1A1815]">{children}</h2>;
 }
 
 function ToggleOpen({ children }) {
@@ -50,7 +43,9 @@ function ToggleOpen({ children }) {
 
 function Wrapper({ hideOnLargerScreens = true, children }) {
   return (
-    <div className={`${styles.modalWrapper} ${hideOnLargerScreens ? styles.hideOnLargerScreens : ""}`}>{children}</div>
+    <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[420px] p-6 bg-[#F8F6F1] rounded-lg shadow-xl border border-neutral-200 flex flex-col ${hideOnLargerScreens ? "min-[820px]:hidden" : ""}`}>
+      {children}
+    </div>
   );
 }
 

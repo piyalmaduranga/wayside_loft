@@ -1,12 +1,12 @@
 import Slider from "@/app/_components/Slider";
-import styles from "./styles.module.css";
 
 function RoomSlider({ images }) {
   return (
-    <div className={styles.sliderContainer}>
+    <div className="relative rounded-lg overflow-hidden shadow-sm">
       <Slider images={images} imgPriority={true} />
     </div>
   );
 }
 
 export default RoomSlider;
+
