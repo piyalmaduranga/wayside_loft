@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import GuestDropdown from "./GuestDropdown/GuestDropdown";
-import Image from "next/image";
 
 function Navbar({ user, signOutAction }) {
   const [open, setOpen] = useState(false);
@@ -25,15 +24,10 @@ function Navbar({ user, signOutAction }) {
       <div className="container flex items-center justify-between h-[72px]">
 
         {/* Logo */}
-        <Link href="/" onClick={() => setOpen(false)} className="flex-shrink-0 w-[150px] h-[42px] flex items-center hover:opacity-75 transition-opacity">
-          <Image
-            src="/logo-wayside-loft.png"
-            alt="Wayside Loft Logo"
-            width={220}
-            height={60}
-            className="w-full h-auto object-contain mix-blend-multiply"
-            priority
-          />
+        <Link href="/" onClick={() => setOpen(false)} className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity">
+          <span className="font-serif text-[1.85rem] font-semibold tracking-tight text-[#1A1815]">
+            WAYSIDE <span className="text-[#C4A87A]">LOFT</span>
+          </span>
         </Link>
 
         {/* Desktop Nav */}

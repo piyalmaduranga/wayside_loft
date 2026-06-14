@@ -11,8 +11,8 @@ function Footer() {
 
           {/* Brand */}
           <div>
-            <h3 className="font-serif text-white font-medium text-[1.1rem] pb-3 mb-5 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-px after:bg-[#C4A87A]">
-              Wayside Loft
+            <h3 className="font-serif text-white font-medium text-[1.8rem] pb-3 mb-5 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-px after:bg-[#C4A87A]">
+              WAYSIDE <span className="text-[#C4A87A]">LOFT</span>
             </h3>
             <p className="text-[13.5px] leading-relaxed text-[#B0A99F]">
               A premium <strong className="text-[#E8D9BE] font-medium">guest house in Mirissa</strong>, offering comfortable rooms and a work-friendly environment for travelers seeking a serene escape.
