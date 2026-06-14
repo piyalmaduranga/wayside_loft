@@ -358,7 +358,7 @@ div.slider button.slider-btn-next:hover {
 }
 
 .react-datepicker__day--disabled {
-  opacity: 0.28;
+  opacity: 0.48;
 }
 
 /* Sizing fixes for room-level datepicker */
@@ -501,4 +501,155 @@ div.slider button.slider-btn-next:hover {
   color: var(--color-muted) !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
+}
+
+/* Wayside Loft date picker theme */
+.wsl-datepicker-popper {
+  z-index: 1000 !important;
+}
+
+.wsl-datepicker.react-datepicker {
+  font-family: var(--font-sans);
+  background-color: #14151c !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  padding: 0.5rem 0.5rem 0.75rem;
+}
+
+.wsl-datepicker .react-datepicker__triangle {
+  display: none;
+}
+
+.wsl-datepicker .react-datepicker__month-container {
+  float: none;
+  background-color: #14151c !important;
+}
+
+.wsl-datepicker .react-datepicker__header,
+.wsl-datepicker .react-datepicker__header--custom {
+  background-color: #14151c !important;
+  border-bottom: none;
+  padding: 0;
+}
+
+.wsl-datepicker .react-datepicker__day-names {
+  display: flex;
+  justify-content: space-around;
+  background-color: #14151c !important;
+  padding: 0.5rem 0.25rem 0.6rem;
+  margin-bottom: 0.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.wsl-datepicker .react-datepicker__day-name {
+  color: rgba(232, 217, 190, 0.5) !important;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  width: 2rem;
+  margin: 0;
+}
+
+.wsl-datepicker .react-datepicker__month {
+  margin: 0;
+  padding: 0 0.25rem 0.25rem;
+  background-color: #14151c !important;
+}
+
+.wsl-datepicker .react-datepicker__week {
+  display: flex;
+  justify-content: space-around;
+}
+
+.wsl-datepicker .react-datepicker__day {
+  color: rgba(255, 255, 255, 0.85);
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  margin: 0.18rem;
+  border-radius: 9999px;
+  font-weight: 400;
+  font-size: 0.85rem;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.wsl-datepicker .react-datepicker__day:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+}
+
+.wsl-datepicker .react-datepicker__day--outside-month {
+  color: rgba(255, 255, 255, 0.18);
+}
+
+.wsl-datepicker .react-datepicker__day--disabled {
+  color: rgba(255, 255, 255, 0.12);
+  cursor: not-allowed;
+}
+
+.wsl-datepicker .react-datepicker__day--disabled:hover {
+  background-color: transparent;
+}
+
+.wsl-datepicker .react-datepicker__day--keyboard-selected {
+  background-color: rgba(196, 168, 122, 0.15);
+  color: #fff;
+}
+
+.wsl-datepicker .react-datepicker__day--in-range,
+.wsl-datepicker .react-datepicker__day--in-selecting-range {
+  background-color: rgba(196, 168, 122, 0.18) !important;
+  color: #fff;
+  border-radius: 0;
+}
+
+.wsl-datepicker .react-datepicker__day--in-range:hover,
+.wsl-datepicker .react-datepicker__day--in-selecting-range:hover {
+  background-color: rgba(196, 168, 122, 0.28) !important;
+}
+
+.wsl-datepicker .react-datepicker__day--range-start,
+.wsl-datepicker .react-datepicker__day--selecting-range-start {
+  border-radius: 9999px 0 0 9999px !important;
+}
+
+.wsl-datepicker .react-datepicker__day--range-end,
+.wsl-datepicker .react-datepicker__day--selecting-range-end {
+  border-radius: 0 9999px 9999px 0 !important;
+}
+
+.wsl-datepicker .react-datepicker__day--range-start,
+.wsl-datepicker .react-datepicker__day--range-end,
+.wsl-datepicker .react-datepicker__day--selected {
+  background: linear-gradient(135deg, #c4a87a, #d9bd8c) !important;
+  color: #1a1a1a !important;
+  font-weight: 600;
+}
+
+.wsl-datepicker .react-datepicker__day--today:not(.react-datepicker__day--selected):not(.react-datepicker__day--range-start):not(.react-datepicker__day--range-end) {
+  border: 1px solid rgba(196, 168, 122, 0.5);
+  line-height: calc(2rem - 2px);
+}
+
+.wsl-datepicker .react-datepicker__day--disabled {
+  position: relative;
+  color: rgba(255, 255, 255, 0.22) !important;
+  background-color: rgba(255, 255, 255, 0.03);
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 255, 255, 0.15);
+  cursor: not-allowed;
+}
+
+.wsl-datepicker .react-datepicker__day--disabled:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.22) !important;
+}
+
+/* Outside-month days that are also disabled shouldn't get the strikethrough */
+.wsl-datepicker .react-datepicker__day--outside-month.react-datepicker__day--disabled {
+  text-decoration: none;
+  background-color: transparent;
 }

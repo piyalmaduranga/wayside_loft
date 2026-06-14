@@ -5,9 +5,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import { useState } from "react";
-import { formatISO, formatRFC7231, isBefore, isValid } from "date-fns";
+import { formatISO, isBefore, isValid, format, addDays } from "date-fns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import toast, { Toaster } from "react-hot-toast";
 
 const options = [
@@ -41,16 +41,45 @@ const selectStyles = {
   indicatorSeparator: () => ({ display: "none" }),
 };
 
+function CustomHeaderLight({ date, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) {
+  return (
+    <div className="flex items-center justify-between px-3 pt-2 pb-3">
+      <button
+        type="button"
+        onClick={decreaseMonth}
+        disabled={prevMonthButtonDisabled}
+        className="w-7 h-7 flex items-center justify-center rounded-full text-[#6C6760] hover:text-[#1A1815] hover:bg-[#1A1815]/5 disabled:opacity-20 disabled:cursor-not-allowed transition-colors border-none bg-transparent cursor-pointer"
+      >
+        <FontAwesomeIcon icon={faChevronLeft} className="text-xs" />
+      </button>
+
+      <span className="font-serif text-sm font-medium text-[#1A1815] tracking-wide">
+        {format(date, "MMMM yyyy")}
+      </span>
+
+      <button
+        type="button"
+        onClick={increaseMonth}
+        disabled={nextMonthButtonDisabled}
+        className="w-7 h-7 flex items-center justify-center rounded-full text-[#6C6760] hover:text-[#1A1815] hover:bg-[#1A1815]/5 disabled:opacity-20 disabled:cursor-not-allowed transition-colors border-none bg-transparent cursor-pointer"
+      >
+        <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
+      </button>
+    </div>
+  );
+}
+
 function FilterSection({ filters }) {
   const range = {
     from: filters?.range.split("_")?.at(0),
     to: filters?.range.split("_")?.at(1),
   };
+
   const [startDate, setStartDate] = useState(
-    filters?.range && isValid(new Date(range.from)) ? formatRFC7231(new Date(range.from)) : ""
+    filters?.range && isValid(new Date(range.from)) ? new Date(range.from) : null
   );
   const [endDate, setEndDate] = useState(
-    filters?.range && isValid(new Date(range.to)) ? formatRFC7231(new Date(range.to)) : ""
+    filters?.range && isValid(new Date(range.to)) ? new Date(range.to) : null
   );
 
   const searchParams = useSearchParams();
@@ -65,10 +94,10 @@ function FilterSection({ filters }) {
 
   function handleSearch() {
     if (!startDate || !endDate) return;
-    const arrival = formatISO(new Date(startDate), { representation: "date" });
-    const departure = formatISO(new Date(endDate), { representation: "date" });
+    const arrival = formatISO(startDate, { representation: "date" });
+    const departure = formatISO(endDate, { representation: "date" });
 
-    if (!isBefore(arrival, departure)) {
+    if (!isBefore(startDate, endDate)) {
       toast.error("Invalid date range!");
       return;
     }
@@ -80,6 +109,13 @@ function FilterSection({ filters }) {
 
   const inputClass =
     "px-4 py-2.5 border border-[rgba(26,24,21,0.12)] rounded-[10px] text-[14px] text-[#1A1815] bg-white outline-none focus:border-[#C4A87A] focus:ring-2 focus:ring-[rgba(196,168,122,0.15)] transition-all w-full placeholder:text-[#B0A99F]";
+
+  const sharedPickerProps = {
+    calendarClassName: "wsl-datepicker-light",
+    popperClassName: "wsl-datepicker-popper",
+    renderCustomHeader: CustomHeaderLight,
+    showPopperArrow: false,
+  };
 
   return (
     <form className="roomsForm flex flex-wrap items-end justify-between gap-4 py-6 border-b border-[rgba(26,24,21,0.08)] mb-8">
@@ -111,8 +147,9 @@ function FilterSection({ filters }) {
             endDate={endDate}
             className={inputClass}
             dateFormat="dd/MM/yyyy"
-            excludeDateIntervals={[{ start: new Date("01/01/1970"), end: new Date() }]}
+            minDate={new Date()}
             placeholderText="Arrival Date"
+            {...sharedPickerProps}
           />
           <DatePicker
             selected={endDate}
@@ -120,11 +157,11 @@ function FilterSection({ filters }) {
             selectsEnd
             startDate={startDate}
             endDate={endDate}
-            minDate={startDate}
+            minDate={startDate ? addDays(startDate, 1) : new Date()}
             className={inputClass}
             dateFormat="dd/MM/yyyy"
-            excludeDateIntervals={[{ start: new Date("01/01/1970"), end: new Date() }]}
             placeholderText="Departure Date"
+            {...sharedPickerProps}
           />
           <button
             type="button"
