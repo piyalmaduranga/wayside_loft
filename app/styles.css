@@ -423,38 +423,52 @@ div.slider button.slider-btn-next:hover {
 /* ============================================================
    REACT-DAY-PICKER OVERRIDES (Airbnb aesthetic)
    ============================================================ */
-.rdp {
+.rdp,
+.rdp-root {
   --rdp-cell-size: 44px !important;
   --rdp-accent-color: var(--color-gold) !important;
+  --rdp-accent-background-color: var(--color-gold-muted) !important;
   --rdp-background-color: var(--color-gold-muted) !important;
   font-family: var(--font-sans) !important;
   margin: 0 auto !important;
   color: var(--color-ink) !important;
 }
 
+/* Selected days & range buttons */
 .rdp-day_selected,
+.rdp-selected .rdp-day_button,
 .rdp-day_selected:focus-visible,
-.rdp-day_selected:hover {
+.rdp-selected:focus-visible .rdp-day_button,
+.rdp-day_selected:hover,
+.rdp-selected:hover .rdp-day_button {
   background-color: var(--color-gold) !important;
   color: #fff !important;
   border-radius: 50% !important;
   font-weight: 600 !important;
 }
 
-.rdp-day_today {
+/* Today date styling */
+.rdp-day_today,
+.rdp-today .rdp-day_button {
   border: 1.5px solid var(--color-gold) !important;
   color: var(--color-gold) !important;
   font-weight: 700 !important;
   border-radius: 50% !important;
 }
 
-.rdp-day_range_middle {
+/* Selected range middle dates styling */
+.rdp-day_range_middle,
+.rdp-range_middle,
+.rdp-range_middle .rdp-day_button {
   background-color: var(--color-gold-muted) !important;
   color: var(--color-gold-dark) !important;
   border-radius: 0 !important;
 }
 
-.rdp-day_range_start {
+/* Selected range start date styling */
+.rdp-day_range_start,
+.rdp-range_start,
+.rdp-range_start .rdp-day_button {
   border-top-left-radius: 50% !important;
   border-bottom-left-radius: 50% !important;
   border-top-right-radius: 0 !important;
@@ -463,7 +477,10 @@ div.slider button.slider-btn-next:hover {
   color: #fff !important;
 }
 
-.rdp-day_range_end {
+/* Selected range end date styling */
+.rdp-day_range_end,
+.rdp-range_end,
+.rdp-range_end .rdp-day_button {
   border-top-right-radius: 50% !important;
   border-bottom-right-radius: 50% !important;
   border-top-left-radius: 0 !important;
@@ -472,9 +489,41 @@ div.slider button.slider-btn-next:hover {
   color: #fff !important;
 }
 
-.rdp-day:hover:not(.rdp-day_selected) {
+.rdp-day:hover:not(.rdp-day_selected):not(.rdp-selected) {
   background-color: var(--color-ivory-dark) !important;
   border-radius: 50% !important;
+}
+
+/* Booked dates styling in react-day-picker */
+.rdp-day_booked,
+.rdp-day--booked {
+  position: relative !important;
+  text-decoration: line-through !important;
+  text-decoration-color: #ef4444 !important;
+  color: var(--color-muted) !important;
+  background-color: rgba(239, 68, 68, 0.04) !important;
+  opacity: 0.7 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+.rdp-day_booked::after,
+.rdp-day--booked::after {
+  content: "" !important;
+  position: absolute !important;
+  bottom: 4px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 4px !important;
+  height: 4px !important;
+  background-color: #ef4444 !important;
+  border-radius: 50% !important;
+}
+
+.rdp-day_booked:hover,
+.rdp-day--booked:hover {
+  background-color: rgba(239, 68, 68, 0.04) !important;
+  color: var(--color-muted) !important;
 }
 
 .rdp-nav_button {

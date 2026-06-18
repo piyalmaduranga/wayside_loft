@@ -22,11 +22,13 @@ function RoomBookingForm({ bookingAction, room, initialRange }) {
   const [guests, setGuests] = useState("2");
 
   const handleDateSelection = useCallback((range) => {
-    if (!range) return;
-    const from = formatISO(range?.from, { representation: "date" });
-    const to = formatISO(range?.to, { representation: "date" });
-
-    console.log({ from, to });
+    if (!range) {
+      setStartDate("");
+      setEndDate("");
+      return;
+    }
+    const from = range.from ? formatISO(range.from, { representation: "date" }) : "";
+    const to = range.to ? formatISO(range.to, { representation: "date" }) : "";
 
     setStartDate(from);
     setEndDate(to);
@@ -54,6 +56,7 @@ function RoomBookingForm({ bookingAction, room, initialRange }) {
   return (
     <div className="flex flex-col gap-6 w-full">
       <FormDayPicker
+        roomId={room.id}
         handleDateSelection={handleDateSelection}
         start={startDate ? new Date(startDate) : undefined}
         end={endDate ? new Date(endDate) : undefined}

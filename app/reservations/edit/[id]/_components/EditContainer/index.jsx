@@ -52,7 +52,7 @@ function EditContainer({ reservation, reservationUpdateAction }) {
           guests={guests}
           handleSubmit={handleSubmit}
         >
-          <FormDayPicker handleDateSelection={handleDateSelection} start={startDate} end={endDate} />
+          <FormDayPicker roomId={reservation.room_id} handleDateSelection={handleDateSelection} start={startDate} end={endDate} />
         </ReservationForm>
       </div>
       <div className="lg:col-span-1 lg:sticky lg:top-24">
