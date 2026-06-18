@@ -10,10 +10,12 @@ import { notFound, redirect } from "next/navigation";
 import { isValid } from "date-fns";
 import { bookingSchema } from "@/app/_lib/zodSchemas";
 import { cookies } from "next/headers";
+import { auth } from "@/auth";
 
 const SUPABASE_ROOMS_URL = process.env.NEXT_PUBLIC_SUPABASE_IMGS_URL;
 
 async function RoomContainer({ params, searchParams }) {
+  const session = await auth();
   const room_slug = params?.room_slug;
   const range = searchParams?.range ?? "";
 
@@ -98,7 +100,12 @@ async function RoomContainer({ params, searchParams }) {
           <BookingPolicy />
         </div>
         <div className="lg:col-span-1 lg:sticky lg:top-24">
-          <RoomBookingForm bookingAction={bookingAction} room={room} initialRange={initialRange} />
+          <RoomBookingForm
+            bookingAction={bookingAction}
+            room={room}
+            initialRange={initialRange}
+            user={session?.user}
+          />
         </div>
       </div>
     </div>

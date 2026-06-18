@@ -6,9 +6,12 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import GuestDropdown from "./GuestDropdown/GuestDropdown";
 
+import { useAuthModal } from "@/app/_components/AuthModalContext";
+
 function Navbar({ user, signOutAction }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { openModal } = useAuthModal();
 
   const links = [
     { href: "/", label: "Home" },
@@ -55,6 +58,10 @@ function Navbar({ user, signOutAction }) {
           ) : (
             <Link
               href="/signin"
+              onClick={(e) => {
+                e.preventDefault();
+                openModal("login");
+              }}
               className={`relative text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors duration-200 py-1
                 ${pathname.includes("account") || pathname === "/signin"
                   ? "text-[#1A1815] after:scale-x-100"
@@ -102,7 +109,11 @@ function Navbar({ user, signOutAction }) {
               ) : (
                 <Link
                   href="/signin"
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setOpen(false);
+                    openModal("login");
+                  }}
                   className="text-[12px] font-semibold uppercase tracking-[0.12em] text-[#6C6760] hover:text-[#1A1815] transition-colors"
                 >
                   Guest Area

@@ -8,6 +8,8 @@ import ReservationButton from "../ReservationButton";
 import { useCallback, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
+import { useAuthModal } from "@/app/_components/AuthModalContext";
+
 const initialState = {
   dateError: "",
   guestsError: "",
@@ -15,11 +17,12 @@ const initialState = {
   isBooking: false,
 };
 
-function RoomBookingForm({ bookingAction, room, initialRange }) {
+function RoomBookingForm({ bookingAction, room, initialRange, user }) {
   const [state, formAction] = useFormState(bookingAction, initialState);
   const [startDate, setStartDate] = useState(initialRange?.from ?? "");
   const [endDate, setEndDate] = useState(initialRange?.to ?? "");
   const [guests, setGuests] = useState("2");
+  const { openModal } = useAuthModal();
 
   const handleDateSelection = useCallback((range) => {
     if (!range) {
@@ -35,6 +38,12 @@ function RoomBookingForm({ bookingAction, room, initialRange }) {
   }, []);
 
   function handleSubmit() {
+    if (!user) {
+      toast.error("Please sign in before confirming your booking!");
+      openModal("login");
+      return;
+    }
+
     if (!(startDate && endDate)) {
       toast.error("Please select a date range from the calendar");
       return;

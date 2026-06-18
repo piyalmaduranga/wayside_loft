@@ -1,6 +1,8 @@
 import { auth } from "@/auth";
 import Footer from "./_components/Footer";
 import Navbar from "./_ui/Navbar";
+import { AuthModalProvider } from "./_components/AuthModalContext";
+import AuthModal from "./_components/AuthModal";
 import "./styles.css";
 
 import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
@@ -45,7 +47,8 @@ export const metadata = {
     "affordable rooms mirissa",
     "digital nomad mirissa",
     "stay in mirissa",
-    "villa mirissa",
+    "rose loft mirissa",
+    "wayside loft mirissa",
   ],
   authors: [{ name: "Wayside Loft" }],
   creator: "Wayside Loft",
@@ -134,19 +137,22 @@ export default async function RootLayout({ children }) {
         />
       </head>
       <body className={`${jakarta.variable} ${playfair.variable} ${jakarta.className}`}>
-        <Navbar user={session?.user} signOutAction={signOutAction} />
-        <main>{children}</main>
-        {/* global WhatsApp chat button */}
-        <a
-          href="https://wa.me/+94760087674"
-          className="whatsapp-global-button"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Chat on WhatsApp"
-        >
-          <FontAwesomeIcon icon={faWhatsapp} />
-        </a>
-        <Footer />
+        <AuthModalProvider>
+          <Navbar user={session?.user} signOutAction={signOutAction} />
+          <main>{children}</main>
+          <AuthModal />
+          {/* global WhatsApp chat button */}
+          <a
+            href="https://wa.me/+94760087674"
+            className="whatsapp-global-button"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Chat on WhatsApp"
+          >
+            <FontAwesomeIcon icon={faWhatsapp} />
+          </a>
+          <Footer />
+        </AuthModalProvider>
       </body>
     </html>
   );
