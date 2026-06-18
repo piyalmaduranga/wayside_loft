@@ -41,8 +41,9 @@ export default async function PreviewPage({ searchParams }) {
   if (!reservation?.id) return notFound();
   if (reservation.guest_id !== session.user.id) return notFound();
 
-  // If the reservation is already confirmed (Direct DB ID), show success
-  if (reservation.status?.toLowerCase() === "confirmed") {
+  // If the reservation is already confirmed or unconfirmed (direct database/Pay on Arrival flow), show success
+  const status = reservation.status?.toLowerCase();
+  if (status === "confirmed" || status === "unconfirmed") {
     return <SuccessPage reservation={reservation} />;
   }
 

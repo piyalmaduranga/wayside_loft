@@ -18,7 +18,7 @@ import { bookingCancelAction } from "@/app/_lib/actions";
 import SelectCountry from "@/app/_ui/SelectCountry";
 import { revalidatePath } from "next/cache";
 import { format } from "date-fns";
-import { sendBookingConfirmationEmail } from "@/app/_lib/mailer";
+import { sendBookingReceivedEmail } from "@/app/_lib/mailer";
 import { bookingTotalPrice } from "@/app/utils/reservationsCalcs";
 import { daysDifferCount } from "@/app/utils/datetime";
 
@@ -101,14 +101,14 @@ async function CheckoutSection() {
         start_date: pending_reservation.start_date,
         end_date: pending_reservation.end_date,
         stripe_session_id: null,
-        status: "confirmed",
+        status: "unconfirmed",
       });
 
       const newReservation = newReservations?.[0];
 
-      // Send confirmation email
+      // Send booking request received email
       try {
-        await sendBookingConfirmationEmail({
+        await sendBookingReceivedEmail({
           guestName: fullname,
           guestEmail: email,
           roomName: room.name,

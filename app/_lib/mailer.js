@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { getBookingConfirmedHtml, getBookingReceivedHtml, getBookingUpdateHtml, getBookingCancellationHtml } from "./emailTemplates";
 
 /**
  * Creates and returns a configured Nodemailer transporter.
@@ -65,6 +66,8 @@ export async function sendContactEmail({ fullname, email, phone, message }) {
     });
 }
 
+import { getRiskySupabaseClient } from "./supabase/supabaseRiskyClient";
+
 /**
  * Sends a booking confirmation email to the guest (and CCs the hotel).
  */
@@ -80,53 +83,37 @@ export async function sendBookingConfirmationEmail({
 }) {
     const transporter = createTransporter();
 
-    const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 8px;">
-      <h2 style="color: #1a1a2e; border-bottom: 2px solid #c9a96e; padding-bottom: 10px; margin-top: 0;">
-        🏡 Booking Confirmed – Wayside Loft
-      </h2>
-      <p style="color: #444;">Dear <strong>${guestName}</strong>,</p>
-      <p style="color: #444;">Thank you for choosing Wayside Loft! Your reservation has been confirmed. Here are your booking details:</p>
+    // Fetch full details from database to complete template info
+    let roomPrice = 0;
+    let roomThumbnail = "";
+    let roomSleeps = 2;
+    try {
+        const { data: res, error } = await getRiskySupabaseClient()
+            .from("reservations")
+            .select("*, rooms(*)")
+            .eq("id", bookingId)
+            .single();
+        if (res?.rooms) {
+            roomPrice = res.rooms.price;
+            roomThumbnail = res.rooms.thumbnail;
+            roomSleeps = res.rooms.sleeps || res.rooms.capacity || 2;
+        }
+    } catch (dbErr) {
+        console.error("[mailer] db fetch failed for confirmation email:", dbErr.message);
+    }
 
-      <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-        <tr style="background: #f9f9f9;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #555; width: 150px;">Booking Number</td>
-          <td style="padding: 10px 12px; color: #222;">#${String(bookingId).padStart(6, "0")}</td>
-        </tr>
-        <tr>
-          <td style="padding: 10px 12px; font-weight: bold; color: #555;">Room</td>
-          <td style="padding: 10px 12px; color: #222;">${roomName}</td>
-        </tr>
-        <tr style="background: #f9f9f9;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #555;">Check-in</td>
-          <td style="padding: 10px 12px; color: #222;">${checkIn}</td>
-        </tr>
-        <tr>
-          <td style="padding: 10px 12px; font-weight: bold; color: #555;">Check-out</td>
-          <td style="padding: 10px 12px; color: #222;">${checkOut}</td>
-        </tr>
-        <tr style="background: #f9f9f9;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #555;">Guests</td>
-          <td style="padding: 10px 12px; color: #222;">${guests}</td>
-        </tr>
-        <tr>
-          <td style="padding: 10px 12px; font-weight: bold; color: #555;">Total Price</td>
-          <td style="padding: 10px 12px; color: #222; font-size: 16px;"><strong>$${Number(totalPrice).toFixed(2)}</strong></td>
-        </tr>
-      </table>
-
-      <div style="background: #fef9ec; border-left: 4px solid #c9a96e; padding: 12px 16px; border-radius: 4px; margin: 20px 0;">
-        <p style="margin: 0; color: #7a5c1e; font-weight: bold;">📍 Wayside Loft, Yatipila Road, Mirissa, Sri Lanka</p>
-        <p style="margin: 4px 0 0; color: #7a5c1e; font-size: 13px;">Payment is due on arrival. Please bring a valid ID.</p>
-      </div>
-
-      <p style="color: #444;">For any queries, contact us at <a href="mailto:${process.env.SMTP_USER}" style="color: #c9a96e;">${process.env.SMTP_USER}</a>.</p>
-      <p style="color: #888; font-size: 12px; margin-top: 24px;">
-        We look forward to welcoming you!<br/>
-        <strong>The Wayside Loft Team</strong>
-      </p>
-    </div>
-  `;
+    const html = getBookingConfirmedHtml({
+        guestName,
+        roomName,
+        checkIn,
+        checkOut,
+        guests,
+        totalPrice,
+        bookingId,
+        roomPrice,
+        roomThumbnail,
+        roomSleeps
+    });
 
     const adminEmails = [
         process.env.CONTACT_RECEIVER_EMAIL,
@@ -137,7 +124,68 @@ export async function sendBookingConfirmationEmail({
         from: `"Wayside Loft" <${process.env.SMTP_USER}>`,
         to: guestEmail,
         cc: adminEmails,
-        subject: `Booking Confirmed – ${roomName} | Wayside Loft #${String(bookingId).padStart(6, "0")}`,
+        subject: `Booking Confirmed – ${roomName} | Wayside Loft #${String(bookingId).split("-")[0]?.toUpperCase() || bookingId}`,
+        html,
+    });
+}
+
+/**
+ * Sends a booking request received email to the guest (and CCs the hotel).
+ */
+export async function sendBookingReceivedEmail({
+    guestName,
+    guestEmail,
+    roomName,
+    checkIn,
+    checkOut,
+    guests,
+    totalPrice,
+    bookingId,
+}) {
+    const transporter = createTransporter();
+
+    // Fetch full details from database to complete template info
+    let roomPrice = 0;
+    let roomThumbnail = "";
+    let roomSleeps = 2;
+    try {
+        const { data: res, error } = await getRiskySupabaseClient()
+            .from("reservations")
+            .select("*, rooms(*)")
+            .eq("id", bookingId)
+            .single();
+        if (res?.rooms) {
+            roomPrice = res.rooms.price;
+            roomThumbnail = res.rooms.thumbnail;
+            roomSleeps = res.rooms.sleeps || res.rooms.capacity || 2;
+        }
+    } catch (dbErr) {
+        console.error("[mailer] db fetch failed for received email:", dbErr.message);
+    }
+
+    const html = getBookingReceivedHtml({
+        guestName,
+        roomName,
+        checkIn,
+        checkOut,
+        guests,
+        totalPrice,
+        bookingId,
+        roomPrice,
+        roomThumbnail,
+        roomSleeps
+    });
+
+    const adminEmails = [
+        process.env.CONTACT_RECEIVER_EMAIL,
+        process.env.CONTACT_CC_EMAILS
+    ].filter(Boolean).join(",");
+
+    await transporter.sendMail({
+        from: `"Wayside Loft" <${process.env.SMTP_USER}>`,
+        to: guestEmail,
+        cc: adminEmails,
+        subject: `Booking Request Received – ${roomName} | Wayside Loft #${String(bookingId).split("-")[0]?.toUpperCase() || bookingId}`,
         html,
     });
 }
@@ -157,52 +205,37 @@ export async function sendBookingUpdateEmail({
 }) {
     const transporter = createTransporter();
 
-    const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 8px;">
-      <h2 style="color: #1a1a2e; border-bottom: 2px solid #5a78af; padding-bottom: 10px; margin-top: 0;">
-        🔄 Booking Updated – Wayside Loft
-      </h2>
-      <p style="color: #444;">Dear <strong>${guestName}</strong>,</p>
-      <p style="color: #444;">Your reservation at Wayside Loft has been updated. Here are your new booking details:</p>
+    // Fetch full details from database to complete template info
+    let roomPrice = 0;
+    let roomThumbnail = "";
+    let roomSleeps = 2;
+    try {
+        const { data: res, error } = await getRiskySupabaseClient()
+            .from("reservations")
+            .select("*, rooms(*)")
+            .eq("id", bookingId)
+            .single();
+        if (res?.rooms) {
+            roomPrice = res.rooms.price;
+            roomThumbnail = res.rooms.thumbnail;
+            roomSleeps = res.rooms.sleeps || res.rooms.capacity || 2;
+        }
+    } catch (dbErr) {
+        console.error("[mailer] db fetch failed for update email:", dbErr.message);
+    }
 
-      <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-        <tr style="background: #f9f9f9;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #555; width: 150px;">Booking Number</td>
-          <td style="padding: 10px 12px; color: #222;">#${String(bookingId).padStart(6, "0")}</td>
-        </tr>
-        <tr>
-          <td style="padding: 10px 12px; font-weight: bold; color: #555;">Room</td>
-          <td style="padding: 10px 12px; color: #222;">${roomName}</td>
-        </tr>
-        <tr style="background: #f9f9f9;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #555;">Check-in</td>
-          <td style="padding: 10px 12px; color: #222;">${checkIn}</td>
-        </tr>
-        <tr>
-          <td style="padding: 10px 12px; font-weight: bold; color: #555;">Check-out</td>
-          <td style="padding: 10px 12px; color: #222;">${checkOut}</td>
-        </tr>
-        <tr style="background: #f9f9f9;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #555;">Guests</td>
-          <td style="padding: 10px 12px; color: #222;">${guests}</td>
-        </tr>
-        <tr>
-          <td style="padding: 10px 12px; font-weight: bold; color: #555;">Total Price</td>
-          <td style="padding: 10px 12px; color: #222; font-size: 16px;"><strong>$${Number(totalPrice).toFixed(2)}</strong></td>
-        </tr>
-      </table>
-
-      <div style="background: #e8f0fe; border-left: 4px solid #5a78af; padding: 12px 16px; border-radius: 4px; margin: 20px 0;">
-        <p style="margin: 0; color: #2b4a83; font-weight: bold;">📍 Wayside Loft, Yatipila Road, Mirissa, Sri Lanka</p>
-        <p style="margin: 4px 0 0; color: #2b4a83; font-size: 13px;">If you didn't request this change, please contact us immediately.</p>
-      </div>
-
-      <p style="color: #444;">For any queries, contact us at <a href="mailto:${process.env.SMTP_USER}" style="color: #c9a96e;">${process.env.SMTP_USER}</a>.</p>
-      <p style="color: #888; font-size: 12px; margin-top: 24px;">
-        The Wayside Loft Team
-      </p>
-    </div>
-  `;
+    const html = getBookingUpdateHtml({
+        guestName,
+        roomName,
+        checkIn,
+        checkOut,
+        guests,
+        totalPrice,
+        bookingId,
+        roomPrice,
+        roomThumbnail,
+        roomSleeps
+    });
 
     const adminEmails = [
         process.env.CONTACT_RECEIVER_EMAIL,
@@ -213,12 +246,10 @@ export async function sendBookingUpdateEmail({
         from: `"Wayside Loft" <${process.env.SMTP_USER}>`,
         to: guestEmail,
         cc: adminEmails,
-        subject: `Booking UPDATED – ${roomName} | Wayside Loft #${String(bookingId).padStart(6, "0")}`,
+        subject: `Booking UPDATED – ${roomName} | Wayside Loft #${String(bookingId).split("-")[0]?.toUpperCase() || bookingId}`,
         html,
     });
 }
-
-
 
 /**
  * Sends a booking cancellation email to the guest and the hotel.
@@ -233,44 +264,43 @@ export async function sendBookingCancellationEmail({
 }) {
     const transporter = createTransporter();
 
-    const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 8px;">
-      <h2 style="color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 10px; margin-top: 0;">
-        ❌ Booking CANCELLED – Wayside Loft
-      </h2>
-      <p style="color: #444;">Dear <strong>${guestName}</strong>,</p>
-      <p style="color: #444;">This email confirms that your reservation at Wayside Loft has been cancelled.</p>
+    // Fetch full details from database to complete template info
+    let roomPrice = 0;
+    let roomThumbnail = "";
+    let roomSleeps = 2;
+    let guests = 2;
+    let totalPrice = 0;
+    try {
+        const { data: res, error } = await getRiskySupabaseClient()
+            .from("reservations")
+            .select("*, rooms(*)")
+            .eq("id", bookingId)
+            .single();
+        if (res) {
+            guests = res.guests_count || 2;
+            totalPrice = res.reserved_price || 0;
+            if (res.rooms) {
+                roomPrice = res.rooms.price;
+                roomThumbnail = res.rooms.thumbnail;
+                roomSleeps = res.rooms.sleeps || res.rooms.capacity || 2;
+            }
+        }
+    } catch (dbErr) {
+        console.error("[mailer] db fetch failed for cancellation email:", dbErr.message);
+    }
 
-      <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-        <tr style="background: #f9f9f9;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #555; width: 150px;">Booking Number</td>
-          <td style="padding: 10px 12px; color: #222;">#${String(bookingId).padStart(6, "0")}</td>
-        </tr>
-        <tr>
-          <td style="padding: 10px 12px; font-weight: bold; color: #555;">Room</td>
-          <td style="padding: 10px 12px; color: #222;">${roomName}</td>
-        </tr>
-        <tr style="background: #f9f9f9;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #555;">Check-in</td>
-          <td style="padding: 10px 12px; color: #222;">${checkIn}</td>
-        </tr>
-        <tr>
-          <td style="padding: 10px 12px; font-weight: bold; color: #555;">Check-out</td>
-          <td style="padding: 10px 12px; color: #222;">${checkOut}</td>
-        </tr>
-      </table>
-
-      <div style="background: #fff5f5; border-left: 4px solid #d32f2f; padding: 12px 16px; border-radius: 4px; margin: 20px 0;">
-        <p style="margin: 0; color: #c62828; font-weight: bold;">Reservation Cancelled</p>
-        <p style="margin: 4px 0 0; color: #c62828; font-size: 13px;">If this was a mistake, please reach out to us to re-book.</p>
-      </div>
-
-      <p style="color: #444;">For any queries, contact us at <a href="mailto:${process.env.SMTP_USER}" style="color: #c9a96e;">${process.env.SMTP_USER}</a>.</p>
-      <p style="color: #888; font-size: 12px; margin-top: 24px;">
-        The Wayside Loft Team
-      </p>
-    </div>
-  `;
+    const html = getBookingCancellationHtml({
+        guestName,
+        roomName,
+        checkIn,
+        checkOut,
+        guests,
+        totalPrice,
+        bookingId,
+        roomPrice,
+        roomThumbnail,
+        roomSleeps
+    });
 
     const adminEmails = [
         process.env.CONTACT_RECEIVER_EMAIL,
@@ -281,7 +311,7 @@ export async function sendBookingCancellationEmail({
         from: `"Wayside Loft" <${process.env.SMTP_USER}>`,
         to: guestEmail,
         cc: adminEmails,
-        subject: `Booking CANCELLED – ${roomName} | Wayside Loft #${String(bookingId).padStart(6, "0")}`,
+        subject: `Booking CANCELLED – ${roomName} | Wayside Loft #${String(bookingId).split("-")[0]?.toUpperCase() || bookingId}`,
         html,
     });
 }

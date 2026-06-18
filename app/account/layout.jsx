@@ -7,7 +7,7 @@ function Layout({ children }) {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-16">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 items-start">
-        <aside className="md:col-span-1 bg-surface border border-border p-6 rounded-lg shadow-sm">
+        <aside className="hidden md:block md:col-span-1 bg-surface border border-border p-6 rounded-lg shadow-sm">
           <ul className="flex md:flex-col gap-3 md:gap-4 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
             <li className="flex-1 md:flex-initial">
               <Link 

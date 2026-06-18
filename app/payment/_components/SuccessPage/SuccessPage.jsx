@@ -6,9 +6,10 @@ import Link from "next/link";
 const SUPABASE_ROOMS_URL = process.env.NEXT_PUBLIC_SUPABASE_IMGS_URL;
 
 function SuccessPage({ reservation }) {
+  const isConfirmed = reservation.status?.toLowerCase() === "confirmed";
   return (
     <>
-      <Banner title={"RESERVATION CONFIRMED"} />
+      <Banner title={isConfirmed ? "RESERVATION CONFIRMED" : "RESERVATION RECEIVED"} />
       <div className="container mx-auto px-4 max-w-4xl py-12 md:-mt-32 relative z-10">
         <div className="bg-[#F8F6F1] rounded-lg shadow-xl border border-neutral-200/60 p-6 md:p-10 transition-all duration-300">
           <h2 className="font-serif font-medium text-2xl text-[#1A1815] mb-6 pb-2 border-b border-[#C4A87A] inline-block">

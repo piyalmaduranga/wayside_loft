@@ -5,6 +5,8 @@ import { daysDifferCount } from "@/app/utils/datetime";
 import { bookingTotalPrice } from "@/app/utils/reservationsCalcs";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { sendBookingConfirmationEmail } from "@/app/_lib/mailer";
+import { format } from "date-fns";
 
 export async function POST(req, res) {
   const requestBody = await req.json();
@@ -66,6 +68,24 @@ export async function POST(req, res) {
         stripe_session_id: metadata.session_id,
         status: "confirmed",
       });
+
+      const createdReservation = new_res?.[0];
+      if (createdReservation) {
+        try {
+          await sendBookingConfirmationEmail({
+            guestName: guest.fullname,
+            guestEmail: guest.email,
+            roomName: room.name,
+            checkIn: format(new Date(pending_reservation.start_date), "MMMM dd, yyyy"),
+            checkOut: format(new Date(pending_reservation.end_date), "MMMM dd, yyyy"),
+            guests: pending_reservation.guests_count,
+            totalPrice: totalUSDPrice,
+            bookingId: createdReservation.id,
+          });
+        } catch (emailErr) {
+          console.error("[stripe-webhook-gateway] confirmation email failed:", emailErr.message);
+        }
+      }
 
       return NextResponse.json(
         { received: true, status: 200 },

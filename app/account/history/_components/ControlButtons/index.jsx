@@ -1,16 +1,15 @@
 "use client";
 import Modal from "@/app/_components/Modal/Modal";
 import ReservationOverview from "../ReservationOverview";
-import DeleteForm from "../DeleteFrom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faEye } from "@fortawesome/free-solid-svg-icons";
 
-function ControlButtons({ deleteAction, reservation, reservationCancelAction }) {
+function ControlButtons({ reservation, reservationCancelAction }) {
   return (
-    <div className="flex flex-row md:flex-col gap-2 w-full md:w-auto md:h-full">
+    <div className="flex flex-row md:flex-col gap-2 w-full md:w-auto md:h-full items-center justify-center">
       <Modal>
         <Modal.ToggleOpen>
-          <button className="flex items-center justify-center gap-2 px-5 py-2.5 bg-white hover:bg-surface border border-ink/20 hover:border-ink text-ink font-sans text-sm font-semibold rounded-full transition-all duration-200 outline-none cursor-pointer w-full md:min-w-[120px]">
+          <button className="flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-ink hover:text-white border border-gold hover:border-ink text-gold font-sans text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-300 outline-none cursor-pointer w-full md:w-auto md:min-w-[140px] shadow-xs hover:shadow-md">
             <FontAwesomeIcon icon={faEye} className="text-xs" />
             <span>View details</span>
           </button>
@@ -19,9 +18,7 @@ function ControlButtons({ deleteAction, reservation, reservationCancelAction }) 
           <Modal.Wrapper hideOnLargerScreens={false}>
             <ReservationOverview
               reservation={reservation}
-              allowDelete={false}
               reservationCancelAction={reservationCancelAction}
-              deleteAction={deleteAction}
             >
               <Modal.ToggleClose>
                 <button
@@ -34,7 +31,6 @@ function ControlButtons({ deleteAction, reservation, reservationCancelAction }) 
             </ReservationOverview>
           </Modal.Wrapper>
         </Modal.Overlay>
-        {reservation.status !== "confirmed" && <DeleteForm deleteAction={deleteAction} />}
       </Modal>
     </div>
   );
