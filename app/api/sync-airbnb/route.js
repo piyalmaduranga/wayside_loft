@@ -130,16 +130,40 @@ export async function GET(request) {
   // 3. Sync each room
   for (const room of roomsToSync) {
     try {
-      // Fetch the iCal feed
-      const icsRes = await fetch(room.airbnb_ical_url);
-      if (!icsRes.ok) {
-        results.push({ room: room.name, success: false, error: `Failed to fetch iCal feed (status ${icsRes.status})` });
+      // Split the airbnb_ical_url by commas, semicolons, newlines, or whitespace
+      const urls = room.airbnb_ical_url
+        .split(/[\s,;\n\r]+/)
+        .map((u) => u.trim())
+        .filter((u) => u.startsWith("http://") || u.startsWith("https://"));
+
+      if (urls.length === 0) {
+        results.push({ room: room.name, success: false, error: "No valid URLs found in configuration" });
         continue;
       }
-      const icsText = await icsRes.text();
 
-      // Parse current feed events
-      const events = parseICS(icsText);
+      const events = [];
+      let fetchError = null;
+
+      for (const url of urls) {
+        try {
+          const icsRes = await fetch(url);
+          if (!icsRes.ok) {
+            fetchError = `Failed to fetch iCal feed from ${url} (status ${icsRes.status})`;
+            break;
+          }
+          const icsText = await icsRes.text();
+          const parsed = parseICS(icsText);
+          events.push(...parsed);
+        } catch (err) {
+          fetchError = `Error fetching ${url}: ${err.message}`;
+          break;
+        }
+      }
+
+      if (fetchError) {
+        results.push({ room: room.name, success: false, error: fetchError });
+        continue;
+      }
 
       // Fetch existing Airbnb bookings in DB for this room
       const { data: dbReservations, error: dbErr } = await supabase

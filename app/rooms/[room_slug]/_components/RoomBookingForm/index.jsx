@@ -22,6 +22,7 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
   const [startDate, setStartDate] = useState(initialRange?.from ?? "");
   const [endDate, setEndDate] = useState(initialRange?.to ?? "");
   const [guests, setGuests] = useState("2");
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
   const { openModal } = useAuthModal();
 
   const handleDateSelection = useCallback((range) => {
@@ -64,12 +65,15 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <FormDayPicker
-        roomId={room.id}
-        handleDateSelection={handleDateSelection}
-        start={startDate ? new Date(startDate) : undefined}
-        end={endDate ? new Date(endDate) : undefined}
-      />
+      {/* Desktop Calendar view: hidden on mobile */}
+      <div className="hidden md:block w-full">
+        <FormDayPicker
+          roomId={room.id}
+          handleDateSelection={handleDateSelection}
+          start={startDate ? new Date(startDate) : undefined}
+          end={endDate ? new Date(endDate) : undefined}
+        />
+      </div>
 
       <form action={handleSubmit} className="bg-surface border border-border rounded-lg p-6 shadow-sm flex flex-col gap-5 text-left">
         <div>
@@ -86,7 +90,12 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 divide-x divide-border">
+          {/* Clickable Date Display Container */}
+          <div 
+            onClick={() => setIsMobileModalOpen(true)}
+            className="grid grid-cols-2 divide-x divide-border cursor-pointer hover:bg-ivory/10 transition-colors"
+            title="Click to select dates"
+          >
             <div className="p-3 bg-surface flex items-center gap-3">
               <FontAwesomeIcon icon={faCalendarAlt} className="text-gold w-4 h-4 shrink-0" />
               <div className="flex flex-col">
@@ -133,6 +142,66 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
           You won&apos;t be charged yet
         </p>
       </form>
+
+      {/* Mobile Modal Calendar Popover */}
+      {isMobileModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4">
+          {/* Modal Overlay Backdrop */}
+          <div className="absolute inset-0" onClick={() => setIsMobileModalOpen(false)} />
+
+          {/* Modal Content Card */}
+          <div className="relative bg-surface w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl shadow-xl flex flex-col max-h-[90vh] overflow-hidden animate-in slide-in-from-bottom duration-200">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+              <div>
+                <h3 className="font-serif text-lg font-semibold text-ink">Select Dates</h3>
+                <p className="text-xs text-muted font-sans mt-0.5">Choose your check-in and check-out dates</p>
+              </div>
+              <button 
+                type="button"
+                onClick={() => setIsMobileModalOpen(false)}
+                className="text-muted hover:text-ink w-8 h-8 rounded-full flex items-center justify-center hover:bg-border transition-colors border-none bg-transparent cursor-pointer font-sans text-lg"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Calendar Scroll Area */}
+            <div className="p-4 overflow-y-auto flex justify-center bg-ivory/5">
+              <FormDayPicker
+                roomId={room.id}
+                handleDateSelection={handleDateSelection}
+                start={startDate ? new Date(startDate) : undefined}
+                end={endDate ? new Date(endDate) : undefined}
+              />
+            </div>
+
+            {/* Footer Summary / Close Button */}
+            <div className="p-5 border-t border-border bg-ivory/30 flex flex-col gap-3">
+              <div className="flex justify-between items-center text-sm font-sans px-2">
+                <div className="flex flex-col">
+                  <span className="text-[9px] uppercase font-semibold text-muted tracking-wider">Check In</span>
+                  <span className="font-semibold text-ink text-sm mt-0.5">{startDate || "Not selected"}</span>
+                </div>
+                <div className="text-muted-light font-light text-lg">➔</div>
+                <div className="flex flex-col text-right">
+                  <span className="text-[9px] uppercase font-semibold text-muted tracking-wider">Check Out</span>
+                  <span className="font-semibold text-ink text-sm mt-0.5">{endDate || "Not selected"}</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsMobileModalOpen(false)}
+                className="w-full py-3 bg-gold hover:bg-gold-dark text-white font-sans text-sm font-semibold rounded-lg transition-colors shadow-sm cursor-pointer mt-1"
+              >
+                {startDate && endDate ? "Apply Dates" : "Close"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Toaster position="top-center" reverseOrder={false} />
     </div>
   );

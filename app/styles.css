@@ -434,6 +434,37 @@ div.slider button.slider-btn-next:hover {
   color: var(--color-ink) !important;
 }
 
+/* Dropdown styling for react-day-picker v9 */
+.rdp-dropdowns {
+  display: flex !important;
+  gap: 8px !important;
+  margin: 4px 0 12px !important;
+}
+
+.rdp-select {
+  font-family: var(--font-sans) !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  color: var(--color-ink) !important;
+  background-color: #FAF9F6 !important;
+  border: 1px solid rgba(26, 24, 21, 0.12) !important;
+  border-radius: 8px !important;
+  padding: 6px 28px 6px 12px !important;
+  cursor: pointer !important;
+  outline: none !important;
+  appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236C6760'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  background-size: 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+.rdp-select:hover {
+  border-color: var(--color-gold) !important;
+  background-color: #ffffff !important;
+}
+
 /* Selected days & range buttons */
 .rdp-day_selected,
 .rdp-selected .rdp-day_button,
@@ -494,36 +525,35 @@ div.slider button.slider-btn-next:hover {
   border-radius: 50% !important;
 }
 
-/* Booked dates styling in react-day-picker */
+/* Booked dates styling in react-day-picker (diagonal slash layout) */
 .rdp-day_booked,
 .rdp-day--booked {
   position: relative !important;
-  text-decoration: line-through !important;
-  text-decoration-color: #ef4444 !important;
-  color: var(--color-muted) !important;
-  background-color: rgba(239, 68, 68, 0.04) !important;
-  opacity: 0.7 !important;
+  color: rgba(26, 24, 21, 0.25) !important;
+  background-color: #FAF9F6 !important;
+  opacity: 0.65 !important;
   cursor: not-allowed !important;
   pointer-events: none !important;
+  border-radius: 50% !important;
 }
 
 .rdp-day_booked::after,
 .rdp-day--booked::after {
   content: "" !important;
   position: absolute !important;
-  bottom: 4px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: 4px !important;
-  height: 4px !important;
-  background-color: #ef4444 !important;
-  border-radius: 50% !important;
+  top: 50% !important;
+  left: 15% !important;
+  width: 70% !important;
+  height: 1px !important;
+  background-color: rgba(26, 24, 21, 0.15) !important;
+  transform: translateY(-50%) rotate(-45deg) !important;
+  border-radius: 0 !important;
 }
 
 .rdp-day_booked:hover,
 .rdp-day--booked:hover {
-  background-color: rgba(239, 68, 68, 0.04) !important;
-  color: var(--color-muted) !important;
+  background-color: #FAF9F6 !important;
+  color: rgba(26, 24, 21, 0.25) !important;
 }
 
 .rdp-nav_button {
