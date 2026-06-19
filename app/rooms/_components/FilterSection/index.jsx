@@ -1,16 +1,14 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
-import DatePicker from "react-datepicker";
 import { useState } from "react";
 import { formatISO, isBefore, isValid, format, addDays } from "date-fns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import toast, { Toaster } from "react-hot-toast";
 
-import { DayPicker } from "react-day-picker";
+import FormDayPicker from "@/app/rooms/[room_slug]/_components/FormDayPicker";
 
 const options = [
   { value: "default", label: "Default Sorting" },
@@ -43,33 +41,17 @@ const selectStyles = {
   indicatorSeparator: () => ({ display: "none" }),
 };
 
-function CustomHeaderLight({ date, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) {
-  return (
-    <div className="flex items-center justify-between px-3 pt-2 pb-3">
-      <button
-        type="button"
-        onClick={decreaseMonth}
-        disabled={prevMonthButtonDisabled}
-        className="w-7 h-7 flex items-center justify-center rounded-full text-[#6C6760] hover:text-[#1A1815] hover:bg-[#1A1815]/5 disabled:opacity-20 disabled:cursor-not-allowed transition-colors border-none bg-transparent cursor-pointer"
-      >
-        <FontAwesomeIcon icon={faChevronLeft} className="text-xs" />
-      </button>
-
-      <span className="font-serif text-sm font-medium text-[#1A1815] tracking-wide">
-        {format(date, "MMMM yyyy")}
-      </span>
-
-      <button
-        type="button"
-        onClick={increaseMonth}
-        disabled={nextMonthButtonDisabled}
-        className="w-7 h-7 flex items-center justify-center rounded-full text-[#6C6760] hover:text-[#1A1815] hover:bg-[#1A1815]/5 disabled:opacity-20 disabled:cursor-not-allowed transition-colors border-none bg-transparent cursor-pointer"
-      >
-        <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
-      </button>
-    </div>
-  );
-}
+const parseLocalDate = (dateStr) => {
+  if (!dateStr) return null;
+  if (dateStr instanceof Date) return dateStr;
+  const cleanStr = dateStr.split("T")[0];
+  const parts = cleanStr.split("-").map(Number);
+  if (parts.length === 3) {
+    const [year, month, day] = parts;
+    return new Date(year, month - 1, day);
+  }
+  return null;
+};
 
 function FilterSection({ filters }) {
   const range = {
@@ -78,10 +60,10 @@ function FilterSection({ filters }) {
   };
 
   const [startDate, setStartDate] = useState(
-    filters?.range && isValid(new Date(range.from)) ? new Date(range.from) : null
+    filters?.range ? parseLocalDate(range.from) : null
   );
   const [endDate, setEndDate] = useState(
-    filters?.range && isValid(new Date(range.to)) ? new Date(range.to) : null
+    filters?.range ? parseLocalDate(range.to) : null
   );
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
 
@@ -120,16 +102,6 @@ function FilterSection({ filters }) {
     setEndDate(range.to || null);
   };
 
-  const inputClass =
-    "px-4 py-2.5 border border-[rgba(26,24,21,0.12)] rounded-[10px] text-[14px] text-[#1A1815] bg-white outline-none focus:border-[#C4A87A] focus:ring-2 focus:ring-[rgba(196,168,122,0.15)] transition-all w-full placeholder:text-[#B0A99F]";
-
-  const sharedPickerProps = {
-    calendarClassName: "wsl-datepicker-light",
-    popperClassName: "wsl-datepicker-popper",
-    renderCustomHeader: CustomHeaderLight,
-    showPopperArrow: false,
-  };
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -155,45 +127,17 @@ function FilterSection({ filters }) {
           Filter by Date
         </label>
         <div className="flex flex-wrap gap-3 items-center w-full md:w-auto">
-          {/* Desktop view: DatePicker inputs */}
-          <div className="hidden md:flex gap-3 items-center">
-            <DatePicker
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              selectsStart
-              startDate={startDate}
-              endDate={endDate}
-              className={inputClass}
-              dateFormat="dd/MM/yyyy"
-              minDate={new Date()}
-              placeholderText="Arrival Date"
-              {...sharedPickerProps}
-            />
-            <DatePicker
-              selected={endDate}
-              onChange={(date) => setEndDate(date)}
-              selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              minDate={startDate ? addDays(startDate, 1) : new Date()}
-              className={inputClass}
-              dateFormat="dd/MM/yyyy"
-              placeholderText="Departure Date"
-              {...sharedPickerProps}
-            />
-          </div>
-
-          {/* Mobile view: Clickable trigger inputs */}
-          <div className="flex md:hidden gap-2 w-full">
+          {/* Clickable trigger inputs (unified for desktop and mobile) */}
+          <div className="flex gap-2 w-full md:w-auto">
             <div 
               onClick={() => setIsMobileModalOpen(true)}
-              className="flex-1 px-4 py-2.5 border border-[rgba(26,24,21,0.12)] rounded-[10px] text-[14px] text-[#1A1815] bg-white cursor-pointer select-none text-center"
+              className="flex-grow md:flex-grow-0 px-4 py-2.5 border border-[rgba(26,24,21,0.12)] rounded-[10px] text-[14px] text-[#1A1815] bg-white cursor-pointer select-none text-center min-w-[145px]"
             >
               {startDate ? format(startDate, "dd/MM/yyyy") : <span className="text-[#B0A99F]">Arrival Date</span>}
             </div>
             <div 
               onClick={() => setIsMobileModalOpen(true)}
-              className="flex-1 px-4 py-2.5 border border-[rgba(26,24,21,0.12)] rounded-[10px] text-[14px] text-[#1A1815] bg-white cursor-pointer select-none text-center"
+              className="flex-grow md:flex-grow-0 px-4 py-2.5 border border-[rgba(26,24,21,0.12)] rounded-[10px] text-[14px] text-[#1A1815] bg-white cursor-pointer select-none text-center min-w-[145px]"
             >
               {endDate ? format(endDate, "dd/MM/yyyy") : <span className="text-[#B0A99F]">Departure Date</span>}
             </div>
@@ -234,17 +178,11 @@ function FilterSection({ filters }) {
             </div>
 
             {/* Calendar Scroll Area */}
-            <div className="p-4 overflow-y-auto flex justify-center bg-ivory/5">
-              <DayPicker
-                captionLayout="dropdown"
-                min={0}
-                onSelect={handleDateSelection}
-                mode="range"
-                selected={{ from: startDate || undefined, to: endDate || undefined }}
-                weekStartsOn={1}
-                numberOfMonths={1}
-                disabled={[{ before: today }]}
-                excludeDisabled={true}
+            <div className="p-4 overflow-y-auto flex justify-center bg-ivory/5 bg-surface rounded-lg">
+              <FormDayPicker
+                handleDateSelection={handleDateSelection}
+                start={startDate || undefined}
+                end={endDate || undefined}
               />
             </div>
 

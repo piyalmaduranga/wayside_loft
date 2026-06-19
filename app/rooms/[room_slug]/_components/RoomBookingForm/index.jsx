@@ -17,6 +17,18 @@ const initialState = {
   isBooking: false,
 };
 
+const parseLocalDate = (dateStr) => {
+  if (!dateStr) return undefined;
+  if (dateStr instanceof Date) return dateStr;
+  const cleanStr = dateStr.split("T")[0];
+  const parts = cleanStr.split("-").map(Number);
+  if (parts.length === 3) {
+    const [year, month, day] = parts;
+    return new Date(year, month - 1, day);
+  }
+  return undefined;
+};
+
 function RoomBookingForm({ bookingAction, room, initialRange, user }) {
   const [state, formAction] = useFormState(bookingAction, initialState);
   const [startDate, setStartDate] = useState(initialRange?.from ?? "");
@@ -70,8 +82,8 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
         <FormDayPicker
           roomId={room.id}
           handleDateSelection={handleDateSelection}
-          start={startDate ? new Date(startDate) : undefined}
-          end={endDate ? new Date(endDate) : undefined}
+          start={parseLocalDate(startDate)}
+          end={parseLocalDate(endDate)}
         />
       </div>
 
@@ -171,8 +183,8 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
               <FormDayPicker
                 roomId={room.id}
                 handleDateSelection={handleDateSelection}
-                start={startDate ? new Date(startDate) : undefined}
-                end={endDate ? new Date(endDate) : undefined}
+                start={parseLocalDate(startDate)}
+                end={parseLocalDate(endDate)}
               />
             </div>
 

@@ -113,12 +113,14 @@ function FormDayPicker({ roomId, handleDateSelection, start, end }) {
                 <span className="inline-block w-2.5 h-2.5 rounded-full border border-border bg-surface"></span>
                 <span>Available</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="inline-block w-2.5 h-2.5 rounded-full bg-rose-50 border border-rose-200 relative overflow-hidden flex items-center justify-center">
-                  <span className="absolute w-[140%] h-[1px] bg-rose-300 rotate-45"></span>
-                </span>
-                <span>Already Booked</span>
-              </div>
+              {roomId && (
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-block w-2.5 h-2.5 rounded-full bg-rose-50 border border-rose-200 relative overflow-hidden flex items-center justify-center">
+                    <span className="absolute w-[140%] h-[1px] bg-rose-300 rotate-45"></span>
+                  </span>
+                  <span>Already Booked</span>
+                </div>
+              )}
             </div>
             <p className="flex items-center gap-1.5 text-xs text-muted font-sans mt-1">
               <FontAwesomeIcon icon={faInfoCircle} className="text-gold" />
