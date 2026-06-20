@@ -12,7 +12,10 @@ import { bookingSchema } from "@/app/_lib/zodSchemas";
 import { cookies } from "next/headers";
 import { auth } from "@/auth";
 
-const SUPABASE_ROOMS_URL = process.env.NEXT_PUBLIC_SUPABASE_IMGS_URL;
+const rawStorageUrl = process.env.NEXT_PUBLIC_SUPABASE_IMGS_URL || "";
+const SUPABASE_ROOMS_URL = rawStorageUrl
+  .replace(".storage.supabase.co/storage/v1/s3", ".supabase.co/storage/v1/object/public/rooms-imgs")
+  .replace("/storage/v1/s3", "/storage/v1/object/public/rooms-imgs");
 
 async function RoomContainer({ params, searchParams }) {
   const session = await auth();

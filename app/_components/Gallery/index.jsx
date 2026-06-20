@@ -2,7 +2,10 @@ import Heading from "@/app/_ui/Heading";
 import Image from "next/image";
 import { getAllRooms } from "@/app/_lib/supabase/rooms";
 
-const SUPABASE_ROOMS_URL = process.env.NEXT_PUBLIC_SUPABASE_IMGS_URL;
+const rawStorageUrl = process.env.NEXT_PUBLIC_SUPABASE_IMGS_URL || "";
+const SUPABASE_ROOMS_URL = rawStorageUrl
+  .replace(".storage.supabase.co/storage/v1/s3", ".supabase.co/storage/v1/object/public/rooms-imgs")
+  .replace("/storage/v1/s3", "/storage/v1/object/public/rooms-imgs");
 
 async function Gallery() {
   const rooms = await getAllRooms();

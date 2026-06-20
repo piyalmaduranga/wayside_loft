@@ -103,7 +103,7 @@ function getEmailHtml(data, emailTitle, emailPreview, greetingText, bodyMessage,
 
   const mainButtonUrl = options.isCancelled ? bookNewStayUrl : viewReservationUrl;
   const mainButtonText = options.isCancelled ? "BOOK A NEW STAY" : "VIEW YOUR RESERVATION";
-  
+
   const secondaryButtonUrl = manageBookingUrl;
   const secondaryButtonText = options.isCancelled ? "View Booking History" : "Manage Booking";
 
@@ -776,7 +776,7 @@ function getEmailHtml(data, emailTitle, emailPreview, greetingText, bodyMessage,
                     </tr>
                     <tr>
                       <td align="center" style="font-size:0px;padding:10px 25px;padding-bottom:16px;word-break:break-word;">
-                        <div style="font-family:Helvetica Neue, Helvetica, Arial, sans-serif;font-size:12px;line-height:1.6;text-align:center;color:#6C6760;">Questions about your stay? Reply to this email or call +94 77 123 4567</div>
+                        <div style="font-family:Helvetica Neue, Helvetica, Arial, sans-serif;font-size:12px;line-height:1.6;text-align:center;color:#6C6760;">Questions about your stay? Reply to this email or call +94 760087674</div>
                       </td>
                     </tr>
                     <tr>

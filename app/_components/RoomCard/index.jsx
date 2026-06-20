@@ -4,7 +4,10 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const SUPABASE_ROOMS_URL = process.env.NEXT_PUBLIC_SUPABASE_IMGS_URL;
+const rawStorageUrl = process.env.NEXT_PUBLIC_SUPABASE_IMGS_URL || "";
+const SUPABASE_ROOMS_URL = rawStorageUrl
+  .replace(".storage.supabase.co/storage/v1/s3", ".supabase.co/storage/v1/object/public/rooms-imgs")
+  .replace("/storage/v1/s3", "/storage/v1/object/public/rooms-imgs");
 
 function RoomCard({ room }) {
   const [isFavorited, setIsFavorited] = useState(false);
