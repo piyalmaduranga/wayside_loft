@@ -5,7 +5,6 @@ import RoomBookingForm from "../RoomBookingForm";
 import RoomDescription from "../RoomDescription";
 import Facilities from "../Facilities";
 import BookingPolicy from "../BookingPolicy";
-import ICalExport from "../ICalExport";
 import { getRoomById, getRoomImages } from "@/app/_lib/supabase/rooms";
 import { notFound, redirect } from "next/navigation";
 import { isValid } from "date-fns";
@@ -118,8 +117,6 @@ async function RoomContainer({ params, searchParams }) {
           <Facilities />
           <hr className="border-border" />
           <BookingPolicy />
-          <hr className="border-border" />
-          <ICalExport room={room} />
         </div>
         <div className="lg:col-span-1 lg:sticky lg:top-24">
           <RoomBookingForm
