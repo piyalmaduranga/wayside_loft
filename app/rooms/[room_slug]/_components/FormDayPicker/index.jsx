@@ -17,10 +17,17 @@ const parseLocalDate = (dateStr) => {
 };
 
 function FormDayPicker({ roomId, handleDateSelection, start, end }) {
-  const [disabledDays, setDisabledDays] = useState([]);
+  const [bookedNights, setBookedNights] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSelectingCheckout, setIsSelectingCheckout] = useState(false);
   const { id } = useParams();
   const calendarRangeRef = useRef({ start: new Date(), end: new Date(new Date().getFullYear() + 2, 11) });
+
+  useEffect(() => {
+    if (!start) {
+      setIsSelectingCheckout(false);
+    }
+  }, [start]);
 
   useEffect(() => {
     if (!roomId) return;
@@ -31,16 +38,23 @@ function FormDayPicker({ roomId, handleDateSelection, start, end }) {
         const reservations = (await getRoomReservations(roomId)) ?? [];
         // If we are editing, exclude the current reservation from the blocked dates
         // and filter out cancelled reservations
-        const busy_days = reservations
+        const nights = [];
+        reservations
           .filter((item) => (!id || item.id != id) && item.status !== "cancelled")
-          .map((item) => ({
-            from: parseLocalDate(item.start_date),
-            to: parseLocalDate(item.end_date),
-          }));
-        setDisabledDays(busy_days);
+          .forEach((item) => {
+            let current = parseLocalDate(item.start_date);
+            const checkout = parseLocalDate(item.end_date);
+            if (current && checkout) {
+              while (current < checkout) {
+                nights.push(new Date(current.getFullYear(), current.getMonth(), current.getDate()));
+                current.setDate(current.getDate() + 1);
+              }
+            }
+          });
+        setBookedNights(nights);
       } catch (error) {
         console.error("Failed to load reservations:", error);
-        setDisabledDays([]);
+        setBookedNights([]);
       }
       setIsLoading(false);
     }
@@ -59,22 +73,95 @@ function FormDayPicker({ roomId, handleDateSelection, start, end }) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const handleSelect = (range) => {
-    if (range && range.from && range.to) {
-      // Check if any day in the selected range is already booked
-      let current = new Date(range.from);
-      const endLimit = new Date(range.to);
+  const getNightsCount = (from, to) => {
+    if (!from || !to) return 0;
+    const s = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+    const e = new Date(to.getFullYear(), to.getMonth(), to.getDate());
+    const diffTime = e - s;
+    return Math.max(0, Math.round(diffTime / (1000 * 60 * 60 * 24)));
+  };
+
+  const isBookedNight = (date) => {
+    return bookedNights.some(
+      (bn) =>
+        bn.getFullYear() === date.getFullYear() &&
+        bn.getMonth() === date.getMonth() &&
+        bn.getDate() === date.getDate()
+    );
+  };
+
+  const isDateDisabled = (date) => {
+    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    if (d < today) return true;
+
+    // If we are selecting check-in (no start selected, or isSelectingCheckout is false)
+    if (!start || !isSelectingCheckout) {
+      return isBookedNight(d);
+    }
+
+    // We are selecting check-out:
+    if (d.getTime() === start.getTime()) {
+      return false; // Clickable to deselect
+    }
+
+    if (d < start) {
+      return isBookedNight(d); // Clickable to change check-in
+    }
+
+    // Find the first booked night after check-in
+    let firstBookedNightAfterStart = null;
+    for (const bn of bookedNights) {
+      if (bn >= start) {
+        if (!firstBookedNightAfterStart || bn < firstBookedNightAfterStart) {
+          firstBookedNightAfterStart = bn;
+        }
+      }
+    }
+
+    // If there is a booked night after check-in, checkout cannot be past that booked night
+    if (firstBookedNightAfterStart && d > firstBookedNightAfterStart) {
+      return true;
+    }
+
+    return false;
+  };
+
+  const handleSelect = (range, selectedDay) => {
+    if (!selectedDay) return;
+    const clicked = new Date(selectedDay.getFullYear(), selectedDay.getMonth(), selectedDay.getDate());
+    
+    let targetRange = null;
+
+    if (!start || !isSelectingCheckout) {
+      const nextDay = new Date(clicked);
+      nextDay.setDate(nextDay.getDate() + 1);
+      targetRange = { from: clicked, to: nextDay };
+      setIsSelectingCheckout(true);
+    } else {
+      if (clicked.getTime() === start.getTime()) {
+        setIsSelectingCheckout(false);
+        handleDateSelection(undefined);
+        return;
+      } else if (clicked < start) {
+        const nextDay = new Date(clicked);
+        nextDay.setDate(nextDay.getDate() + 1);
+        targetRange = { from: clicked, to: nextDay };
+        setIsSelectingCheckout(true);
+      } else {
+        targetRange = { from: start, to: clicked };
+        setIsSelectingCheckout(false);
+      }
+    }
+
+    if (targetRange && targetRange.from && targetRange.to) {
+      // Check if any night of stay in the selected range is already booked
+      let current = new Date(targetRange.from);
+      const endLimit = new Date(targetRange.to);
+      endLimit.setDate(endLimit.getDate() - 1); // Exclusive of checkout date
       let hasBookedDate = false;
 
       while (current <= endLimit) {
-        const isBooked = disabledDays.some((busyRange) => {
-          const d = new Date(current.getFullYear(), current.getMonth(), current.getDate());
-          const start = new Date(busyRange.from.getFullYear(), busyRange.from.getMonth(), busyRange.from.getDate());
-          const busyEnd = new Date(busyRange.to.getFullYear(), busyRange.to.getMonth(), busyRange.to.getDate());
-          return d >= start && d <= busyEnd;
-        });
-
-        if (isBooked) {
+        if (isBookedNight(current)) {
           hasBookedDate = true;
           break;
         }
@@ -83,11 +170,13 @@ function FormDayPicker({ roomId, handleDateSelection, start, end }) {
 
       if (hasBookedDate) {
         toast.error("Selected range contains booked dates. Please choose an available range.");
+        setIsSelectingCheckout(false);
         handleDateSelection(undefined);
         return;
       }
     }
-    handleDateSelection(range);
+
+    handleDateSelection(targetRange);
   };
 
   return (
@@ -102,9 +191,9 @@ function FormDayPicker({ roomId, handleDateSelection, start, end }) {
         endMonth={calendarRangeRef.current.end}
         weekStartsOn={1}
         numberOfMonths={1}
-        disabled={[{ before: today }, ...disabledDays]}
+        disabled={isDateDisabled}
         excludeDisabled={true}
-        modifiers={{ booked: disabledDays }}
+        modifiers={{ booked: bookedNights }}
         modifiersClassNames={{ booked: "rdp-day_booked rdp-day--booked" }}
         footer={
           <div className="flex flex-col gap-2 mt-4 pt-3 border-t border-border w-full">
@@ -124,7 +213,15 @@ function FormDayPicker({ roomId, handleDateSelection, start, end }) {
             </div>
             <p className="flex items-center gap-1.5 text-xs text-muted font-sans mt-1">
               <FontAwesomeIcon icon={faInfoCircle} className="text-gold" />
-              <span>Select check-in and check-out dates.</span>
+              <span>
+                {start && end ? (
+                  `Selected stay: ${getNightsCount(start, end)} ${
+                    getNightsCount(start, end) === 1 ? "night" : "nights"
+                  }`
+                ) : (
+                  "Select check-in and check-out dates."
+                )}
+              </span>
             </p>
           </div>
         }

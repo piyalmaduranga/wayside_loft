@@ -195,7 +195,14 @@ function FilterSection({ filters }) {
                     {startDate ? format(startDate, "dd/MM/yyyy") : "Not selected"}
                   </span>
                 </div>
-                <div className="text-muted-light font-light text-lg">➔</div>
+                <div className="flex flex-col items-center justify-center">
+                  {startDate && endDate && (
+                    <span className="text-[10px] bg-gold/10 text-gold px-2 py-0.5 rounded-full font-medium mb-1 whitespace-nowrap">
+                      {Math.max(0, Math.round((endDate - startDate) / (1000 * 60 * 60 * 24)))} {Math.max(0, Math.round((endDate - startDate) / (1000 * 60 * 60 * 24))) === 1 ? "night" : "nights"}
+                    </span>
+                  )}
+                  <div className="text-muted-light font-light text-lg leading-none">➔</div>
+                </div>
                 <div className="flex flex-col text-right">
                   <span className="text-[9px] uppercase font-semibold text-muted tracking-wider">Check Out</span>
                   <span className="font-semibold text-ink text-sm mt-0.5">

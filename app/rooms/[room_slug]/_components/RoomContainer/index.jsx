@@ -5,12 +5,14 @@ import RoomBookingForm from "../RoomBookingForm";
 import RoomDescription from "../RoomDescription";
 import Facilities from "../Facilities";
 import BookingPolicy from "../BookingPolicy";
+import ICalExport from "../ICalExport";
 import { getRoomById, getRoomImages } from "@/app/_lib/supabase/rooms";
 import { notFound, redirect } from "next/navigation";
 import { isValid } from "date-fns";
 import { bookingSchema } from "@/app/_lib/zodSchemas";
 import { cookies } from "next/headers";
 import { auth } from "@/auth";
+import { syncAirbnbForRoom } from "@/app/_lib/supabase/syncAirbnb";
 
 const rawStorageUrl = process.env.NEXT_PUBLIC_SUPABASE_IMGS_URL || "";
 const SUPABASE_ROOMS_URL = rawStorageUrl
@@ -39,6 +41,21 @@ async function RoomContainer({ params, searchParams }) {
   const room = await getRoomById(room_slug);
 
   if (!room) notFound();
+
+  // Sync Airbnb calendar for this room server-side
+  if (!global.airbnbSyncCache) {
+    global.airbnbSyncCache = {};
+  }
+  const lastSync = global.airbnbSyncCache[room.id];
+  const now = Date.now();
+  if (!lastSync || now - lastSync > 1 * 60 * 1000) {
+    global.airbnbSyncCache[room.id] = now;
+    try {
+      await syncAirbnbForRoom(room.id);
+    } catch (err) {
+      console.error("Server-side Airbnb sync failed:", err);
+    }
+  }
 
   const room_images = await getRoomImages(room.id);
 
@@ -101,6 +118,8 @@ async function RoomContainer({ params, searchParams }) {
           <Facilities />
           <hr className="border-border" />
           <BookingPolicy />
+          <hr className="border-border" />
+          <ICalExport room={room} />
         </div>
         <div className="lg:col-span-1 lg:sticky lg:top-24">
           <RoomBookingForm

@@ -4,25 +4,38 @@ import CheckoutOverview from "../CheckoutOverview";
 import ReservationForm from "../ReservationForm";
 
 import FormDayPicker from "@/app/rooms/[room_slug]/_components/FormDayPicker";
-import { formatISO } from "date-fns";
+import { formatISO, addDays } from "date-fns";
 import { useFormState } from "react-dom";
 import toast, { Toaster } from "react-hot-toast";
+
+const parseLocalDate = (dateStr) => {
+  if (!dateStr) return undefined;
+  if (dateStr instanceof Date) return dateStr;
+  const cleanStr = dateStr.split("T")[0];
+  const parts = cleanStr.split("-").map(Number);
+  if (parts.length === 3) {
+    const [year, month, day] = parts;
+    return new Date(year, month - 1, day);
+  }
+  return undefined;
+};
 
 const initialState = {};
 
 function EditContainer({ reservation, reservationUpdateAction }) {
   const [state, formAction] = useFormState(reservationUpdateAction, initialState);
 
-  const [startDate, setStartDate] = useState(new Date(reservation.start_date));
-  const [endDate, setEndDate] = useState(new Date(reservation.end_date));
+  const [startDate, setStartDate] = useState(reservation.start_date ? formatISO(new Date(reservation.start_date), { representation: "date" }) : "");
+  const [endDate, setEndDate] = useState(reservation.end_date ? formatISO(new Date(reservation.end_date), { representation: "date" }) : "");
   const [guests, setGuests] = useState(reservation.guests_count);
+
 
   const handleDateSelection = useCallback((range) => {
     console.log(range);
     if (!range) return;
 
-    const from = formatISO(range?.from, { representation: "date" });
-    const to = formatISO(range?.to, { representation: "date" });
+    const from = range.from ? formatISO(range.from, { representation: "date" }) : "";
+    const to = range.to ? formatISO(range.to, { representation: "date" }) : "";
 
     console.log(from, to);
     setStartDate(from);
@@ -30,6 +43,10 @@ function EditContainer({ reservation, reservationUpdateAction }) {
   }, []);
 
   async function handleSubmit() {
+    if (!startDate || !endDate) {
+      toast.error("Please select both check-in and check-out dates.");
+      return;
+    }
     const reservationFormData = new FormData();
     reservationFormData.set("start_date", startDate);
     reservationFormData.set("end_date", endDate);
@@ -52,7 +69,7 @@ function EditContainer({ reservation, reservationUpdateAction }) {
           guests={guests}
           handleSubmit={handleSubmit}
         >
-          <FormDayPicker roomId={reservation.room_id} handleDateSelection={handleDateSelection} start={startDate} end={endDate} />
+          <FormDayPicker roomId={reservation.room_id} handleDateSelection={handleDateSelection} start={parseLocalDate(startDate)} end={parseLocalDate(endDate)} />
         </ReservationForm>
       </div>
       <div className="lg:col-span-1 lg:sticky lg:top-24">

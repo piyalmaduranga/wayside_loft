@@ -14,6 +14,8 @@ import {
   createNewReservation,
   createNewReservationDirect,
 } from "@/app/_lib/supabase/reservations";
+import { getRiskySupabaseClient } from "@/app/_lib/supabase/supabaseRiskyClient";
+import { syncAirbnbForRoom } from "@/app/_lib/supabase/syncAirbnb";
 import { bookingCancelAction } from "@/app/_lib/actions";
 import SelectCountry from "@/app/_ui/SelectCountry";
 import { revalidatePath } from "next/cache";
@@ -79,6 +81,33 @@ async function CheckoutSection() {
     let flagError = { error: false, payload: "" };
     try {
       const session = await auth();
+
+      // Sync Airbnb calendar before checking availability
+      try {
+        await syncAirbnbForRoom(pending_reservation.room_id);
+      } catch (err) {
+        console.error("Checkout Airbnb sync failed:", err);
+      }
+
+      // Check if dates are still available before creating the reservation
+      const { data: overlapping, error: overlapError } = await getRiskySupabaseClient()
+        .from("reservations")
+        .select("id")
+        .eq("room_id", pending_reservation.room_id)
+        .not("status", "eq", "cancelled")
+        .or(
+          `and(start_date.gte.${pending_reservation.start_date},start_date.lt.${pending_reservation.end_date}),` +
+          `and(end_date.gt.${pending_reservation.start_date},end_date.lte.${pending_reservation.end_date}),` +
+          `and(start_date.lte.${pending_reservation.start_date},end_date.gte.${pending_reservation.end_date})`
+        );
+
+      if (overlapError) throw overlapError;
+      if (overlapping && overlapping.length > 0) {
+        return {
+          ...prevState,
+          criticalErr: "The selected dates are no longer available. Please select another date range."
+        };
+      }
 
       // Update the guest profile
       await updateGuestDirect(

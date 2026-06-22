@@ -1,7 +1,7 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBed, faCalendarAlt, faUsers } from "@fortawesome/free-solid-svg-icons";
-import { formatISO } from "date-fns";
+import { formatISO, addDays } from "date-fns";
 import FormDayPicker from "../FormDayPicker";
 import { useFormState } from "react-dom";
 import ReservationButton from "../ReservationButton";
@@ -27,6 +27,14 @@ const parseLocalDate = (dateStr) => {
     return new Date(year, month - 1, day);
   }
   return undefined;
+};
+
+const getNightsCount = (start, end) => {
+  if (!start || !end) return 0;
+  const s = new Date(start);
+  const e = new Date(end);
+  const diffTime = Math.abs(e - s);
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 };
 
 function RoomBookingForm({ bookingAction, room, initialRange, user }) {
@@ -58,7 +66,12 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
     }
 
     if (!(startDate && endDate)) {
-      toast.error("Please select a date range from the calendar");
+      toast.error("Please select a check-in and check-out date range from the calendar");
+      return;
+    }
+
+    if (startDate === endDate) {
+      toast.error("Booking must be for at least 1 night");
       return;
     }
 
@@ -148,6 +161,20 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
           </div>
         </div>
 
+        {startDate && endDate && startDate !== endDate && (
+          <div className="flex flex-col gap-2 p-3 bg-ivory/10 border border-border/60 rounded-md text-sm font-sans">
+            <div className="flex justify-between text-muted">
+              <span>${room.price} x {getNightsCount(startDate, endDate)} {getNightsCount(startDate, endDate) === 1 ? "night" : "nights"}</span>
+              <span>${room.price * getNightsCount(startDate, endDate)}</span>
+            </div>
+            <hr className="border-border/40" />
+            <div className="flex justify-between font-medium text-ink">
+              <span>Total estimated price</span>
+              <span>${room.price * getNightsCount(startDate, endDate)}</span>
+            </div>
+          </div>
+        )}
+
         <ReservationButton />
 
         <p className="text-center text-xs text-muted font-sans font-light mt-1">
@@ -195,7 +222,14 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
                   <span className="text-[9px] uppercase font-semibold text-muted tracking-wider">Check In</span>
                   <span className="font-semibold text-ink text-sm mt-0.5">{startDate || "Not selected"}</span>
                 </div>
-                <div className="text-muted-light font-light text-lg">➔</div>
+                <div className="flex flex-col items-center justify-center">
+                  {startDate && endDate && startDate !== endDate && (
+                    <span className="text-[10px] bg-gold/10 text-gold px-2 py-0.5 rounded-full font-medium mb-1 whitespace-nowrap">
+                      {getNightsCount(startDate, endDate)} {getNightsCount(startDate, endDate) === 1 ? "night" : "nights"}
+                    </span>
+                  )}
+                  <div className="text-muted-light font-light text-lg leading-none">➔</div>
+                </div>
                 <div className="flex flex-col text-right">
                   <span className="text-[9px] uppercase font-semibold text-muted tracking-wider">Check Out</span>
                   <span className="font-semibold text-ink text-sm mt-0.5">{endDate || "Not selected"}</span>
