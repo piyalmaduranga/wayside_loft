@@ -5,7 +5,7 @@ import { formatISO, addDays } from "date-fns";
 import FormDayPicker from "../FormDayPicker";
 import { useFormState } from "react-dom";
 import ReservationButton from "../ReservationButton";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 import { useAuthModal } from "@/app/_components/AuthModalContext";
@@ -45,6 +45,41 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
   const { openModal } = useAuthModal();
 
+  // Restore pending booking after login/reload
+  useEffect(() => {
+    const saved = localStorage.getItem(`pending_booking_${room.id}`);
+    if (saved) {
+      try {
+        const { startDate: savedStart, endDate: savedEnd, guests: savedGuests, timestamp } = JSON.parse(saved);
+        // Only restore if saved less than 30 minutes ago
+        if (Date.now() - timestamp < 30 * 60 * 1000) {
+          if (savedStart) setStartDate(savedStart);
+          if (savedEnd) setEndDate(savedEnd);
+          if (savedGuests) setGuests(savedGuests);
+
+          // If user is now logged in, auto-submit the booking
+          if (user && savedStart && savedEnd) {
+            localStorage.removeItem(`pending_booking_${room.id}`);
+            const timer = setTimeout(() => {
+              toast.success("Restored your booking dates. Proceeding to checkout...");
+              const newForm = new FormData();
+              newForm.set("start_date", savedStart);
+              newForm.set("end_date", savedEnd);
+              newForm.set("guests_count", savedGuests);
+              newForm.set("room_id", room.id);
+              formAction(newForm);
+            }, 500);
+            return () => clearTimeout(timer);
+          }
+        } else {
+          localStorage.removeItem(`pending_booking_${room.id}`);
+        }
+      } catch (e) {
+        console.error("Failed to restore pending booking:", e);
+      }
+    }
+  }, [user, room.id, formAction]);
+
   const handleDateSelection = useCallback((range) => {
     if (!range) {
       setStartDate("");
@@ -60,6 +95,17 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
 
   function handleSubmit() {
     if (!user) {
+      if (startDate && endDate) {
+        localStorage.setItem(
+          `pending_booking_${room.id}`,
+          JSON.stringify({
+            startDate,
+            endDate,
+            guests,
+            timestamp: Date.now(),
+          })
+        );
+      }
       toast.error("Please sign in before confirming your booking!");
       openModal("login");
       return;
@@ -79,6 +125,8 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
       toast.error("Please select guests number");
       return;
     }
+
+    localStorage.removeItem(`pending_booking_${room.id}`);
 
     const newForm = new FormData();
     newForm.set("start_date", startDate);
