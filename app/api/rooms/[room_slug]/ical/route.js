@@ -35,14 +35,24 @@ export async function GET(request, { params }) {
     ];
 
     const formatDateTime = (dateStr) => {
-      if (!dateStr) return new Date().toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
-      const d = new Date(dateStr);
-      return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+      try {
+        if (!dateStr) throw new Error("No date provided");
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) throw new Error("Invalid date");
+        return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+      } catch (err) {
+        return new Date().toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+      }
+    };
+
+    const cleanDateStr = (dateStr) => {
+      if (!dateStr) return "";
+      return dateStr.split(" ")[0].split("T")[0].replace(/-/g, "");
     };
 
     reservations?.forEach((res) => {
-      const start = res.start_date.replace(/-/g, "");
-      const end = res.end_date.replace(/-/g, "");
+      const start = cleanDateStr(res.start_date);
+      const end = cleanDateStr(res.end_date);
       const uid = res.external_uid || `res_${res.id}@waysideloft.com`;
       const stamp = formatDateTime(res.created_at);
 
@@ -59,14 +69,30 @@ export async function GET(request, { params }) {
 
     icsLines.push("END:VCALENDAR");
 
-    // Joining with CRLF (\r\n) as required by iCalendar specification
-    const icsContent = icsLines.join("\r\n");
+    // Fold lines to 75 characters max according to RFC 5545 folding rule
+    const foldLine = (line) => {
+      if (line.length <= 75) return line;
+      let folded = line.substring(0, 75);
+      let remaining = line.substring(75);
+      while (remaining.length > 0) {
+        folded += "\r\n " + remaining.substring(0, 74);
+        remaining = remaining.substring(74);
+      }
+      return folded;
+    };
+
+    const foldedLines = icsLines.map(foldLine);
+
+    // Joining with CRLF (\r\n) and ensuring a trailing CRLF at the end
+    const icsContent = foldedLines.join("\r\n") + "\r\n";
 
     return new NextResponse(icsContent, {
       headers: {
         "Content-Type": "text/calendar; charset=utf-8",
         "Content-Disposition": `attachment; filename="${room_slug}-calendar.ics"`,
         "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
       },
     });
   } catch (err) {

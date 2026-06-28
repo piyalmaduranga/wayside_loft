@@ -3,7 +3,20 @@ import { getRiskySupabaseClient } from "./supabaseRiskyClient";
 // Simple, lightweight, dependency-free iCal ICS parser
 function parseICS(icsText) {
   const events = [];
-  const lines = icsText.split(/\r?\n/);
+  
+  // Unfold lines (merge folded lines that start with space or tab as per RFC 5545)
+  const lines = [];
+  const rawLines = icsText.split(/\r?\n/);
+  for (const line of rawLines) {
+    if (line.startsWith(" ") || line.startsWith("\t")) {
+      if (lines.length > 0) {
+        lines[lines.length - 1] += line.substring(1);
+      }
+    } else {
+      lines.push(line);
+    }
+  }
+
   let currentEvent = null;
 
   for (const line of lines) {
@@ -173,7 +186,7 @@ export async function syncAirbnbForRoom(roomId) {
         end_date: event.end,
         status: "confirmed",
         external_uid: event.uid,
-        message: event.summary || "Airbnb Block",
+        message: event.summary || (event.uid?.includes("booking") ? "Booking.com Block" : "Airbnb Block"),
       });
 
       if (insertErr) throw insertErr;
