@@ -169,7 +169,7 @@ async function CheckoutSection() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 items-start py-12 px-4 max-w-7xl mx-auto container">
-      <div className="lg:col-span-2">
+      <div className="order-2 lg:order-1 lg:col-span-2">
         <CheckoutForm
           createReservationAction={createReservationAction}
           room={room}
@@ -178,7 +178,7 @@ async function CheckoutSection() {
         />
       </div>
 
-      <div className="lg:col-span-1 lg:sticky lg:top-24">
+      <div className="order-1 lg:order-2 lg:col-span-1 lg:sticky lg:top-24">
         <CheckoutOverview room={room} pending_reservation={pending_reservation} />
       </div>
     </div>

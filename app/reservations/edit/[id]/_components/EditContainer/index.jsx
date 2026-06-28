@@ -61,7 +61,7 @@ function EditContainer({ reservation, reservationUpdateAction }) {
 
   return (
     <>
-      <div className="lg:col-span-2">
+      <div className="order-2 lg:order-1 lg:col-span-2">
         <ReservationForm
           handleDateSelection={handleDateSelection}
           capacity={reservation.rooms.capacity}
@@ -72,7 +72,7 @@ function EditContainer({ reservation, reservationUpdateAction }) {
           <FormDayPicker roomId={reservation.room_id} handleDateSelection={handleDateSelection} start={parseLocalDate(startDate)} end={parseLocalDate(endDate)} />
         </ReservationForm>
       </div>
-      <div className="lg:col-span-1 lg:sticky lg:top-24">
+      <div className="order-1 lg:order-2 lg:col-span-1 lg:sticky lg:top-24">
         <CheckoutOverview reservation={reservation} start={startDate} end={endDate} guests={guests} />
       </div>
       <Toaster position="top-center" reverseOrder={true} />
