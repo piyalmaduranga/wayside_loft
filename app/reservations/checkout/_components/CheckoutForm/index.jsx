@@ -4,9 +4,9 @@ import Alert from "@/app/_ui/Alert";
 import ConfirmationButton from "../ConfirmationButton";
 import { useFormState } from "react-dom";
 import CancelButton from "../CancelButton";
-import { useTransition } from "react";
+import { useTransition, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import Image from "next/image";
+import { countryCodes, getFlagEmoji, isValidPhoneNumber } from "@/app/_lib/countryCodes";
 
 const initialState = {
   fullname: "",
@@ -17,9 +17,30 @@ const initialState = {
   criticalError: "",
 };
 
-function CheckoutForm({ guest, createReservationAction, bookingCancelAction, children }) {
+function CheckoutForm({ guest, createReservationAction, bookingCancelAction }) {
   const [state, formAction] = useFormState(createReservationAction, initialState);
   const [isPending, setTransition] = useTransition();
+
+  const [selectedCountry, setSelectedCountry] = useState(() => {
+    const matched = countryCodes.find(
+      (c) => 
+        (guest.phone && guest.phone.startsWith(c.dial)) || 
+        (guest.nationality && guest.nationality.split("%")[0].toLowerCase() === c.name.toLowerCase())
+    );
+    return matched || countryCodes.find((c) => c.code === "LK") || countryCodes[0];
+  });
+
+  const [localNumber, setLocalNumber] = useState(() => {
+    const dial = countryCodes.find(
+      (c) => 
+        (guest.phone && guest.phone.startsWith(c.dial)) || 
+        (guest.nationality && guest.nationality.split("%")[0].toLowerCase() === c.name.toLowerCase())
+    )?.dial || "+94";
+    if (guest.phone && guest.phone.startsWith(dial)) {
+      return guest.phone.substring(dial.length).trim();
+    }
+    return guest.phone || "";
+  });
 
   function handleCancel() {
     setTransition(async () => await bookingCancelAction());
@@ -35,6 +56,18 @@ function CheckoutForm({ guest, createReservationAction, bookingCancelAction, chi
       </h2>
 
       {state?.criticalError && <Alert>{state?.criticalError}</Alert>}
+
+      {/* Hidden inputs to pass phone and nationality to formAction */}
+      <input 
+        type="hidden" 
+        name="phone" 
+        value={`${selectedCountry.dial}${localNumber.replace(/\s+/g, "")}`} 
+      />
+      <input 
+        type="hidden" 
+        name="nationality" 
+        value={`${selectedCountry.name}%https://flagcdn.com/${selectedCountry.code.toLowerCase()}.svg`} 
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
         <div className="flex flex-col gap-1.5">
@@ -52,7 +85,7 @@ function CheckoutForm({ guest, createReservationAction, bookingCancelAction, chi
 
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-sans font-semibold uppercase tracking-wider text-muted">
-            National ID / Passport
+            National ID / Passport (Optional)
           </label>
           <input 
             type="text" 
@@ -78,34 +111,62 @@ function CheckoutForm({ guest, createReservationAction, bookingCancelAction, chi
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-sans font-semibold uppercase tracking-wider text-muted">
-          Phone Number
+        <label className="text-xs font-sans font-semibold uppercase tracking-wider text-muted flex items-center justify-between gap-2">
+          <span>Phone Number</span>
+          <span className="inline-flex items-center gap-1.5 text-[11px] text-muted normal-case font-normal bg-ivory/30 border border-border px-2 py-0.5 rounded">
+            <span>Detected Country:</span>
+            <span className="font-semibold text-ink">{selectedCountry.name}</span>
+            <img
+              src={`https://flagcdn.com/${selectedCountry.code.toLowerCase()}.svg`}
+              alt={selectedCountry.name}
+              className="w-3.5 h-2.5 object-cover rounded-xs border border-border"
+            />
+          </span>
         </label>
-        <input 
-          type="tel" 
-          name="phone" 
-          defaultValue={guest.phone} 
-          className="border-none text-base outline-1 outline-border focus:outline-gold focus:ring-4 focus:ring-gold/10 px-4 py-3 w-full shadow-xs transition-all duration-200 rounded-md bg-surface text-ink placeholder:text-muted/60" 
-        />
+        
+        <div className="flex gap-2 w-full">
+          {/* Country Code Selector */}
+          <div className="relative shrink-0">
+            <select
+              value={selectedCountry.code}
+              onChange={(e) => {
+                const newCountry = countryCodes.find((c) => c.code === e.target.value);
+                if (newCountry) setSelectedCountry(newCountry);
+              }}
+              className="border-none text-base outline-1 outline-border focus:outline-gold focus:ring-4 focus:ring-gold/10 px-3 py-3 rounded-md bg-surface text-ink cursor-pointer font-sans appearance-none pr-8 min-w-[105px]"
+            >
+              {countryCodes.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {getFlagEmoji(c.code)} {c.dial}
+                </option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-[9px] text-muted-light">
+              ▼
+            </div>
+          </div>
+          
+          {/* Local Phone Input */}
+          <input 
+            type="tel" 
+            value={localNumber}
+            onChange={(e) => {
+              let val = e.target.value;
+              if (selectedCountry.code === "LK" && val.startsWith("0")) {
+                val = val.substring(1);
+              }
+              setLocalNumber(val);
+            }}
+            placeholder={selectedCountry.example || "77 123 4567"}
+            className="border-none text-base outline-1 outline-border focus:outline-gold focus:ring-4 focus:ring-gold/10 px-4 py-3 w-full shadow-xs transition-all duration-200 rounded-md bg-surface text-ink placeholder:text-muted/60" 
+          />
+        </div>
+        {localNumber && !isValidPhoneNumber(selectedCountry.code, localNumber) && (
+          <span className="text-amber-600 text-xs font-sans mt-1 block">
+            Note: {selectedCountry.name} numbers should follow format e.g. {selectedCountry.dial} {selectedCountry.example || "7-15 digits"}.
+          </span>
+        )}
         {state?.phone && <span className="text-red-600 text-xs font-sans mt-0.5">{state?.phone}</span>}
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-sans font-semibold uppercase tracking-wider text-muted flex items-center gap-2">
-          <span>Where are you from?</span>
-          {guest.countryFlag && (
-            <span className="inline-block w-6 h-4 overflow-hidden rounded-xs border border-border relative">
-              <Image
-                src={guest.countryFlag}
-                alt={`${guest.nationality ?? "country"} flag`}
-                fill
-                className="object-cover"
-              />
-            </span>
-          )}
-        </label>
-        {children}
-        {state?.nationality && <span className="text-red-600 text-xs font-sans mt-0.5">{state?.nationality}</span>}
       </div>
 
       <div className="flex flex-col gap-1.5">

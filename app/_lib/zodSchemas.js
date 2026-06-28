@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { countryCodes, isValidPhoneNumber } from "./countryCodes";
 
 export const subscriberSchema = z.object({
   email: z.string().email("invalid email format."),
@@ -45,18 +46,34 @@ export const reservationSchema = z.object({
   nationality: z.string({ message: "Nationality is required" }),
   phone: z
     .string()
-    .regex(
-      /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
-      "Invalid phone number."
-    ),
+    .regex(/^\+?[0-9]{1,4}?[-.\s]?(\(?\d{1,3}?\)?[-.\s]?){1,4}\d{1,4}$/, {
+      message: "Invalid phone number format."
+    }),
   email: z.string().email("invalid email format."),
   nationalID: z
     .string()
-    .regex(/^[a-zA-Z0-9]{6,12}$/, "Invalid national ID format"),
+    .optional()
+    .or(z.literal("")),
   message: z
     .string()
     .max(255, { message: "Message cannot exceed 255 characters" })
     .optional(),
+}).refine((data) => {
+  const nationalityName = data.nationality.split("%")[0];
+  const matchedCountry = countryCodes.find(
+    (c) => c.name.toLowerCase() === nationalityName.toLowerCase()
+  );
+  if (!matchedCountry) return true;
+
+  let localPart = data.phone;
+  if (data.phone.startsWith(matchedCountry.dial)) {
+    localPart = data.phone.substring(matchedCountry.dial.length);
+  }
+  
+  return isValidPhoneNumber(matchedCountry.code, localPart);
+}, {
+  message: "Phone number is invalid for the selected country.",
+  path: ["phone"]
 });
 
 export const signupSchema = z

@@ -17,7 +17,6 @@ import {
 import { getRiskySupabaseClient } from "@/app/_lib/supabase/supabaseRiskyClient";
 import { syncAirbnbForRoom } from "@/app/_lib/supabase/syncAirbnb";
 import { bookingCancelAction } from "@/app/_lib/actions";
-import SelectCountry from "@/app/_ui/SelectCountry";
 import { revalidatePath } from "next/cache";
 import { format } from "date-fns";
 import { sendBookingReceivedEmail } from "@/app/_lib/mailer";
@@ -176,13 +175,7 @@ async function CheckoutSection() {
           room={room}
           guest={guest}
           bookingCancelAction={bookingCancelAction}
-        >
-          <SelectCountry
-            name={"nationality"}
-            className="border-none text-base outline-1 outline-border focus:outline-gold focus:ring-4 focus:ring-gold/10 px-4 py-3 w-full shadow-xs transition-all duration-200 rounded-md bg-surface text-ink placeholder:text-muted/60"
-            defaultCountry={guest.nationality}
-          />
-        </CheckoutForm>
+        />
       </div>
 
       <div className="lg:col-span-1 lg:sticky lg:top-24">
