@@ -1,3 +1,5 @@
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+
 export const countryCodes = [
   { code: "LK", dial: "+94", name: "Sri Lanka", min: 9, max: 9, regex: /^[0-9]{9}$/, example: "77 123 4567" },
   { code: "US", dial: "+1", name: "United States", min: 10, max: 10, regex: /^[0-9]{10}$/, example: "201 555 0123" },
@@ -253,24 +255,15 @@ export function getFlagEmoji(countryCode) {
 }
 
 /**
- * Validates a local phone number against the country code validation rules.
+ * Validates a local phone number against the country code validation rules using libphonenumber-js.
  */
 export function isValidPhoneNumber(countryCode, localNumber) {
-  const cleaned = localNumber.replace(/\D/g, "");
-  const country = countryCodes.find(c => c.code === countryCode);
-  if (!country) return false;
-
-  // If there are no min/max boundaries, fallback to basic length check (7 to 15 digits)
-  const min = country.min || 7;
-  const max = country.max || 15;
-
-  if (cleaned.length < min || cleaned.length > max) {
+  if (!localNumber) return true;
+  try {
+    const phoneNumber = parsePhoneNumberFromString(localNumber, countryCode);
+    if (!phoneNumber) return false;
+    return phoneNumber.isValid();
+  } catch (err) {
     return false;
   }
-
-  if (country.regex) {
-    return country.regex.test(cleaned);
-  }
-
-  return true;
 }

@@ -7,8 +7,6 @@ const services = [
     alt: "Airport Transfers Mirissa",
     label: "Travel & Transport",
     title: "Airport Transfers",
-    price: 35,
-    unit: "per trip",
     desc: "Travel with ease. We offer convenient transfers between the airport and your accommodation in Mirissa, ensuring a smooth and hassle-free journey.",
   },
   {
@@ -16,8 +14,6 @@ const services = [
     alt: "Whale Watching in Mirissa",
     label: "Ocean Experience",
     title: "Whale Watching",
-    price: 45,
-    unit: "per person",
     desc: "Experience the thrill of whale watching in Mirissa, one of the best places in the world to spot blue whales and dolphins in their natural habitat.",
   },
   {
@@ -25,9 +21,21 @@ const services = [
     alt: "Yala Safari from Mirissa",
     label: "Wildlife Adventure",
     title: "Yala Safari Tours",
-    price: 80,
-    unit: "per person",
     desc: "Embark on an unforgettable safari adventure through Yala National Park. Spot elephants, leopards, and diverse bird species from our guest house.",
+  },
+  {
+    img: "/laundry-service.png",
+    alt: "Laundry Service Wayside Loft",
+    label: "Guest Comfort",
+    title: "Laundry Service",
+    desc: "Enjoy fresh and clean clothes throughout your stay. We offer fast, high-quality laundry and pressing services so you can travel light and stay fresh.",
+  },
+  {
+    img: "/scooter-rental.png",
+    alt: "Scooter Rental Mirissa",
+    label: "Adventure & Travel",
+    title: "Scooter Rental",
+    desc: "Explore Mirissa and the surrounding beaches at your own pace. Rent a reliable scooter directly from our guest house and discover hidden spots with ease.",
   },
 ];
 
@@ -52,11 +60,11 @@ function Blog() {
         {/* Cards grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
           {services.map((s) => (
-            <Card key={s.title}>
+            <Card key={s.title} className="flex flex-col h-full">
               <Thumbnail>
                 <Image fill src={s.img} alt={s.alt} className="object-cover" />
               </Thumbnail>
-              <Description>
+              <Description className="flex flex-col flex-grow">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#C4A87A] mb-2">
                   {s.label}
                 </p>

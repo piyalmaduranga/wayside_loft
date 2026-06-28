@@ -23,6 +23,14 @@ function FormDayPicker({ roomId, handleDateSelection, start, end, className }) {
   const { id } = useParams();
   const calendarRangeRef = useRef({ start: new Date(), end: new Date(new Date().getFullYear() + 2, 11) });
 
+  const [month, setMonth] = useState(() => start || new Date());
+
+  useEffect(() => {
+    if (start) {
+      setMonth(start);
+    }
+  }, [start]);
+
   useEffect(() => {
     if (!start) {
       setIsSelectingCheckout(false);
@@ -215,6 +223,8 @@ function FormDayPicker({ roomId, handleDateSelection, start, end, className }) {
   return (
     <div className={className || "p-4 flex flex-col items-center justify-center bg-surface border border-border rounded-lg shadow-sm"}>
       <DayPicker
+        month={month}
+        onMonthChange={setMonth}
         captionLayout="dropdown"
         min={0}
         onSelect={handleSelect}
