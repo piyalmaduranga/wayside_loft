@@ -106,7 +106,6 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
           })
         );
       }
-      toast.error("Please sign in before confirming your booking!");
       openModal("login");
       return;
     }
@@ -149,9 +148,14 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
       </div>
 
       <form action={handleSubmit} className="bg-surface border border-border rounded-lg p-6 shadow-sm flex flex-col gap-5 text-left">
-        <div>
-          <span className="text-2xl font-serif font-semibold text-ink">${room.price}</span>
-          <span className="text-muted font-sans text-sm font-light"> / night</span>
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <span className="text-2xl font-serif font-semibold text-ink">${room.price}</span>
+            <span className="text-muted font-sans text-sm font-light"> / night</span>
+          </div>
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-sans font-semibold uppercase tracking-wider text-[#C4A87A] bg-[#C4A87A]/8 border border-[#C4A87A]/25 px-2.5 py-1 rounded transition-all duration-300 hover:bg-[#C4A87A]/15">
+            ☕ Breakfast Included
+          </span>
         </div>
 
         <div className="border border-border rounded-md divide-y divide-border overflow-hidden">

@@ -35,10 +35,15 @@ function RoomItem({ id, imgPath, price, title, slug, range }) {
           <h2 className="text-white font-serif font-medium text-lg leading-tight mb-0.5">
             {title}
           </h2>
-          <p className="flex items-baseline gap-1.5 mt-1">
-            <span className="text-[#C4A87A] text-xl font-bold font-sans">${price}</span>
-            <span className="text-white/70 text-xs font-medium">/ night</span>
-          </p>
+          <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
+            <p className="flex items-baseline gap-1.5">
+              <span className="text-[#C4A87A] text-xl font-bold font-sans">${price}</span>
+              <span className="text-white/70 text-xs font-medium">/ night</span>
+            </p>
+            <span className="inline-flex items-center gap-1.5 text-[9px] font-sans font-semibold uppercase tracking-wider text-[#C4A87A] bg-black/45 border border-[#C4A87A]/35 px-2 py-0.5 rounded transition-all duration-300 hover:bg-black/60">
+              ☕ Breakfast Included
+            </span>
+          </div>
         </div>
         <Link
           href={roomHref}

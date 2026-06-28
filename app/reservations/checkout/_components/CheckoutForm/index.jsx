@@ -46,9 +46,6 @@ function CheckoutForm({ guest, createReservationAction, bookingCancelAction }) {
     setTransition(async () => await bookingCancelAction());
   }
 
-  const errors = Object.values(state)?.filter((item) => item.length);
-  if (errors.length) errors.forEach((item) => toast.error(item ?? "Failed to confirm your booking, please try again"));
-
   return (
     <form action={formAction} className="flex flex-col gap-6 text-left w-full max-w-2xl bg-surface border border-border rounded-lg p-8 shadow-sm">
       <h2 className="font-serif text-2xl font-semibold text-ink mb-1 relative after:content-[''] after:block after:w-16 after:h-0.5 after:bg-gold after:mt-3">

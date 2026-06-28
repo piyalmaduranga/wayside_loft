@@ -53,7 +53,7 @@ function getCommonData(data) {
     ? (roomThumbnail.startsWith("https") ? roomThumbnail : `${process.env.NEXT_PUBLIC_SUPABASE_IMGS_URL}/${roomThumbnail}`)
     : "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80";
 
-  const roomSpecs = `${guests} guest${guests > 1 ? "s" : ""} · Base Capacity: ${roomSleeps} Sleeps`;
+  const roomSpecs = `${guests} guest${guests > 1 ? "s" : ""} · Base Capacity: ${roomSleeps} Sleeps · Breakfast: Included (Free)`;
 
   return {
     guestName,

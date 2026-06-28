@@ -118,6 +118,12 @@ function ReservationOverview({ reservation, reservationCancelAction, children })
                 {String(reservation.guests_count).padStart(2, "0")} guests
               </span>
             </div>
+            <div className="flex justify-between items-center text-sm font-sans">
+              <span className="text-muted">Breakfast</span>
+              <span className="inline-flex items-center gap-1 text-[10px] font-sans font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2.5 py-0.5 rounded">
+                🍳 INCLUDED
+              </span>
+            </div>
             <div className="flex justify-between text-sm font-sans">
               <span className="text-muted">Booked on</span>
               <span className="text-ink font-semibold">

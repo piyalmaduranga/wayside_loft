@@ -37,12 +37,6 @@ function ProfileForm({ guestUpdateAction, guest }) {
     return guest.phone || "";
   });
 
-  const errors = Object.values(state ?? {})?.filter((item) => item.length);
-  if (errors.length)
-    errors.forEach((item) =>
-      toast.error(item ?? "Failed to update your profile, please try again")
-    );
-
   return (
     <form action={formAction} className="bg-surface border border-border rounded-lg p-8 shadow-sm text-left flex flex-col gap-6 w-full max-w-3xl">
       {/* Hidden inputs to pass phone and nationality to guestUpdateAction */}

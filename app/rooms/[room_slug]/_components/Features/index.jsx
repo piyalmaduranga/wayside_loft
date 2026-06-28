@@ -1,11 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBed, faDollarSign, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faBed, faDollarSign, faUsers, faUtensils } from "@fortawesome/free-solid-svg-icons";
 
 function Features({ room }) {
   const stats = [
     { icon: faBed, label: "Sleeps", value: `${room.sleeps || 2} Adults` },
     { icon: faUsers, label: "Capacity", value: `${room.capacity} Guests` },
     { icon: faDollarSign, label: "From", value: `$${room.price} / night` },
+    { icon: faUtensils, label: "Breakfast", value: "Included (Free)" },
   ];
 
   return (

@@ -78,10 +78,15 @@ function RoomCard({ room }) {
           {room.capacity} guests · {room.size || "32m²"}
         </p>
 
-        <p className="mt-1.5 flex items-baseline gap-1">
-          <span className="text-lg font-bold text-[#C4A87A] font-sans">${room.price}</span>
-          <span className="text-muted text-xs">/ night</span>
-        </p>
+        <div className="mt-1.5 flex items-center justify-between">
+          <p className="flex items-baseline gap-1">
+            <span className="text-lg font-bold text-[#C4A87A] font-sans">${room.price}</span>
+            <span className="text-muted text-xs">/ night</span>
+          </p>
+          <span className="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-wider text-[#C4A87A] bg-[#C4A87A]/8 border border-[#C4A87A]/25 px-2.5 py-0.5 rounded transition-all duration-300 hover:bg-[#C4A87A]/15">
+            ☕ Breakfast Included
+          </span>
+        </div>
       </div>
     </Link>
   );

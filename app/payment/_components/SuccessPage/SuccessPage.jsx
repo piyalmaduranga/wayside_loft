@@ -38,6 +38,12 @@ function SuccessPage({ reservation }) {
                 <label className="text-xs uppercase tracking-wider text-[#6C6760] font-semibold">Guests</label>
                 <span className="text-base text-[#1A1815] font-bold">{reservation.guests_count} Guests</span>
               </div>
+              <div className="flex flex-col gap-1 items-start">
+                <label className="text-xs uppercase tracking-wider text-[#6C6760] font-semibold">Breakfast</label>
+                <span className="inline-flex items-center gap-1 text-[10px] font-sans font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2.5 py-1 rounded mt-0.5">
+                  🍳 INCLUDED
+                </span>
+              </div>
               <div className="flex flex-col gap-1">
                 <label className="text-xs uppercase tracking-wider text-[#6C6760] font-semibold">Total Amount</label>
                 <span className="text-base text-[#C4A87A] font-extrabold text-lg">${(reservation.reserved_price * 1).toFixed(2)}</span>

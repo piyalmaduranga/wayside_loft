@@ -44,6 +44,12 @@ function CheckoutOverview({ reservation, guests, start, end }) {
               <span className="text-muted">Guests</span>
               <span className="text-ink font-semibold">{String(guests).padStart(2, "0")} Guests</span>
             </div>
+            <div className="flex justify-between items-center text-sm font-sans">
+              <span className="text-muted">Breakfast</span>
+              <span className="inline-flex items-center gap-1 text-[10px] font-sans font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2.5 py-0.5 rounded">
+                🍳 INCLUDED
+              </span>
+            </div>
           </div>
 
           <div className="flex flex-col gap-3">

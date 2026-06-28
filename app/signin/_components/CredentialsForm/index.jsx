@@ -25,9 +25,6 @@ function CredentialsForm({ authAction }) {
       <h2 className="font-serif text-2xl font-semibold text-ink text-center mb-2">Login</h2>
 
       {state.criticalError && <Alert>{state.criticalError}</Alert>}
-      {pathname === "/reservations/checkout" && (
-        <Alert type="warning">Please sign in before confirming your booking!</Alert>
-      )}
 
       <div className="flex flex-col gap-1.5">
         <label className="text-xs font-sans font-semibold uppercase tracking-wider text-muted">
