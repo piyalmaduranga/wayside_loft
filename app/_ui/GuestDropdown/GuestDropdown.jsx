@@ -39,7 +39,10 @@ const GuestDropdown = ({ user, signOutAction }) => {
         <FontAwesomeIcon icon={faCaretDown} />
       </span>
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 bg-surface border border-border shadow-md rounded-md w-40 z-50 overflow-hidden py-1 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div 
+          className="absolute top-full right-0 mt-2 bg-surface border border-border shadow-md rounded-md w-40 z-50 overflow-hidden py-1 animate-in fade-in slide-in-from-top-2 duration-200"
+          onClick={(e) => e.stopPropagation()}
+        >
           <Link 
             className="block px-4 py-2.5 text-sm text-ink hover:bg-ivory hover:text-gold transition-colors duration-200 font-sans" 
             href="/account/history"

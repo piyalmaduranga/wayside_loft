@@ -16,7 +16,7 @@ const parseLocalDate = (dateStr) => {
   return new Date(year, month - 1, day);
 };
 
-function FormDayPicker({ roomId, handleDateSelection, start, end }) {
+function FormDayPicker({ roomId, handleDateSelection, start, end, className }) {
   const [bookedNights, setBookedNights] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSelectingCheckout, setIsSelectingCheckout] = useState(false);
@@ -79,6 +79,39 @@ function FormDayPicker({ roomId, handleDateSelection, start, end }) {
     const e = new Date(to.getFullYear(), to.getMonth(), to.getDate());
     const diffTime = e - s;
     return Math.max(0, Math.round(diffTime / (1000 * 60 * 60 * 24)));
+  };
+
+  const getActiveBookedNights = () => {
+    let list = bookedNights || [];
+    
+    // 1. Exclude the active check-out date (end) so it doesn't get slashed while selected
+    if (end && typeof end.getTime === "function") {
+      const endTime = end.getTime();
+      list = list.filter((bn) => bn && typeof bn.getTime === "function" && bn.getTime() !== endTime);
+    }
+    
+    // 2. Exclude the first booked night after check-in when we are in checkout selection phase
+    // so the user knows they can select it as their check-out day.
+    if (start && typeof start.getTime === "function" && isSelectingCheckout) {
+      const startTime = start.getTime();
+      let firstBookedNightAfterStart = null;
+      for (const bn of bookedNights) {
+        if (bn && typeof bn.getTime === "function") {
+          const bnTime = bn.getTime();
+          if (bnTime >= startTime) {
+            if (!firstBookedNightAfterStart || bnTime < firstBookedNightAfterStart.getTime()) {
+              firstBookedNightAfterStart = bn;
+            }
+          }
+        }
+      }
+      if (firstBookedNightAfterStart) {
+        const firstTime = firstBookedNightAfterStart.getTime();
+        list = list.filter((bn) => bn && typeof bn.getTime === "function" && bn.getTime() !== firstTime);
+      }
+    }
+    
+    return list;
   };
 
   const isBookedNight = (date) => {
@@ -180,7 +213,7 @@ function FormDayPicker({ roomId, handleDateSelection, start, end }) {
   };
 
   return (
-    <div className="p-4 flex flex-col items-center justify-center bg-surface border border-border rounded-lg shadow-sm">
+    <div className={className || "p-4 flex flex-col items-center justify-center bg-surface border border-border rounded-lg shadow-sm"}>
       <DayPicker
         captionLayout="dropdown"
         min={0}
@@ -193,7 +226,7 @@ function FormDayPicker({ roomId, handleDateSelection, start, end }) {
         numberOfMonths={1}
         disabled={isDateDisabled}
         excludeDisabled={true}
-        modifiers={{ booked: bookedNights }}
+        modifiers={{ booked: getActiveBookedNights() }}
         modifiersClassNames={{ booked: "rdp-day_booked rdp-day--booked" }}
         footer={
           <div className="flex flex-col gap-2 mt-4 pt-3 border-t border-border w-full">

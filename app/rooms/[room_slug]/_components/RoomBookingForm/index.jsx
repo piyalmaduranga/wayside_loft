@@ -254,12 +254,13 @@ function RoomBookingForm({ bookingAction, room, initialRange, user }) {
             </div>
 
             {/* Calendar Scroll Area */}
-            <div className="p-4 overflow-y-auto flex justify-center bg-ivory/5">
+            <div className="py-2 px-0 overflow-y-auto flex justify-center bg-surface w-full">
               <FormDayPicker
                 roomId={room.id}
                 handleDateSelection={handleDateSelection}
                 start={parseLocalDate(startDate)}
                 end={parseLocalDate(endDate)}
+                className="w-full flex flex-col items-center justify-center bg-surface border-none shadow-none rounded-none"
               />
             </div>
 
