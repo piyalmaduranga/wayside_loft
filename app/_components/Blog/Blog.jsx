@@ -66,14 +66,17 @@ function Blog() {
                 <p className="text-[#6C6760] text-[14.5px] leading-[1.75] mb-4">
                   {s.desc}
                 </p>
-                <p className="flex items-baseline gap-1.5 mt-auto pt-3 border-t border-[rgba(26,24,21,0.08)]">
-                  <span className="text-lg font-bold text-[#C4A87A] font-sans">
-                    ${s.price}
-                  </span>
-                  <span className="text-[#6C6760] text-xs font-medium">
-                    {s.unit}
-                  </span>
-                </p>
+                <a
+                  href={`https://wa.me/94760087674?text=${encodeURIComponent(
+                    `Hi Wayside Loft, I'm interested in the "${s.title}" service. Could you please share more details, availability, and pricing?`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-auto pt-3 border-t border-[rgba(26,24,21,0.08)] flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#6C6760] hover:text-[#C4A87A] transition-all duration-200 group/link font-sans"
+                >
+                  <span>Request Details</span>
+                  <span className="text-[#C4A87A] transition-transform duration-200 group-hover/link:translate-x-1">➔</span>
+                </a>
               </Description>
             </Card>
           ))}
