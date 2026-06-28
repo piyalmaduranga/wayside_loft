@@ -11,15 +11,29 @@ export const profileSchema = z.object({
     .trim()
     .min(3, { message: "Fullname must contains at least 3 characters" })
     .max(64, { message: "Fullname cannot exceed 64 characters" }),
-
   nationality: z.string(),
   phone: z
     .string()
-    .regex(
-      /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
-      "Invalid phone number."
-    ),
+    .regex(/^\+?[0-9]{1,4}?[-.\s]?(\(?\d{1,3}?\)?[-.\s]?){1,4}\d{1,4}$/, {
+      message: "Invalid phone number format."
+    }),
   email: z.string().email("invalid email format."),
+}).refine((data) => {
+  const nationalityName = data.nationality.split("%")[0];
+  const matchedCountry = countryCodes.find(
+    (c) => c.name.toLowerCase() === nationalityName.toLowerCase()
+  );
+  if (!matchedCountry) return true;
+
+  let localPart = data.phone;
+  if (data.phone.startsWith(matchedCountry.dial)) {
+    localPart = data.phone.substring(matchedCountry.dial.length);
+  }
+  
+  return isValidPhoneNumber(matchedCountry.code, localPart);
+}, {
+  message: "Phone number is invalid for the selected country.",
+  path: ["phone"]
 });
 
 export const signInSchema = z.object({
@@ -99,13 +113,20 @@ export const contactSchema = z.object({
     .min(3, { message: "Name must be at least 3 characters" })
     .max(64, "Name cannot exceed 64 charcters"),
   email: z.string().email(),
-  phone: z
-    .string()
-    .regex(/^\+?[0-9]{1,4}?[-.\s]?(\(?\d{1,3}?\)?[-.\s]?){1,4}\d{1,4}$/, {
-      message: "Invalid phone number",
-    }),
+  phone: z.string(),
   message: z
     .string()
     .min(20, { message: "Message must contain at least 20 characters" })
     .max(500, { message: "Message cannot exceed 500 characters" }),
+}).refine((data) => {
+  const matchedCountry = countryCodes.find((c) => data.phone.startsWith(c.dial));
+  if (!matchedCountry) {
+    return /^\+?[0-9]{1,4}?[-.\s]?(\(?\d{1,3}?\)?[-.\s]?){1,4}\d{1,4}$/.test(data.phone);
+  }
+  
+  const localPart = data.phone.substring(matchedCountry.dial.length);
+  return isValidPhoneNumber(matchedCountry.code, localPart);
+}, {
+  message: "Phone number is invalid for the selected country code.",
+  path: ["phone"]
 });
