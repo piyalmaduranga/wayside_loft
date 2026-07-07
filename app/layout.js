@@ -25,10 +25,10 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata = {
   title: {
     template: "%s | Wayside Loft Mirissa",
-    default: "Wayside Loft | Boutique Guest House in Mirissa, Sri Lanka",
+    default: "Wayside Loft | Boutique Guest House & Hotel in Mirissa, Sri Lanka",
   },
   description:
-    "Discover Wayside Loft, the best accommodation in Mirissa for remote work and relaxation. Boutique hotel experience with comfortable rooms, work-friendly spaces, and proximity to whale watching. Book your Mirissa stay now.",
+    "Discover Wayside Loft, the best accommodation, guest house and boutique hotel in Mirissa. Perfect for remote work, relaxation, whale watching, and scooter renting. Boutique hotel experience with comfortable rooms, work-friendly spaces, and proximity to beach. Book your Mirissa stay now.",
   keywords: [
     "mirissa",
     "hotel mirissa",
@@ -49,6 +49,12 @@ export const metadata = {
     "stay in mirissa",
     "rose loft mirissa",
     "wayside loft mirissa",
+    "guest house",
+    "scooter renting mirissa",
+    "scooter rental mirissa",
+    "mirissa hotel",
+    "mirissa guest house",
+    "comfortable stay mirissa"
   ],
   authors: [{ name: "Wayside Loft" }],
   creator: "Wayside Loft",
@@ -90,38 +96,131 @@ export const metadata = {
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "Hotel",
-  "name": "Wayside Loft Mirissa",
-  "description": "Boutique guest house in Mirissa, Sri Lanka. Comfortable rooms and remote work friendly environment.",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "Yatipila Road",
-    "addressLocality": "Mirissa",
-    "addressRegion": "Southern Province",
-    "addressCountry": "LK"
-  },
-  "telephone": "+94760087674",
-  "url": "http://localhost:3001",
-  "starRating": {
-    "@type": "Rating",
-    "ratingValue": "4.5"
-  },
-  "priceRange": "$$",
-  "amenityFeature": [
+  "@graph": [
     {
-      "@type": "LocationFeatureSpecification",
-      "name": "Free Wi-Fi",
-      "value": "true"
+      "@type": "Hotel",
+      "@id": "https://waysideloft.com/#hotel",
+      "name": "Wayside Loft Mirissa",
+      "description": "Premium boutique guest house and hotel in Mirissa, Sri Lanka. Offers comfortable rooms, remote work amenities, scooter rentals, and whale watching excursions.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Yatipila Road",
+        "addressLocality": "Mirissa",
+        "addressRegion": "Southern Province",
+        "addressCountry": "LK"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "5.94826",
+        "longitude": "80.45782"
+      },
+      "telephone": "+94760087674",
+      "url": "https://waysideloft.com",
+      "starRating": {
+        "@type": "Rating",
+        "ratingValue": "4.8"
+      },
+      "priceRange": "$$",
+      "amenityFeature": [
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Free Wi-Fi",
+          "value": "true"
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Air Conditioning",
+          "value": "true"
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Work Desk",
+          "value": "true"
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Free Breakfast",
+          "value": "true"
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Scooter Rental",
+          "value": "true"
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Laundry Service",
+          "value": "true"
+        }
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Guest Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Scooter Rental Mirissa",
+              "description": "Convenient scooter renting in Mirissa directly from our guest house to explore surrounding beaches."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Whale Watching Mirissa",
+              "description": "Ocean excursions to spot blue whales and dolphins in Mirissa, Sri Lanka."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Yala Safari Tours",
+              "description": "Wildlife safaris to Yala National Park directly arranged for our guests."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Airport Transfers",
+              "description": "Convenient airport shuttles between CMB airport and Mirissa."
+            }
+          }
+        ]
+      }
     },
     {
-      "@type": "LocationFeatureSpecification",
-      "name": "Air Conditioning",
-      "value": "true"
-    },
-    {
-      "@type": "LocationFeatureSpecification",
-      "name": "Work Desk",
-      "value": "true"
+      "@type": "FAQPage",
+      "@id": "https://waysideloft.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How can I book a guest house or hotel stay in Mirissa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can easily book online directly at Wayside Loft. We offer a simple 'Book Now, Pay on Arrival' reservation system with instant confirmation and zero pre-payment fees."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you arrange whale watching excursions in Mirissa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! Wayside Loft can arrange whale watching tours for you to spot blue whales, sperm whales, and dolphins in their natural habitat off Mirissa beach."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is scooter renting available at Wayside Loft in Mirissa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, we offer convenient scooter renting directly from our boutique guest house to easily explore Mirissa beach, Weligama, and other neighbouring surf spots."
+          }
+        }
+      ]
     }
   ]
 };

@@ -35,7 +35,7 @@ const services = [
     alt: "Scooter Rental Mirissa",
     label: "Adventure & Travel",
     title: "Scooter Rental",
-    desc: "Explore Mirissa and the surrounding beaches at your own pace. Rent a reliable scooter directly from our guest house and discover hidden spots with ease.",
+    desc: "Explore Mirissa and the surrounding beaches at your own pace. We offer convenient scooter renting in Mirissa directly from our guest house so you can discover hidden spots with ease.",
   },
 ];
 

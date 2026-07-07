@@ -21,9 +21,9 @@ function About() {
               Nestled amidst the lush greenery of Mirissa,{" "}
               <strong className="text-[#1A1815] font-semibold">Wayside Loft</strong> offers a tranquil
               escape where nature meets comfort. As a premier{" "}
-              <strong className="text-[#1A1815] font-semibold">guest house in Mirissa</strong>, we
+              <strong className="text-[#1A1815] font-semibold">guest house and boutique hotel in Mirissa</strong>, we
               specialize in providing comfortable rooms for travelers seeking a serene environment. Our
-              boutique villa is{" "}
+              boutique accommodation is{" "}
               <strong className="text-[#1A1815] font-semibold">remote work friendly</strong> and perfect
               for digital nomads, offering high-speed internet and quiet spaces.
             </p>
