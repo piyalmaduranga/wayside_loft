@@ -1,4 +1,5 @@
 import { getAllRooms } from "./_lib/supabase/rooms";
+import { services } from "./_lib/servicesData";
 
 export default async function sitemap() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://waysideloft.com";
@@ -13,6 +14,13 @@ export default async function sitemap() {
 
   const roomUrls = rooms?.map((room) => ({
     url: `${baseUrl}/rooms/${room.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  })) || [];
+
+  const serviceUrls = services?.map((s) => ({
+    url: `${baseUrl}/services/${s.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly",
     priority: 0.7,
@@ -38,5 +46,6 @@ export default async function sitemap() {
       priority: 0.5,
     },
     ...roomUrls,
+    ...serviceUrls,
   ];
 }

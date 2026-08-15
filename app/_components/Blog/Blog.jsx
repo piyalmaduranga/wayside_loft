@@ -1,43 +1,7 @@
 import Card, { Thumbnail, Description } from "../Card/Card";
 import Image from "next/image";
-
-const services = [
-  {
-    img: "/airport-shuttle-1.png",
-    alt: "Airport Transfers Mirissa",
-    label: "Travel & Transport",
-    title: "Airport Transfers",
-    desc: "Travel with ease. We offer convenient transfers between the airport and your accommodation in Mirissa, ensuring a smooth and hassle-free journey.",
-  },
-  {
-    img: "/whale-watching.png",
-    alt: "Whale Watching in Mirissa",
-    label: "Ocean Experience",
-    title: "Whale Watching",
-    desc: "Experience the thrill of whale watching in Mirissa, one of the best places in the world to spot blue whales and dolphins in their natural habitat.",
-  },
-  {
-    img: "/yala-safari.png",
-    alt: "Yala Safari from Mirissa",
-    label: "Wildlife Adventure",
-    title: "Yala Safari Tours",
-    desc: "Embark on an unforgettable safari adventure through Yala National Park. Spot elephants, leopards, and diverse bird species from our guest house.",
-  },
-  {
-    img: "/laundry-service.png",
-    alt: "Laundry Service Wayside Loft",
-    label: "Guest Comfort",
-    title: "Laundry Service",
-    desc: "Enjoy fresh and clean clothes throughout your stay. We offer fast, high-quality laundry and pressing services so you can travel light and stay fresh.",
-  },
-  {
-    img: "/scooter-rental.png",
-    alt: "Scooter Rental Mirissa",
-    label: "Adventure & Travel",
-    title: "Scooter Rental",
-    desc: "Explore Mirissa and the surrounding beaches at your own pace. We offer convenient scooter renting in Mirissa directly from our guest house so you can discover hidden spots with ease.",
-  },
-];
+import Link from "next/link";
+import { services } from "../../_lib/servicesData";
 
 function Blog() {
   return (
@@ -74,17 +38,13 @@ function Blog() {
                 <p className="text-[#6C6760] text-[14.5px] leading-[1.75] mb-4">
                   {s.desc}
                 </p>
-                <a
-                  href={`https://wa.me/94760087674?text=${encodeURIComponent(
-                    `Hi Wayside Loft, I'm interested in the "${s.title}" service. Could you please share more details, availability, and pricing?`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href={`/services/${s.slug}`}
                   className="mt-auto pt-3 border-t border-[rgba(26,24,21,0.08)] flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#6C6760] hover:text-[#C4A87A] transition-all duration-200 group/link font-sans"
                 >
-                  <span>Request Details</span>
+                  <span>View more details</span>
                   <span className="text-[#C4A87A] transition-transform duration-200 group-hover/link:translate-x-1">➔</span>
-                </a>
+                </Link>
               </Description>
             </Card>
           ))}

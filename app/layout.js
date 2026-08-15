@@ -64,7 +64,7 @@ export const metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("http://localhost:3001"), // Update this to your production URL when ready
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://waysideloft.com"),
   alternates: {
     canonical: "/",
   },
