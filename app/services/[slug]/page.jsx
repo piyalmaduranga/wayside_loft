@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { services } from "../../_lib/servicesData";
 import QRCodeCard from "./_components/QRCodeCard";
+import ServiceImageSlider from "./_components/ServiceImageSlider";
 
 export async function generateStaticParams() {
   return services.map((s) => ({
@@ -50,16 +50,8 @@ export default function ServiceDetails({ params }) {
           {/* Left Column: Details & Images */}
           <div className="lg:col-span-2 space-y-8">
             
-            {/* Hero Image */}
-            <div className="relative aspect-[16/9] w-full rounded-3xl overflow-hidden shadow-sm border border-border/40">
-              <Image 
-                fill 
-                src={service.img} 
-                alt={service.alt} 
-                className="object-cover"
-                priority
-              />
-            </div>
+            {/* Image Slider */}
+            <ServiceImageSlider images={service.images} alt={service.alt} />
 
             {/* Content Card */}
             <div className="bg-white rounded-3xl p-6 md:p-10 border border-border/50 shadow-xs space-y-6">

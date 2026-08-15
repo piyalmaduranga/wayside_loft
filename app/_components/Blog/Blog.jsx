@@ -26,7 +26,7 @@ function Blog() {
           {services.map((s) => (
             <Card key={s.title} className="flex flex-col h-full">
               <Thumbnail>
-                <Image fill src={s.img} alt={s.alt} className="object-cover" />
+                <Image fill src={s.images[0]} alt={s.alt} className="object-cover" />
               </Thumbnail>
               <Description className="flex flex-col flex-grow">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#C4A87A] mb-2">
