@@ -42,7 +42,7 @@ export const blogPosts = [
       },
       {
         type: "image",
-        url: "https://images.unsplash.com/photo-1527631746610-1da0065161a9?w=1200&q=80",
+        url: "https://images.unsplash.com/photo-1508962914676-134849a727f0?w=1200&q=80",
         caption: "Happy travelers exploring the Southern Coast of Mirissa together by scooter."
       },
       {

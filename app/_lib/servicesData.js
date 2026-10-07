@@ -110,8 +110,8 @@ export const services = [
     slug: "scooter-rental",
     images: [
       "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Q3x479QbFi2pMS0_rtZsFa80H2Wu-KPwaWUQUVdO8gCfE-kjSCSJTPu2hySjTPXI4iT_e1_jZe3tG0Mmpx3pdi3QPUh58TjsqmjswYHkCdF3rsIRAUh3wUuMvFpY3fXI_OEF1IWk8rptjS=s1360-w1360-h1020-rw",
-      "https://images.unsplash.com/photo-1527631746610-1da0065161a9?w=1000&q=80",
-      "https://images.unsplash.com/photo-1508962914676-134849a727f0?w=1000&q=80"
+      "https://images.unsplash.com/photo-1508962914676-134849a727f0?w=1000&q=80",
+      "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=1000&q=80"
     ],
     alt: "Scooter Rental Mirissa",
     label: "Adventure & Travel",
