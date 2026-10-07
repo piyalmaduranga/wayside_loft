@@ -109,7 +109,7 @@ export const services = [
   {
     slug: "scooter-rental",
     images: [
-      "/scooter-rental.png",
+      "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Q3x479QbFi2pMS0_rtZsFa80H2Wu-KPwaWUQUVdO8gCfE-kjSCSJTPu2hySjTPXI4iT_e1_jZe3tG0Mmpx3pdi3QPUh58TjsqmjswYHkCdF3rsIRAUh3wUuMvFpY3fXI_OEF1IWk8rptjS=s1360-w1360-h1020-rw",
       "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=1000&q=80",
       "https://images.unsplash.com/photo-1508962914676-134849a727f0?w=1000&q=80"
     ],
@@ -132,6 +132,32 @@ export const services = [
       { key: "Licensing", value: "International Driving License is a must" },
       { key: "Helmets", value: "2 Helmets provided" },
       { key: "Delivery", value: "Free hotel supply around Mirissa" }
+    ]
+  },
+  {
+    slug: "reach-service",
+    images: [
+      "/waysideloft-room.jpg",
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1000&q=80",
+      "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1000&q=80"
+    ],
+    alt: "Reach Service Wayside Loft Mirissa",
+    label: "Concierge & Assistance",
+    title: "Reach Service",
+    desc: "Seamless arrival assistance, local coordination, and custom concierge services. Let us take care of every detail when you reach Mirissa.",
+    fullDesc: "The Wayside Loft Reach Service is our dedicated concierge and local assistance experience designed to make your arrival and stay in Mirissa effortless.\n\nWhether you need personal station or airport pickup coordination, luggage management, custom trip planning, scooter delivery on arrival, or local guidance, our team is at your service. Simply submit your request or reach out via WhatsApp, and we will tailor everything to your schedule.",
+    highlights: [
+      "Personalized arrival pickup & luggage assistance",
+      "Custom day itineraries and local recommendations",
+      "Direct WhatsApp coordination with our team",
+      "Pre-arrival scooter & transit setup",
+      "Flexible schedule adjustments"
+    ],
+    details: [
+      { key: "Service Type", value: "Personalized Concierge & Assistance" },
+      { key: "Availability", value: "24/7 Guest Support" },
+      { key: "Location", value: "Mirissa & Southern Coast" },
+      { key: "Booking", value: "Direct Request / WhatsApp" }
     ]
   }
 ];

@@ -16,6 +16,8 @@ function Navbar({ user, signOutAction }) {
   const links = [
     { href: "/", label: "Home" },
     { href: "/rooms", label: "Rooms" },
+    { href: "/reach-service", label: "Reach Service" },
+    { href: "/blog", label: "Blog" },
     { href: "/contact", label: "Contact Us" },
   ];
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { services } from "../../_lib/servicesData";
 import QRCodeCard from "./_components/QRCodeCard";
 import ServiceImageSlider from "./_components/ServiceImageSlider";
@@ -25,6 +25,10 @@ export async function generateMetadata({ params }) {
 }
 
 export default function ServiceDetails({ params }) {
+  if (params.slug === "reach-service") {
+    redirect("/reach-service");
+  }
+
   const service = services.find((s) => s.slug === params.slug);
   if (!service) notFound();
 

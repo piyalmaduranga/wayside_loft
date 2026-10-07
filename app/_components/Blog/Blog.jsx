@@ -39,7 +39,7 @@ function Blog() {
                   {s.desc}
                 </p>
                 <Link
-                  href={`/services/${s.slug}`}
+                  href={s.slug === "reach-service" ? "/reach-service" : `/services/${s.slug}`}
                   className="mt-auto pt-3 border-t border-[rgba(26,24,21,0.08)] flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#6C6760] hover:text-[#C4A87A] transition-all duration-200 group/link font-sans"
                 >
                   <span>View more details</span>

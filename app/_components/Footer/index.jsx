@@ -40,6 +40,8 @@ function Footer() {
               {[
                 { href: "/", label: "Home" },
                 { href: "/rooms", label: "Rooms" },
+                { href: "/reach-service", label: "Reach Service" },
+                { href: "/blog", label: "Blog & Travel Guides" },
                 { href: "/contact", label: "Contact Us" },
                 { href: "/signin", label: "Guest Area" },
               ].map(({ href, label }) => (
