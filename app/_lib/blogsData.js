@@ -42,8 +42,8 @@ export const blogPosts = [
       },
       {
         type: "image",
-        url: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=1200&q=80",
-        caption: "Riding along the scenic coastal stretch connecting Mirissa, Weligama, and Matara."
+        url: "https://images.unsplash.com/photo-1527631746610-1da0065161a9?w=1200&q=80",
+        caption: "Happy travelers exploring the Southern Coast of Mirissa together by scooter."
       },
       {
         type: "heading",
