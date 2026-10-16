@@ -2,6 +2,7 @@
 import { faBars, faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import GuestDropdown from "./GuestDropdown/GuestDropdown";
@@ -25,14 +26,19 @@ function Navbar({ user, signOutAction }) {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-[1000] bg-[#F8F6F1]/92 backdrop-blur-xl border-b border-black/[0.06] shadow-[0_1px_12px_rgba(26,24,21,0.04)]">
-      <div className="container flex items-center justify-between h-[72px]">
+    <header className="sticky top-0 z-[1000] bg-[#F8F6F1]/95 backdrop-blur-xl border-b border-black/[0.06] shadow-[0_1px_12px_rgba(26,24,21,0.04)]">
+      <div className="container flex items-center justify-between h-[76px] sm:h-[80px]">
 
         {/* Logo */}
-        <Link href="/" onClick={() => setOpen(false)} className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity">
-          <span className="font-serif text-[1.85rem] font-semibold tracking-tight text-[#1A1815]">
-            WAYSIDE <span className="text-[#C4A87A]">LOFT</span>
-          </span>
+        <Link href="/" onClick={() => setOpen(false)} className="flex-shrink-0 flex items-center hover:opacity-85 transition-opacity py-1">
+          <Image
+            src="/wayside-loft-logo.png"
+            alt="Wayside Loft Mirissa Logo"
+            width={943}
+            height={515}
+            priority
+            className="h-12 sm:h-14 md:h-[58px] w-auto object-contain"
+          />
         </Link>
 
         {/* Desktop Nav */}

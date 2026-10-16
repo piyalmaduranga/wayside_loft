@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useAuthModal } from "../AuthModalContext";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -150,13 +151,24 @@ export default function AuthModal() {
         {/* Close Button */}
         <button
           onClick={closeModal}
-          className="absolute top-4 right-4 text-muted hover:text-ink transition-colors duration-200 cursor-pointer p-1 rounded-full hover:bg-ivory"
+          className="absolute top-4 right-4 text-muted hover:text-ink transition-colors duration-200 cursor-pointer p-1 rounded-full hover:bg-ivory z-20"
           aria-label="Close modal"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
+
+        {/* Brand Header */}
+        <div className="pt-6 pb-2 px-6 flex justify-center bg-surface">
+          <Image
+            src="/wayside-loft-logo.png"
+            alt="Wayside Loft Mirissa Logo"
+            width={943}
+            height={515}
+            className="h-11 w-auto object-contain"
+          />
+        </div>
 
         {/* Tab Headers */}
         <div className="flex border-b border-border">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import NewsletterForm from "./NewsletterForm";
 
 function Footer() {
@@ -11,9 +12,15 @@ function Footer() {
 
           {/* Brand */}
           <div>
-            <h3 className="font-serif text-white font-medium text-[1.8rem] pb-3 mb-5 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-px after:bg-[#C4A87A]">
-              WAYSIDE <span className="text-[#C4A87A]">LOFT</span>
-            </h3>
+            <Link href="/" className="inline-block mb-4 hover:opacity-85 transition-opacity">
+              <Image
+                src="/wayside-loft-logo-white.png"
+                alt="Wayside Loft Mirissa Logo"
+                width={943}
+                height={515}
+                className="h-14 sm:h-16 w-auto object-contain"
+              />
+            </Link>
             <p className="text-[13.5px] leading-relaxed text-[#B0A99F]">
               A premium <strong className="text-[#E8D9BE] font-medium">guest house in Mirissa</strong>, offering comfortable rooms and a work-friendly environment for travelers seeking a serene escape.
             </p>
